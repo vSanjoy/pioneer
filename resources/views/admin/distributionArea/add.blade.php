@@ -19,7 +19,7 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class="text-dark font-bold">Distribution Area<span class="red_star">*</span></label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_distribution_area')<span class="red_star">*</span></label>
 										{{ Form::text('title', null, [
 																		'id' => 'title',
 																		'placeholder' => '',

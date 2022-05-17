@@ -14,9 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 use App\Traits\GeneralMethods;
-use App\Models\User;
-use App\Models\UserDetail;
-use App\Models\DistributionArea;
+use App\Models\Category;
+use App\Models\Product;
 use DataTables;
 
 class ProductsController extends Controller
@@ -115,6 +114,23 @@ class ProductsController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
+                        ->addColumn('category', function ($row) {
+                            if ($row->categoryDetails !== NULL) {
+                                return $row->categoryDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('rate_per_pcs', function ($row) {
+                            return formatToTwoDecimalPlaces($row->rate_per_pcs);
+                        })
+                        ->addColumn('mrp', function ($row) {
+                            if ($row->mrp !== NULL) {
+                                return formatToTwoDecimalPlaces($row->mrp);
+                            } else {
+                                return 'N/A';
+                            }
+                        })
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
                         })
@@ -146,7 +162,7 @@ class ProductsController extends Controller
                             }                            
                             return $btn;
                         })
-                        ->rawColumns(['whatsapp_no','status','action'])
+                        ->rawColumns(['category','status','action'])
                         ->make(true);
             }
             return view($this->viewFolderPath.'.list');
@@ -177,10 +193,15 @@ class ProductsController extends Controller
                 $validationCondition = array(
                     'category_id'   => 'required',
                     'title'         => 'required',
+                    'rate_per_pcs'  => 'required|regex:'.config('global.VALID_AMOUNT_REGEX'),
+                    'mrp'           => 'nullable|regex:'.config('global.VALID_AMOUNT_REGEX'),
                 );
                 $validationMessages = array(
-                    'category_id.required'  => 'Please select distribution area',
-                    'title.required'        => 'Please enter title',
+                    'category_id.required'  => trans('custom_admin.error_category'),
+                    'title.required'        => trans('custom_admin.error_title'),
+                    'rate_per_pcs.required' => trans('custom_admin.error_rate_per_pcs'),
+                    'rate_per_pcs.regex'    => trans('custom_admin.error_valid_amount'),
+                    'mrp.regex'             => trans('custom_admin.error_valid_amount'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -192,7 +213,7 @@ class ProductsController extends Controller
                     $saveData['category_id']    = $request->category_id ?? null;
                     $saveData['title']          = $request->title ?? null;
                     $saveData['slug']           = generateUniqueSlug($this->model, trim($request->store_name,' '));
-                    $saveData['rate_per_pc']    = $request->rate_per_pc ?? null;
+                    $saveData['rate_per_pcs']   = $request->rate_per_pcs ?? 0;
                     $saveData['mrp']            = $request->mrp ?? null;
                     $saveData['sort']           = generateSortNumber($this->model);
                     $save = $this->model->create($saveData);
@@ -207,9 +228,9 @@ class ProductsController extends Controller
                 }
             }
 
-            $data['distributionAreas'] = DistributionArea::where(['status' => '1'])
-                                                        ->select('id','title')
-                                                        ->get();
+            $data['categories'] = Category::where(['status' => '1'])
+                                            ->select('id','title')
+                                            ->get();
             return view($this->viewFolderPath.'.add', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -234,16 +255,12 @@ class ProductsController extends Controller
         ];
 
         try {
-            $data['id']                 = $id;
-            $data['distributorId']      = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])
-                                                            ->select('id','title')
-                                                            ->get();
-
-
-
-                                                            
-            $data['details']            = $details = $this->model->where(['id' => $id])->first();
+            $data['id']         = $id;
+            $data['productId']  = $id = customEncryptionDecryption($id, 'decrypt');
+            $data['categories'] = Category::where(['status' => '1'])
+                                            ->select('id','title')
+                                            ->get();
+            $data['details']    = $details = $this->model->where(['id' => $id])->first();
             
             if ($request->isMethod('POST')) {
                 if ($id == null) {
@@ -251,24 +268,17 @@ class ProductsController extends Controller
                     return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                 }
                 $validationCondition = array(
-                    'distribution_area_id'  => 'required',
-                    'job_title_1'           => 'required',
-                    'full_name'             => 'required',
-                    'company'               => 'required',
-                    'email'                 => 'required|regex:'.config('global.EMAIL_REGEX'),
-                    // 'phone_no'              => 'required',
-                    'profile_pic'           => 'mimes:'.config('global.IMAGE_FILE_TYPES').'|max:'.config('global.IMAGE_MAX_UPLOAD_SIZE'),
+                    'category_id'   => 'required',
+                    'title'         => 'required',
+                    'rate_per_pcs'  => 'required|regex:'.config('global.VALID_AMOUNT_REGEX'),
+                    'mrp'           => 'nullable|regex:'.config('global.VALID_AMOUNT_REGEX'),
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => 'Please select distribution area',
-                    'job_title_1.required'          => 'Please enter job title 1',
-                    'full_name.required'            => 'Please enter name 1',
-                    'company.required'              => 'Please enter company',
-                    'email.required'                => trans('custom_admin.error_email'),
-                    'email.regex'                   => trans('custom_admin.error_valid_email'),
-                    'email.unique'                  => trans('custom_admin.error_email_unique'),
-                    // 'phone_no.required'             => trans('custom_admin.error_enter_phone_no'),
-                    'profile_pic.mimes'             => trans('custom_admin.error_image_mimes'),
+                    'category_id.required'  => trans('custom_admin.error_category'),
+                    'title.required'        => trans('custom_admin.error_title'),
+                    'rate_per_pcs.required' => trans('custom_admin.error_rate_per_pcs'),
+                    'rate_per_pcs.regex'    => trans('custom_admin.error_valid_amount'),
+                    'mrp.regex'             => trans('custom_admin.error_valid_amount'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -276,75 +286,19 @@ class ProductsController extends Controller
                     $this->generateToastMessage('error', $validationFailedMessages, false);
                     return redirect()->back()->withInput();
                 } else {
-                    $updateData     = [];
-                    $validationFlag = false;
-                    // Unique Email validation for User type "Distributor"
-                    $userEmailExistCheck = $this->model->where('id', '<>', $id)
-                                                ->where(['email' => $request->email, 'type' => 'D'])
-                                                ->count();
-                    if ($userEmailExistCheck > 0) {
-                        $validationFlag = true;
-                    }
-                    
-                    if (!$validationFlag) {
-                        $profilePic         = $request->file('profile_pic');
-                        $uploadedImage      = '';
-                        $previousFileName   = null;
-                        $unlinkStatus       = false;
-                        
-                        if ($profilePic != '') {
-                            if ($details['profile_pic'] != null) {
-                                $previousFileName           = $details['profile_pic'];
-                                $unlinkStatus               = true;
-                            }
-                            $uploadedImage                  = singleImageUpload($this->modelName, $profilePic, 'distributor', $this->pageRoute, true, $previousFileName, $unlinkStatus);
-                            $updateData['profile_pic']      = $uploadedImage;
-                        }
+                    $updateData                 = [];
+                    $updateData['category_id']  = $request->category_id ?? null;
+                    $updateData['title']        = $request->title ?? null;
+                    $updateData['slug']         = generateUniqueSlug($this->model, trim($request->title,' '), $data['id']);
+                    $updateData['rate_per_pcs'] = $request->rate_per_pcs ?? 0;
+                    $updateData['mrp']          = $request->mrp ?? null;
+                    $update = $details->update($updateData);
 
-                        if ($request->full_name == trim($request->full_name) && strpos($request->full_name, ' ') !== false) {
-                            $explodedFullName               = explode(' ', $request->full_name);
-    
-                            $updateData['first_name']       = $explodedFullName[0];
-                            $updateData['last_name']        = $explodedFullName[1];
-                        } else {
-                            $updateData['first_name']       = $request->full_name ?? null;
-                        }
-                        
-                        $updateData['job_title_1']          = $request->job_title_1 ?? null;
-                        $updateData['full_name']            = $request->full_name ?? null;
-                        $updateData['email']                = $request->email ?? null;
-                        $updateData['company']              = $request->company ?? null;
-                        $updateData['phone_no']             = $request->phone_no ?? null;
-                        $updateData['distribution_area_id'] = $request->distribution_area_id ?? null;
-                        $update = $this->model->where(['id' => $id])->update($updateData);
-                        
-                        if ($update) {
-                            // Start :: update data to user_details table
-                            UserDetail::where(['user_id' => $id])->update([
-                                'job_title_2'   => $request->job_title_2 ?? null,
-                                'full_name_2'   => $request->full_name_2 ?? null,
-                                'phone_no_2'    => $request->phone_no_2 ?? null,
-                                'whatsapp_no'   => $request->whatsapp_no ?? null,
-                                'street'        => $request->street ?? null,
-                                'city'          => $request->city ?? null,
-                                'district_region'=> $request->district_region ?? null,
-                                'state_province'=> $request->state_province ?? null,
-                                'zip'           => $request->zip ?? null,
-                                'notes'         => $request->notes ?? null
-                            ]);
-                            // End :: update data to user_details table                        
-
-                            $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
-                            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
-                        } else {
-                            // If files uploaded then delete those files
-                            unlinkFiles($uploadedImage, $this->pageRoute, false);
-                            
-                            $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
-                            return redirect()->back()->withInput();
-                        }
+                    if ($update) {
+                        $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
+                        return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                     } else {
-                        $this->generateToastMessage('error', trans('custom_admin.error_email_unique'), false);
+                        $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
                         return redirect()->back()->withInput();
                     }
                 }

@@ -48,11 +48,11 @@
 								@endif
 									<th class="zeroColumn table-th-display-none"></th>
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
-									<th>Job Title 1</th>
+									<th>@lang('custom_admin.label_job_title_1')</th>
 									<th>@lang('custom_admin.label_name') 1</th>
-									<th>Phone 1</th>
-									<th>WhatsAppNo</th>
-									<th>Company</th>
+									<th>@lang('custom_admin.label_phone') 1</th>
+									<th>@lang('custom_admin.label_whatsapp_no')</th>
+									<th>@lang('custom_admin.label_company')</th>
 									<th>@lang('custom_admin.label_email')</th>
 									{{-- <th class="modifiedColumn">@lang('custom_admin.label_modified')</th> --}}
 									<th class="row_status">@lang('custom_admin.label_status')</th>

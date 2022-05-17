@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 use App\Traits\GeneralMethods;
 use App\Models\DistributionArea;
+use App\Models\User;
+use App\Models\Store;
 use DataTables;
 
 class DistributionAreasController extends Controller
@@ -191,8 +193,8 @@ class DistributionAreasController extends Controller
                     'title'         => 'required|unique:'.($this->model)->getTable().',title,NULL,id,deleted_at,NULL',
                 );
                 $validationMessages = array(
-                    'title.required'        => 'Please enter distribution area.',
-                    'title.unique'          => 'Please enter unique distribution area.',
+                    'title.required'        => trans('custom_admin.error_distribution_area'),
+                    'title.unique'          => trans('custom_admin.error_unique_distribution_area'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -255,8 +257,8 @@ class DistributionAreasController extends Controller
                     'title' => 'required|unique:'.($this->model)->getTable().',title,'.$id.',id,deleted_at,NULL',
                 );
                 $validationMessages = array(
-                    'title.required'    => 'Please enter distribution area.',
-                    'title.unique'      => 'Please enter unique distribution area.',
+                    'title.required'    => trans('custom_admin.error_distribution_area'),
+                    'title.unique'      => trans('custom_admin.error_unique_distribution_area'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -310,28 +312,20 @@ class DistributionAreasController extends Controller
                     $details = $this->model->where('id', $id)->first();
                     if ($details != null) {
                         if ($details->status == '1') {
-                            // $isRelatedCityExist     = City::where(['state_id' => $id])->count();
-                            // $isRelatedSeasonExist   = Season::where(['state_id' => $id])->count();
-                            // $isRelatedRegionExist   = Region::where(['state_id' => $id])->count();
-                            // if ($isRelatedCityExist || $isRelatedSeasonExist || $isRelatedRegionExist) {
-                            //     $title      = trans('custom_admin.message_warning');
-                            //     $message    = trans('custom_admin.message_inactive_related_records_exist');
-                            //     $type       = 'warning';
-                            // } else {
-                            //     $details->status = '0';
-                            //     $details->save();
+                            $isRelatedDistributorExist  = User::where(['distribution_area_id' => $id, 'type' => 'D', 'status' => '1'])->count();
+                            $isRelatedStoreExist        = Store::where(['distribution_area_id' => $id, 'status' => '1'])->count();
+                            if ($isRelatedDistributorExist || $isRelatedStoreExist) {
+                                $title      = trans('custom_admin.message_warning');
+                                $message    = trans('custom_admin.message_inactive_related_distributor_or_store_records_exist');
+                                $type       = 'warning';
+                            } else {
+                                $details->status = '0';
+                                $details->save();
                                 
-                            //     $title      = trans('custom_admin.message_success');
-                            //     $message    = trans('custom_admin.success_status_updated_successfully');
-                            //     $type       = 'success';
-                            // }
-
-                            $details->status = '0';
-                            $details->save();
-                            
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_status_updated_successfully');
-                            $type       = 'success';
+                                $title      = trans('custom_admin.message_success');
+                                $message    = trans('custom_admin.success_status_updated_successfully');
+                                $type       = 'success';
+                            }
                         } else if ($details->status == '0') {
                             $details->status = '1';
                             $details->save();
@@ -373,30 +367,21 @@ class DistributionAreasController extends Controller
                 if ($id != null) {
                     $details = $this->model->where('id', $id)->first();
                     if ($details != null) {
-                        // $isRelatedCityExist     = City::where(['state_id' => $id])->count();
-                        // $isRelatedSeasonExist   = Season::where(['state_id' => $id])->count();
-                        // $isRelatedRegionExist   = Region::where(['state_id' => $id])->count();
-                        // if ($isRelatedCityExist || $isRelatedSeasonExist || $isRelatedRegionExist) {
-                        //     $title      = trans('custom_admin.message_warning');
-                        //     $message    = trans('custom_admin.message_delete_related_portfolio_exist');
-                        //     $type       = 'warning';
-                        // } else {
-                        //     $delete = $details->delete();
-                        //     if ($delete) {
-                        //         $title      = trans('custom_admin.message_success');
-                        //         $message    = trans('custom_admin.success_data_deleted_successfully');
-                        //         $type       = 'success';
-                        //     } else {
-                        //         $message    = trans('custom_admin.error_took_place_while_deleting');
-                        //     }
-                        // }
-                        $delete = $details->delete();
-                        if ($delete) {
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_data_deleted_successfully');
-                            $type       = 'success';
+                        $isRelatedDistributorExist  = User::where(['distribution_area_id' => $id, 'type' => 'D'])->count();
+                        $isRelatedStoreExist        = Store::where(['distribution_area_id' => $id])->count();
+                        if ($isRelatedDistributorExist || $isRelatedStoreExist) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_delete_related_distributor_or_store_records_exist');
+                            $type       = 'warning';
                         } else {
-                            $message    = trans('custom_admin.error_took_place_while_deleting');
+                            $delete = $details->delete();
+                            if ($delete) {
+                                $title      = trans('custom_admin.message_success');
+                                $message    = trans('custom_admin.success_data_deleted_successfully');
+                                $type       = 'success';
+                            } else {
+                                $message    = trans('custom_admin.error_took_place_while_deleting');
+                            }
                         }
                     } else {
                         $message = trans('custom_admin.error_invalid');
@@ -490,64 +475,58 @@ class DistributionAreasController extends Controller
 
         try {
             if ($request->ajax()) {
-                $selectedIds    = $request->selectedIds;
-                $actionType     = $request->actionType;
-                $blockCount     = 0;
+                $selectedIds        = $request->selectedIds;
+                $actionType         = $request->actionType;
+                $blockStatusCount   = $blockDeleteCount = 0;
                 
-                // if (count($selectedIds) > 0) {
-                //     if ($actionType == 'active') {
-                //         $this->model->whereIn('id', $selectedIds)->update(['status' => '1']);
-                        
-                //         $title      = trans('custom_admin.message_success');
-                //         $message    = trans('custom_admin.success_status_updated_successfully');
-                //         $type       = 'success';
-                //     } else {
-                //         foreach ($selectedIds as $key => $id) {
-                //             $isRelatedCityExist     = City::where(['state_id' => $id])->count();
-                //             $isRelatedSeasonExist   = Season::where(['city_id' => $id])->count();
-                //             $isRelatedRegionExist   = Region::where(['city_id' => $id])->count();
-                //             if ($isRelatedCityExist || $isRelatedSeasonExist || $isRelatedRegionExist) {
-                //                 $blockCount++;
-                //             } else {
-                //                 if ($actionType ==  'inactive') {
-                //                     $this->model->where('id', $id)->update(['status' => '0']);
-                //                     $message    = trans('custom_admin.success_status_updated_successfully');
-                //                 } else if ($actionType ==  'delete') {
-                //                     $this->model->where('id', $id)->delete();
-                //                     $message    = trans('custom_admin.success_data_deleted_successfully');
-                //                 }
-                //             }
-                //         }
-                        
-                //         if ($blockCount) {
-                //             $title          = trans('custom_admin.message_warning');
-                //             if ($actionType ==  'inactive') {
-                //                 $message    = trans('custom_admin.message_inactive_related_records_exist');
-                //             } else {
-                //                 $message    = trans('custom_admin.message_delete_related_records_exist');
-                //             }
-                //             $type           = 'warning';
-                //         } else {
-                //             $title          = trans('custom_admin.message_success');
-                //             $type           = 'success';
-                //         }
-                //     }
-                // } else {
-                //     $message = trans('custom_admin.error_invalid');
-                // }
-
                 if (count($selectedIds) > 0) {
-                    if ($actionType ==  'active') {
+                    if ($actionType == 'active') {
                         $this->model->whereIn('id', $selectedIds)->update(['status' => '1']);
-                    } else if ($actionType ==  'inactive') {
-                        $this->model->whereIn('id', $selectedIds)->update(['status' => '0']);
+                        
+                        $title      = trans('custom_admin.message_success');
                         $message    = trans('custom_admin.success_status_updated_successfully');
-                    } else if ($actionType ==  'delete') {
-                        $this->model->where('id', $selectedIds)->delete();
-                        $message    = trans('custom_admin.success_data_deleted_successfully');
+                        $type       = 'success';
+                    } else if ($actionType == 'inactive') {
+                        foreach ($selectedIds as $key => $id) {
+                            $isRelatedDistributorExist  = User::where(['distribution_area_id' => $id, 'type' => 'D', 'status' => '1'])->count();
+                            $isRelatedStoreExist        = Store::where(['distribution_area_id' => $id, 'status' => '1'])->count();
+                            if ($isRelatedDistributorExist || $isRelatedStoreExist) {
+                                $blockStatusCount++;
+                            } else {
+                                $this->model->where('id', $id)->update(['status' => '0']);
+                                $message    = trans('custom_admin.success_status_updated_successfully');
+                            }
+                        }
+                        
+                        if ($blockStatusCount) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_inactive_related_distributor_or_store_records_exist');
+                            $type       = 'warning';
+                        } else {
+                            $title      = trans('custom_admin.message_success');
+                            $type       = 'success';
+                        }
+                    } else if ($actionType == 'delete') {
+                        foreach ($selectedIds as $key => $id) {
+                            $isRelatedDistributorExist  = User::where(['distribution_area_id' => $id, 'type' => 'D'])->count();
+                            $isRelatedStoreExist        = Store::where(['distribution_area_id' => $id])->count();
+                            if ($isRelatedDistributorExist || $isRelatedStoreExist) {
+                                $blockDeleteCount++;
+                            } else {
+                                $this->model->where('id', $id)->delete();
+                                $message    = trans('custom_admin.success_data_deleted_successfully');
+                            }
+                        }
+                        
+                        if ($blockDeleteCount) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_delete_related_distributor_or_store_records_exist');
+                            $type       = 'warning';
+                        } else {
+                            $title      = trans('custom_admin.message_success');
+                            $type       = 'success';
+                        }
                     }
-                    $title      = trans('custom_admin.message_success');
-                    $type       = 'success';
                 } else {
                     $message = trans('custom_admin.error_invalid');
                 }

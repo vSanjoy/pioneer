@@ -199,10 +199,10 @@ class DistributorsController extends Controller
                     'profile_pic'           => 'mimes:'.config('global.IMAGE_FILE_TYPES').'|max:'.config('global.IMAGE_MAX_UPLOAD_SIZE'),
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => 'Please select distribution area',
-                    'job_title_1.required'          => 'Please enter job title 1',
-                    'full_name.required'            => 'Please enter name 1',
-                    'company.required'              => 'Please enter company',
+                    'distribution_area_id.required' => trans('custom_admin.error_select_distribution_area'),
+                    'job_title_1.required'          => trans('custom_admin.error_job_title_1'),
+                    'full_name.required'            => trans('custom_admin.error_name_1'),
+                    'company.required'              => trans('custom_admin.error_company'),
                     'email.required'                => trans('custom_admin.error_email'),
                     'email.regex'                   => trans('custom_admin.error_valid_email'),
                     'email.unique'                  => trans('custom_admin.error_email_unique'),
@@ -327,10 +327,10 @@ class DistributorsController extends Controller
                     'profile_pic'           => 'mimes:'.config('global.IMAGE_FILE_TYPES').'|max:'.config('global.IMAGE_MAX_UPLOAD_SIZE'),
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => 'Please select distribution area',
-                    'job_title_1.required'          => 'Please enter job title 1',
-                    'full_name.required'            => 'Please enter name 1',
-                    'company.required'              => 'Please enter company',
+                    'distribution_area_id.required' => trans('custom_admin.error_select_distribution_area'),
+                    'job_title_1.required'          => trans('custom_admin.error_job_title_1'),
+                    'full_name.required'            => trans('custom_admin.error_name_1'),
+                    'company.required'              => trans('custom_admin.error_company'),
                     'email.required'                => trans('custom_admin.error_email'),
                     'email.regex'                   => trans('custom_admin.error_valid_email'),
                     'email.unique'                  => trans('custom_admin.error_email_unique'),

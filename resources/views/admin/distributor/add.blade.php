@@ -21,7 +21,7 @@
 							<div class="row mt-1">
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class="text-dark font-bold">Distribution Area<span class="red_star">*</span></label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_distribution_area')<span class="red_star">*</span></label>
 										<select name="distribution_area_id" id="distribution_area_id" class="form-control">
 											<option value="">--Select--</option>
 										@foreach ($distributionAreas as $item)
@@ -34,7 +34,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">Job Title 1<span class="red_star">*</span></label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_job_title_1')<span class="red_star">*</span></label>
 										{{ Form::text('job_title_1', null, [
                                                                 'id' => 'job_title_1',
                                                                 'class' => 'form-control',
@@ -56,7 +56,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">Job Title 2</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_job_title_2')</label>
 										{{ Form::text('job_title_2', null, [
                                                                 'id' => 'job_title_2',
                                                                 'class' => 'form-control',
@@ -76,7 +76,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">Company<span class="red_star">*</span></label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_company')<span class="red_star">*</span></label>
 										{{ Form::text('company', null, [
                                                                 'id' => 'company',
                                                                 'class' => 'form-control',
@@ -86,7 +86,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">Phone 1</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_phone') 1</label>
 										{{ Form::text('phone_no', null, [
                                                                 'id' => 'phone_no',
                                                                 'class' => 'form-control',
@@ -97,7 +97,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">Phone 2</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_phone') 2</label>
 										{{ Form::text('phone_no_2', null, [
                                                                 'id' => 'phone_no_2',
                                                                 'class' => 'form-control',
@@ -106,7 +106,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">WhatsAppNo</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_whatsapp_no')</label>
 										{{ Form::text('whatsapp_no', null, [
                                                                 'id' => 'whatsapp_no',
                                                                 'class' => 'form-control',
@@ -117,7 +117,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">Street</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_street')</label>
 										{{ Form::textarea('street', null, [
 																		'id' => 'street',
 																		'class' => 'form-control',
@@ -127,7 +127,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">City</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_city')</label>
 										{{ Form::text('city', null, [
 																'id' => 'city',
 																'class' => 'form-control',
@@ -138,7 +138,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">District/Region</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_district_region')</label>
 										{{ Form::text('district_region', null, [
 																	'id' => 'district_region',
 																	'class' => 'form-control',
@@ -147,7 +147,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">State/Province</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_state_province')</label>
 										{{ Form::text('state_province', null, [
 																'id' => 'state_province',
 																'class' => 'form-control',
@@ -158,7 +158,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">Zip/PostalCode</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_zip_postal_code')</label>
 										{{ Form::text('zip', null, [
 																'id' => 'zip',
 																'class' => 'form-control',
@@ -205,7 +205,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">Notes</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_notes')</label>
 										{{ Form::textarea('notes', null, [
 																		'id' => 'notes',
 																		'placeholder' => '',

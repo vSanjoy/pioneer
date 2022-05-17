@@ -97,6 +97,19 @@ $.validator.addMethod("valid_amount", function(value, element) {
     }
 });
 
+// Integer and decimal
+$.validator.addMethod("valid_amount_not_empty", function(value, element) {
+    if (value) {
+        if (/^[0-9]\d*(\.\d+)?$/.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return true;
+    }
+});
+
 // Youtube url checking
 $.validator.addMethod("valid_youtube_url", function(value, element) {
     if (/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/.test(value)) {
@@ -1186,6 +1199,142 @@ $(document).ready(function() {
         }
     });
     // End :: Category Form //
+
+    // Start :: Product Form //
+    $("#createProductForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            category_id: {
+                required: true,
+            },
+            title: {
+                required: true,
+            },
+            rate_per_pcs: {
+                required: true,
+                valid_amount: true,
+            },
+            mrp: {
+                // required: true,
+                valid_amount_not_empty: true,
+            },
+        },
+        messages: {
+            category_id: {
+                required: "Please select category.",
+            },
+            title: {
+                required: "Please enter title.",
+            },
+            rate_per_pcs: {
+                required: "Please enter rate per pcs.",
+                valid_amount: "Please enter valid amount.",
+            },
+            mrp: {
+                // required: "Please enter mrp.",
+                valid_amount_not_empty: "Please enter valid amount.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+                $('#lang-tabs a[href="#' + jQuery(validator.errorList[0].element).closest(".tab-pane").attr('id') + '"]').tab('show');
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            if ($(element).attr('id') == 'category_id') {
+                error.insertAfter($(element).parents('div#category-div'));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+
+    $("#updateProductForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            category_id: {
+                required: true,
+            },
+            title: {
+                required: true,
+            },
+            rate_per_pcs: {
+                required: true,
+                valid_amount: true,
+            },
+            mrp: {
+                // required: true,
+                valid_amount_not_empty: true,
+            },
+        },
+        messages: {
+            category_id: {
+                required: "Please select category.",
+            },
+            title: {
+                required: "Please enter title.",
+            },
+            rate_per_pcs: {
+                required: "Please enter rate per pcs.",
+                valid_amount: "Please enter valid amount.",
+            },
+            mrp: {
+                // required: "Please enter mrp.",
+                valid_amount_not_empty: "Please enter valid amount.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+                $('#lang-tabs a[href="#' + jQuery(validator.errorList[0].element).closest(".tab-pane").attr('id') + '"]').tab('show');
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            if ($(element).attr('id') == 'category_id') {
+                error.insertAfter($(element).parents('div#category-div'));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Product Form //
     
 
     /***************************** Start :: Data table and Common Functionalities ****************************/

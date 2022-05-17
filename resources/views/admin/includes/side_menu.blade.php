@@ -149,7 +149,7 @@ $getSiteSettings = getSiteSettings();
 			@if ( ($isSuperAdmin) || in_array('product.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $productRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $productRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
-						<i data-feather="file-text" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_product')</span>
+						<i data-feather="life-buoy" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_product')</span>
 					</a>
 					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $productRoutes))in @endif">
 						<li class="sidebar-item">

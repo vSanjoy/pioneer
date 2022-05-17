@@ -48,7 +48,10 @@
 								@endif
 									<th class="zeroColumn table-th-display-none"></th>
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
-									<th>@lang('custom_admin.label_distribution_area')</th>
+									<th>@lang('custom_admin.label_category')</th>
+									<th>@lang('custom_admin.label_product_name')</th>
+									<th>@lang('custom_admin.label_rate_per_pcs')</th>
+									<th>@lang('custom_admin.label_mrp')</th>
 									{{-- <th class="modifiedColumn">@lang('custom_admin.label_modified')</th> --}}
 									<th class="row_status">@lang('custom_admin.label_status')</th>
 									<th class="actions">@lang('custom_admin.label_action')</th>

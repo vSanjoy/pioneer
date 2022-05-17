@@ -30,23 +30,26 @@ $(document).ready(function() {
 				type: 'POST',
 				data: function(data) {},
 	        },
-	        columns: [		
+	        columns: [
 			@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
-			{
-				data: 'id',
-				orderable: false,
-				searchable: false,
-				render: function ( data, type, row ) {
-					if ( type === 'display' ) {
-						return '<div class="custom-control custom-checkbox"><input type="checkbox" class="delete_checkbox" id="customCheck2_'+row.id+'" value="'+row.id+'"><label class="" for="customCheck2_'+row.id+'"></label></div>';
-					}
-					return data;
+				{
+					data: 'id',
+					orderable: false,
+					searchable: false,
+					render: function ( data, type, row ) {
+						if ( type === 'display' ) {
+							return '<div class="custom-control custom-checkbox"><input type="checkbox" class="delete_checkbox" id="customCheck2_'+row.id+'" value="'+row.id+'"><label class="" for="customCheck2_'+row.id+'"></label></div>';
+						}
+						return data;
+					},
 				},
-			},
-		@endif	
+            @endif
 				{data: 'id', name: 'id'},
 	            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+				{data: 'category', name: 'category'},
 				{data: 'title', name: 'title'},
+				{data: 'rate_per_pcs', name: 'rate_per_pcs', orderable: false, searchable: false},
+				{data: 'mrp', name: 'mrp', orderable: false, searchable: false},
 				// {data: 'updated_at', name: 'updated_at', orderable: false, searchable: false},
 				{data: 'status', name: 'status'},
 			@if ($isAllow || in_array($editUrl, $allowedRoutes))
@@ -54,32 +57,32 @@ $(document).ready(function() {
 			@endif
 	        ],
 			columnDefs: [
-				{
-			@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
-				targets: [ 1 ],
-			@else
-				targets: [ 0 ],
-			@endif
-				visible: false,
-				searchable: false,
-				},
-			],
-	        order: [
-			@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
-				[1, 'desc']
-			@else
-				[0, 'desc']
-			@endif
-			],
-			pageLength: 25,
-			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
-			fnDrawCallback: function(settings) {
-				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
-            		$('#list-table_paginate').hide();
-        		} else {
-            		$('#list-table_paginate').show();
-        		}
-			},
+                {
+            @if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
+                targets: [ 1 ],
+            @else
+                targets: [ 0 ],
+            @endif
+                visible: false,
+                searchable: false,
+                },
+            ],
+            order: [
+            @if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
+                [1, 'desc']
+            @else
+                [0, 'desc']
+            @endif
+            ],
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
+            fnDrawCallback: function(settings) {
+                if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
+                    $('#list-table_paginate').hide();
+                } else {
+                    $('#list-table_paginate').show();
+                }
+            },
 	});
 	// Prevent alert box from datatable & console error message
 	$.fn.dataTable.ext.errMode = 'none';	
@@ -103,19 +106,19 @@ $(document).ready(function() {
 	});
 
 	// Bulk Action
-	$('.bulkAction').on('click', function() {
-		var selectedIds = [];
-		$("input:checkbox[class=delete_checkbox]:checked").each(function () {
-			selectedIds.push($(this).val());
-		});
+    $('.bulkAction').on('click', function() {
+        var selectedIds = [];
+        $("input:checkbox[class=delete_checkbox]:checked").each(function () {
+            selectedIds.push($(this).val());
+        });
 
-		if (selectedIds.length > 0) {
-			var actionType = $(this).data('action-type');
-			bulkActions('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType, dTable);
-		} else {
-			toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
-		}
-	});
+        if (selectedIds.length > 0) {
+            var actionType = $(this).data('action-type');
+            bulkActions('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType, dTable);
+        } else {
+            toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
+        }
+    });
 	@endif
 
 });

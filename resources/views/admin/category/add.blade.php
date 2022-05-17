@@ -23,8 +23,7 @@
 										{{ Form::text('title', null, [
 																	'id' => 'title',
 																	'placeholder' => '',
-																	'class' => 'form-control',		// slug-generation class is to call generate slug function
-																	// 'data-model'	=> $modelName,	// Used in generate slug
+																	'class' => 'form-control',
 																	'required' => true,
 																]) }}
 									</div>
@@ -50,6 +49,3 @@
 	</div>
 
 @endsection
-
-@push('scripts')
-@endpush

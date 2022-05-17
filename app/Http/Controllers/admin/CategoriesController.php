@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 use App\Traits\GeneralMethods;
 use App\Models\Category;
+use App\Models\Product;
 use DataTables;
 
 class CategoriesController extends Controller
@@ -125,7 +126,7 @@ class CategoriesController extends Controller
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
                         ->addColumn('title', function ($row) {
-                            return excerpts($row->title, 6);
+                            return $row->title;
                         })
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
@@ -243,9 +244,9 @@ class CategoriesController extends Controller
         ];
 
         try {
-            $data['id']                 = $id;
-            $data['categoryId']         = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['details']            = $details = $this->model->where(['id' => $id])->first();
+            $data['id']         = $id;
+            $data['categoryId'] = $id = customEncryptionDecryption($id, 'decrypt');
+            $data['details']    = $details = $this->model->where(['id' => $id])->first();
             
             if ($request->isMethod('POST')) {
                 if ($id == null) {
@@ -308,14 +309,21 @@ class CategoriesController extends Controller
                 if ($id != null) {
                     $details = $this->model->where('id', $id)->first();
                     if ($details != null) {
-                        if ($details->status == 1) {
-                            $details->status = '0';
-                            $details->save();
-                            
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_status_updated_successfully');
-                            $type       = 'success';
-                        } else if ($details->status == 0) {
+                        if ($details->status == '1') {
+                            $isRelatedProductExist   = Product::where(['category_id' => $id, 'status' => '1'])->count();
+                            if ($isRelatedProductExist) {
+                                $title      = trans('custom_admin.message_warning');
+                                $message    = trans('custom_admin.message_inactive_related_product_records_exist');
+                                $type       = 'warning';
+                            } else {
+                                $details->status = '0';
+                                $details->save();
+                                
+                                $title      = trans('custom_admin.message_success');
+                                $message    = trans('custom_admin.success_status_updated_successfully');
+                                $type       = 'success';
+                            }
+                        } else if ($details->status == '0') {
                             $details->status = '1';
                             $details->save();
         
@@ -356,13 +364,20 @@ class CategoriesController extends Controller
                 if ($id != null) {
                     $details = $this->model->where('id', $id)->first();
                     if ($details != null) {
-                        $delete = $details->delete();
-                        if ($delete) {
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_data_deleted_successfully');
-                            $type       = 'success';
+                        $isRelatedProductExist  = Product::where(['category_id' => $id])->count();
+                        if ($isRelatedProductExist) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_delete_related_product_records_exist');
+                            $type       = 'warning';
                         } else {
-                            $message    = trans('custom_admin.error_took_place_while_deleting');
+                            $delete = $details->delete();
+                            if ($delete) {
+                                $title      = trans('custom_admin.message_success');
+                                $message    = trans('custom_admin.success_data_deleted_successfully');
+                                $type       = 'success';
+                            } else {
+                                $message    = trans('custom_admin.error_took_place_while_deleting');
+                            }
                         }
                     } else {
                         $message = trans('custom_admin.error_invalid');
@@ -393,62 +408,56 @@ class CategoriesController extends Controller
 
         try {
             if ($request->ajax()) {
-                $selectedIds    = $request->selectedIds;
-                $actionType     = $request->actionType;
-                $blockCount     = 0;
-
-                // if (count($selectedIds) > 0) {
-                //     if ($actionType ==  'active') {
-                //         $this->model->whereIn('id', $selectedIds)->update(['status' => '1']);
-                        
-                //         $title      = trans('custom_admin.message_success');
-                //         $message    = trans('custom_admin.success_status_updated_successfully');
-                //         $type       = 'success';
-                //     } else {
-                //         foreach ($selectedIds as $key => $id) {
-                //             $isRelatedPostExist = PostCategoryMapping::where('category_id', $id)->count();
-                //             if ($isRelatedPostExist) {
-                //                 $blockCount++;
-                //             } else {
-                //                 if ($actionType ==  'inactive') {
-                //                     $this->model->where('id', $id)->update(['status' => '0']);
-                //                     $message    = trans('custom_admin.success_status_updated_successfully');
-                //                 } else if ($actionType ==  'delete') {
-                //                     $this->model->where('id', $id)->delete();
-                //                     $message    = trans('custom_admin.success_data_deleted_successfully');
-                //                 }
-                //             }
-                //         }
-                        
-                //         if ($blockCount) {
-                //             $title          = trans('custom_admin.message_warning');
-                //             if ($actionType ==  'inactive') {
-                //                 $message    = trans('custom_admin.message_inactive_related_records_exist');
-                //             } else {
-                //                 $message    = trans('custom_admin.message_delete_related_records_exist');
-                //             }
-                //             $type           = 'warning';
-                //         } else {
-                //             $title          = trans('custom_admin.message_success');
-                //             $type           = 'success';
-                //         }
-                //     }
-                // } else {
-                //     $message = trans('custom_admin.error_invalid');
-                // }
+                $selectedIds        = $request->selectedIds;
+                $actionType         = $request->actionType;
+                $blockStatusCount   = $blockDeleteCount = 0;
 
                 if (count($selectedIds) > 0) {
                     if ($actionType ==  'active') {
                         $this->model->whereIn('id', $selectedIds)->update(['status' => '1']);
-                    } else if ($actionType ==  'inactive') {
-                        $this->model->whereIn('id', $selectedIds)->update(['status' => '0']);
+                        
+                        $title      = trans('custom_admin.message_success');
                         $message    = trans('custom_admin.success_status_updated_successfully');
-                    } else if ($actionType ==  'delete') {
-                        $this->model->where('id', $selectedIds)->delete();
-                        $message    = trans('custom_admin.success_data_deleted_successfully');
+                        $type       = 'success';
+                    } else if ($actionType == 'inactive') {
+                        foreach ($selectedIds as $key => $id) {
+                            $isRelatedProductExist = Product::where('category_id', $id)->count();
+                            if ($isRelatedProductExist) {
+                                $blockStatusCount++;
+                            } else {
+                                $this->model->where('id', $id)->update(['status' => '0']);
+                                $message    = trans('custom_admin.success_status_updated_successfully');
+                            }
+                        }
+                        
+                        if ($blockStatusCount) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_inactive_related_product_records_exist');
+                            $type       = 'warning';
+                        } else {
+                            $title      = trans('custom_admin.message_success');
+                            $type       = 'success';
+                        }
+                    } else if ($actionType == 'delete') {
+                        foreach ($selectedIds as $key => $id) {
+                            $isRelatedProductExist = Product::where('category_id', $id)->count();
+                            if ($isRelatedProductExist) {
+                                $blockDeleteCount++;
+                            } else {
+                                $this->model->where('id', $id)->delete();
+                                $message    = trans('custom_admin.success_data_deleted_successfully');
+                            }
+                        }
+                        
+                        if ($blockDeleteCount) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_delete_related_product_records_exist');
+                            $type       = 'warning';
+                        } else {
+                            $title      = trans('custom_admin.message_success');
+                            $type       = 'success';
+                        }
                     }
-                    $title      = trans('custom_admin.message_success');
-                    $type       = 'success';
                 } else {
                     $message = trans('custom_admin.error_invalid');
                 }
