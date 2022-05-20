@@ -258,10 +258,12 @@ class DistributionAreasController extends Controller
                 }
                 $validationCondition = array(
                     'title' => 'required|unique:'.($this->model)->getTable().',title,'.$id.',id,deleted_at,NULL',
+                    'definition' => 'required',
                 );
                 $validationMessages = array(
                     'title.required'    => trans('custom_admin.error_distribution_area'),
                     'title.unique'      => trans('custom_admin.error_unique_distribution_area'),
+                    'definition.required'    => trans('custom_admin.error_distribution_area_definition'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -271,6 +273,7 @@ class DistributionAreasController extends Controller
                 } else {
                     $updateData                 = [];
                     $updateData['title']        = $request->title ?? null;
+                    $updateData['definition']   = $request->definition ?? null;
                     $updateData['slug']         = generateUniqueSlug($this->model, trim($request->title,' '), $data['id']);
                     $updateData['description']  = $request->description ?? null;
                     $update = $details->update($updateData);
