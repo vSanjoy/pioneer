@@ -747,7 +747,7 @@ $(document).ready(function() {
         },
         messages: {
             title: {
-                required: "Please enter distribution area.",
+                required: "Please enter area name.",
             },
         },
         errorClass: 'error invalid-feedback',
@@ -787,7 +787,7 @@ $(document).ready(function() {
         },
         messages: {
             title: {
-                required: "Please enter distribution area.",
+                required: "Please enter area name.",
             },
         },
         errorClass: 'error invalid-feedback',

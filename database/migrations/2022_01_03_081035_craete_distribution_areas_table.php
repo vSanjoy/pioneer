@@ -16,6 +16,7 @@ class CraeteDistributionAreasTable extends Migration
         Schema::create('distribution_areas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title')->nullable();
+            $table->string('definition')->nullable();
             $table->string('slug')->nullable();
             $table->integer('sort')->default('0');
             $table->enum('status', ['0','1'])->default('1')->comment('0=>Inactive, 1=>Active');

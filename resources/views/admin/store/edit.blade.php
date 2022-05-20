@@ -19,7 +19,7 @@
 							<div class="row mt-1">
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_distributor')<span class="red_star">*</span></label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_distribution_area')<span class="red_star">*</span></label>
 										<select name="distribution_area_id" id="distribution_area_id" class="form-control">
 											<option value="">--@lang('custom_admin.label_select')--</option>
 										@foreach ($distributionAreas as $item)
@@ -53,7 +53,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_store_name')</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_store_name')<span class="red_star">*</span></label>
 										{{ Form::text('store_name', $details->store_name ?? null, [
                                                                 'id' => 'store_name',
                                                                 'class' => 'form-control',
