@@ -17,7 +17,7 @@
 								'novalidate' => true ]) }}
 						<div class="form-body mt-4-5">
 							<div class="row">
-								<div class="col-md-12">
+								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_distribution_area_name')<span class="red_star">*</span></label>
 										{{ Form::text('title', null, [
@@ -26,6 +26,12 @@
 																		'class' => 'form-control',
 																		'required' => true,
 																	]) }}
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="text-dark font-bold">@lang('custom_admin.label_distribution_area_definition')<span class="red_star">*</span></label>
+										{{ Form::text('definition', null, ['id' => 'definition','placeholder' => '','class' => 'form-control','required' => true,]) }}
 									</div>
 								</div>
 							</div>
