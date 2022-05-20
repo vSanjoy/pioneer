@@ -462,6 +462,7 @@ return [
     'error_not_authorized'                          => 'You are not authorized.',
     'error_distribution_area'                       => 'Please enter area name.',
     'error_unique_distribution_area'                => 'Please enter unique area name.',
+    'error_distribution_area_definition'            => 'Please enter definition.',
     'error_select_distribution_area'                => 'Please select distribution area.',
     'error_job_title_1'                             => 'Please enter job title 1.',
     'error_name_1'                                  => 'Please enter name 1.',

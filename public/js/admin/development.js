@@ -744,10 +744,16 @@ $(document).ready(function() {
             title: {
                 required: true,
             },
+            definition: {
+                required: true,
+            },
         },
         messages: {
             title: {
                 required: "Please enter area name.",
+            },
+            definition: {
+                required: "Please enter definition.",
             },
         },
         errorClass: 'error invalid-feedback',

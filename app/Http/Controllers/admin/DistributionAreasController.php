@@ -191,10 +191,12 @@ class DistributionAreasController extends Controller
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
                     'title'         => 'required|unique:'.($this->model)->getTable().',title,NULL,id,deleted_at,NULL',
+                    'definition'    => 'required',
                 );
                 $validationMessages = array(
                     'title.required'        => trans('custom_admin.error_distribution_area'),
                     'title.unique'          => trans('custom_admin.error_unique_distribution_area'),
+                    'definition.required'   => trans('custom_admin.error_distribution_area_definition'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -204,6 +206,7 @@ class DistributionAreasController extends Controller
                 } else {
                     $saveData                               = [];
                     $saveData['title']                      = $request->title ?? null;
+                    $saveData['definition']                 = $request->definition ?? null;
                     $saveData['slug']                       = generateUniqueSlug($this->model, trim($request->title,' '));
                     $saveData['sort']                       = generateSortNumber($this->model);
                     $save = $this->model->create($saveData);
