@@ -211,6 +211,12 @@ return [
     'label_product'                                 => 'Product',
     'label_add_product'                             => 'Add Product',
     'label_edit_product'                            => 'Edit Product',
+    'label_menu_area_analysis'                      => 'Area Analysis',
+    'label_area_analysis_management'                => 'Area Analysis Management',
+    'label_area_analysis_list'                      => 'Area Analysis List',
+    'label_area_analysis'                           => 'Area Analysis',
+    'label_add_area_analysis'                       => 'Add Area Analysis',
+    'label_edit_area_analysis'                      => 'Edit Area Analysis',
     'label_subject'                                 => 'Subject',
     'label_location'                                => 'Location',
     'label_reset_password_link'                     => 'Reset Password Link',
@@ -326,6 +332,13 @@ return [
     'label_rate_per_pcs'                            => 'Rate Per Pcs',
     'label_mrp'                                     => 'MRP',
     'label_product_name'                            => 'Product Name',
+    'label_season'                                  => 'Season',
+    'label_analysis_date'                           => 'Analysis Date',
+    'label_analysis_action'                         => 'Action',
+    'label_target_monthly_sales'                    => 'Target Monthly Sales',
+    'label_type_of_analysis'                        => 'Type of Analysis',
+    'label_why'                                     => 'Why',
+    'label_comment'                                 => 'Comment',
 
     
     // Buttons

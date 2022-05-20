@@ -168,6 +168,32 @@ $getSiteSettings = getSiteSettings();
 				</li>
 			@endif
 
+			<!-- Area Analysis Management Start -->
+			@php
+			$areaAnalysisRoutes = ['areaAnalysis.list','areaAnalysis.add','areaAnalysis.edit','areaAnalysis.sort'];
+			@endphp
+			@if ( ($isSuperAdmin) || in_array('areaAnalysis.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $areaAnalysisRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $areaAnalysisRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="life-buoy" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_area_analysis')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $areaAnalysisRoutes))in @endif">
+						<li class="sidebar-item">
+							<a href="{{ route('admin.areaAnalysis.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
+							</a>
+						</li>
+						@if ( ($isSuperAdmin) || (in_array($currentPage, $cmsRoutes)) )
+						<li class="sidebar-item">
+							<a href="{{ route('admin.areaAnalysis.add') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_add')</span>
+							</a>
+						</li>
+						@endif
+					</ul>
+				</li>
+			@endif
+
 			<!-- Website Settings Management Start -->
 			@php
 			$siteSettingRoutes 	= ['website-settings'];

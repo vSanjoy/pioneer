@@ -1551,66 +1551,6 @@ $(document).ready(function() {
     });
 
     // $("#settlement_status").select2();
-
-
-    // Player Edit Profile on changes
-    $(document).on('change', '.registrationCity', function() {
-		var city = $(this).val();
-        
-        if (city != '') {
-            $('#playing_region').html('<option value="">--Select--</option>');
-            $('#preferred_home_court').html('<option value="">--Select--</option>');
-
-            // Getting regions
-            getRegions(city);
-        } else {
-            $('#playing_region').html('<option value="">--Select--</option>');
-            $('#preferred_home_court').html('<option value="">--Select--</option>');
-        }
-	});
-    $(document).on('change', '#playing_region', function() {
-        var city    = $('#city_id').val();
-        var region  = $('#playing_region').val();
-
-        if (city != '' && region != '') {
-            $('.preloader').show();
-            var regionWisePreferredHomeCourtUrl = adminPanelUrl + '/player/ajax-region-wise-preferred-home-court-and-league';
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: regionWisePreferredHomeCourtUrl,
-                method: 'POST',
-                data: {
-                    city_id: city,
-                    region_id: region,
-                },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.type == 'success') {
-                        $('.preloader').hide();
-                        $('#preferred_home_court').html(response.options);
-
-                        // Select your league
-                        $('#select-league').show(500);
-                        $('#league-checkboxes').html(response.leagues);
-                    } else {
-                        $('#preferred_home_court').html('<option value="">--Select--</option>');
-
-                        $('#select-league').hide(500);
-                        $('#league-checkboxes').html('');
-                    }
-                }
-            });
-        } else {
-            $('#preferred_home_court').html('<option value="">--Select--</option>');
-
-            $('#select-league').hide(500);
-            $('#league-checkboxes').html('');
-        }
-    });
-
-
 });
 
 // Start :: Admin List Actions //
@@ -2139,32 +2079,3 @@ $(document).on('click', '.clickToCopy', function(e) {
         $('#password').focus();
     }
 });
-
-
-// Get regions
-function getRegions(city) {
-    if (city != '') {
-        $('.preloader').show();
-        var cityWiseRegionUrl = adminPanelUrl + '/player/ajax-city-wise-region';
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: cityWiseRegionUrl,
-            method: 'POST',
-            data: {
-                city_id: city,
-            },
-            dataType: 'json',
-            success: function (response) {
-                if (response.type == 'success') {
-                    $('.preloader').hide();
-                    $('#playing_region').html(response.options);
-                } else {
-                    $('#playing_region').html('<option value="">--Select--</option>');
-                    $('#preferred_home_court').html('<option value="">--Select--</option>');
-                }
-            }
-        });
-    }
-}

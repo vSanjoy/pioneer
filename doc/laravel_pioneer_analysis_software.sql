@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2022 at 09:39 AM
+-- Generation Time: May 20, 2022 at 03:17 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -20,6 +20,54 @@ SET time_zone = "+00:00";
 --
 -- Database: `laravel_pioneer_analysis_software`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `up_area_analysis`
+--
+
+CREATE TABLE `up_area_analysis` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `season_id` int(11) DEFAULT NULL COMMENT 'Id from seasons table',
+  `year` int(11) DEFAULT NULL,
+  `analysis_date` timestamp NULL DEFAULT NULL,
+  `distribution_area_id` int(11) DEFAULT NULL COMMENT 'Id from distribution_areas table',
+  `distributor_id` int(11) DEFAULT NULL COMMENT 'Id from distributors table',
+  `store_id` int(11) DEFAULT NULL COMMENT 'Id from stores table',
+  `category_id` int(11) DEFAULT NULL COMMENT 'Id from categories table',
+  `product_id` int(11) DEFAULT NULL COMMENT 'Id from products table',
+  `target_monthly_sales` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type_of_analysis` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `result` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `why` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `comment` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `up_area_analysis_details`
+--
+
+CREATE TABLE `up_area_analysis_details` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `area_analysis_id` int(11) DEFAULT NULL COMMENT 'Id from area_analysis table',
+  `distributor_id` int(11) DEFAULT NULL COMMENT 'Id from distributors table',
+  `result` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `why` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `commented_by` enum('D','SA','A','S') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'D' COMMENT 'D=>Distributor, SA=>Super Admin, A=>Admin, S=>Store Manager',
+  `is_viewed` enum('N','Y') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT 'N=>No, Y=>Yes',
+  `status` enum('0','1','2') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active, 2=>Blocked',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -114,7 +162,10 @@ INSERT INTO `up_migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2022_05_09_111152_create_user_details_table', 2),
 (9, '2022_05_13_065830_create_stores_table', 3),
 (10, '2022_05_16_125023_create_categories_table', 4),
-(11, '2022_05_16_131654_create_products_table', 5);
+(11, '2022_05_16_131654_create_products_table', 5),
+(12, '2022_05_20_092726_create_area_analysis_table', 6),
+(13, '2022_05_20_095527_create_area_analysis_details_table', 7),
+(14, '2022_05_20_103233_create_seasons_table', 8);
 
 -- --------------------------------------------------------
 
@@ -270,6 +321,32 @@ CREATE TABLE `up_role_permissions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `up_seasons`
+--
+
+CREATE TABLE `up_seasons` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sort` int(11) NOT NULL DEFAULT 0,
+  `status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `up_seasons`
+--
+
+INSERT INTO `up_seasons` (`id`, `title`, `slug`, `sort`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'High Season', 'high-season', 0, '1', '2022-05-20 10:34:40', '2022-05-20 10:34:40', NULL),
+(2, 'Incentive Season', 'incentive-season', 1, '1', '2022-05-20 10:34:40', '2022-05-20 10:34:40', NULL),
+(3, 'Mid Season', 'mid-season', 2, '1', '2022-05-20 10:34:56', '2022-05-20 10:34:56', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `up_stores`
 --
 
@@ -304,7 +381,7 @@ CREATE TABLE `up_stores` (
 --
 
 INSERT INTO `up_stores` (`id`, `distribution_area_id`, `name_1`, `name_2`, `store_name`, `slug`, `phone_no_1`, `whatsapp_no_1`, `phone_no_2`, `whatsapp_no_2`, `street`, `district_region`, `zip`, `beat_name`, `email`, `sale_size_category`, `integrity`, `notes`, `sort`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 3, 'Store Name 11', 'Store Name 2', 'Dipankar Stores', 'dipankar-stores', '987543210', '9876543211', '9876543212', '9876543213', 'M.G. Road', 'Kolkata', '700033', 'Beat name', 'dipankarstores@yopmail.com', 'L', 'A', 'Test notes.', 0, '1', '2022-05-13 04:39:17', '2022-05-17 06:38:57', NULL);
+(1, 1, 'Store Name 11', 'Store Name 2', 'Dipankar Stores', 'dipankar-stores', '987543210', '9876543211', '9876543212', '9876543213', 'M.G. Road', 'Kolkata', '700033', 'Beat name', 'dipankarstores@yopmail.com', 'L', 'A', 'Test notes.', 0, '1', '2022-05-13 04:39:17', '2022-05-20 07:12:31', NULL);
 
 -- --------------------------------------------------------
 
@@ -440,6 +517,18 @@ INSERT INTO `up_website_settings` (`id`, `from_email`, `to_email`, `website_titl
 --
 
 --
+-- Indexes for table `up_area_analysis`
+--
+ALTER TABLE `up_area_analysis`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `up_area_analysis_details`
+--
+ALTER TABLE `up_area_analysis_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `up_categories`
 --
 ALTER TABLE `up_categories`
@@ -476,6 +565,12 @@ ALTER TABLE `up_role_pages`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `up_seasons`
+--
+ALTER TABLE `up_seasons`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `up_stores`
 --
 ALTER TABLE `up_stores`
@@ -504,6 +599,18 @@ ALTER TABLE `up_website_settings`
 --
 
 --
+-- AUTO_INCREMENT for table `up_area_analysis`
+--
+ALTER TABLE `up_area_analysis`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `up_area_analysis_details`
+--
+ALTER TABLE `up_area_analysis_details`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `up_categories`
 --
 ALTER TABLE `up_categories`
@@ -519,7 +626,7 @@ ALTER TABLE `up_distribution_areas`
 -- AUTO_INCREMENT for table `up_migrations`
 --
 ALTER TABLE `up_migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `up_products`
@@ -538,6 +645,12 @@ ALTER TABLE `up_roles`
 --
 ALTER TABLE `up_role_pages`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `up_seasons`
+--
+ALTER TABLE `up_seasons`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `up_stores`
