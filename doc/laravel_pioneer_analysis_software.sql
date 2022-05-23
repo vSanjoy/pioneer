@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2022 at 03:17 PM
+-- Generation Time: May 23, 2022 at 08:16 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -424,7 +424,7 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', NULL, 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', NULL, 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653030819, 'Y', '2022-05-06 07:39:45', '2022-05-20 01:43:39', NULL),
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', NULL, 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', NULL, 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653282312, 'Y', '2022-05-06 07:39:45', '2022-05-22 23:35:12', NULL),
 (3, 'Owner', NULL, NULL, 'Tibrewalla', NULL, 'Tibrewalla', NULL, 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'distributor_1652101000.jpg', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-05-09 06:16:32', '2022-05-17 12:08:32', NULL);
 
 -- --------------------------------------------------------
