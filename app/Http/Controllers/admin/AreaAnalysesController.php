@@ -20,16 +20,16 @@ use App\Models\Store;
 use App\Models\DistributionArea;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\AreaAnalysis;
+use App\Models\AreaAnalyses;
 use App\Models\AreaAnalysisDetail;
 use DataTables;
 
-class AreaAnalysisController extends Controller
+class AreaAnalysesController extends Controller
 {
     use GeneralMethods;
-    public $controllerName  = 'AreaAnalysis';
+    public $controllerName  = 'AreaAnalyses';
     public $management;
-    public $modelName       = 'AreaAnalysis';
+    public $modelName       = 'AreaAnalyses';
     public $breadcrumb;
     public $routePrefix     = 'admin';
     public $pageRoute       = 'areaAnalysis';
@@ -40,7 +40,7 @@ class AreaAnalysisController extends Controller
     public $statusUrl       = 'areaAnalysis.change-status';
     public $deleteUrl       = 'areaAnalysis.delete';
     public $viewFolderPath  = 'admin.areaAnalysis';
-    public $model           = 'AreaAnalysis';
+    public $model           = 'AreaAnalyses';
 
     /*
         * Function Name : __construct
@@ -53,7 +53,7 @@ class AreaAnalysisController extends Controller
         parent::__construct();
 
         $this->management  = trans('custom_admin.label_menu_area_analysis');
-        $this->model       = new AreaAnalysis();
+        $this->model       = new AreaAnalyses();
 
         // Assign breadcrumb
         $this->assignBreadcrumb();
@@ -127,15 +127,43 @@ class AreaAnalysisController extends Controller
                                 return 'N/A';
                             }
                         })
-                        ->addColumn('sale_size_category', function ($row) {
-                            if ($row->sale_size_category == 'M') {
-                                return 'Medium';
-                            } else if ($row->sale_size_category == 'L') {
-                                return 'Large';
+                        ->addColumn('store_id', function ($row) {
+                            if ($row->storeDetails !== NULL) {
+                                return $row->storeDetails->store_name;
                             } else {
-                                return 'Small';
+                                return 'N/A';
                             }
                         })
+                        ->addColumn('category_id', function ($row) {
+                            if ($row->categoryDetails !== NULL) {
+                                return $row->categoryDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('product_id', function ($row) {
+                            if ($row->productDetails !== NULL) {
+                                return $row->productDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('distributor_id', function ($row) {
+                            if ($row->distributorDetails !== NULL) {
+                                return $row->distributorDetails->full_name;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('season_id', function ($row) {
+                            if ($row->seasonDetails !== NULL) {
+                                return $row->seasonDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                   
+                      
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
                         })
@@ -167,7 +195,7 @@ class AreaAnalysisController extends Controller
                             }                            
                             return $btn;
                         })
-                        ->rawColumns(['distribution_area_id','sale_size_category','status','action'])
+                        ->rawColumns(['status','action'])
                         ->make(true);
             }
             return view($this->viewFolderPath.'.list');
@@ -196,18 +224,36 @@ class AreaAnalysisController extends Controller
         try {
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
+                    'season_id'             => 'required',
+                    'year'                  => 'required',
+                    'analysis_date'         => 'required',
                     'distribution_area_id'  => 'required',
-                    'name_1'                => 'required',
-                    'store_name'            => 'required',
-                    // 'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
+                    'distributor_id'        => 'required',
+                    'store_id'              => 'required',
+                    'category_id'           => 'required',
+                    'product_id'            => 'required',
+                    'target_monthly_sales'  => 'required',
+                    'type_of_analysis'      => 'required',
+                    'action'                => 'required',
+                    'result'                => 'required',
+                    'why'                   => 'required',
+                    'comment'               => 'required',
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => 'Please select distribution area',
-                    'name_1.required'               => 'Please enter name 1',
-                    'store_name.required'           => 'Please enter store name',
-                    // 'email.required'            => trans('custom_admin.error_email'),
-                    // 'email.regex'               => trans('custom_admin.error_valid_email'),
-                    // 'email.unique'              => trans('custom_admin.error_email_unique'),
+                    'season_id.required'                    => trans('custom_admin.error_season_id'),
+                    'year.required'                         => trans('custom_admin.error_year'),
+                    'analysis_date.required'                => trans('custom_admin.error_analysis_date'),
+                    'distribution_area_id.required'         => trans('custom_admin.error_distribution_area'),
+                    'distributor_id.required'               => trans('custom_admin.error_distributor'),
+                    'store_id.required'                     => trans('custom_admin.error_store'),
+                    'category_id.required'                  => trans('custom_admin.error_category'),
+                    'product_id.required'                   => trans('custom_admin.error_product'),
+                    'target_monthly_sales.required'         => trans('custom_admin.error_target_monthly_sales'),
+                    'type_of_analysis.required'             => trans('custom_admin.error_type_of_analysis'),
+                    'action.required'                       => trans('custom_admin.error_action'),
+                    'result.required'                       => trans('custom_admin.error_result'),
+                    'why.required'                          => trans('custom_admin.error_why'),
+                    'comment.required'                      => trans('custom_admin.error_comment'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -216,24 +262,20 @@ class AreaAnalysisController extends Controller
                     return redirect()->back()->withInput();
                 } else {
                     $saveData                           = [];
+                    $saveData['season_id']              = $request->season_id ?? null;
+                    $saveData['year']                   = $request->year ?? null;
+                    $saveData['analysis_date']          = date('Y-m-d', strtotime($request->analysis_date)) ?? null;
                     $saveData['distribution_area_id']   = $request->distribution_area_id ?? null;
-                    $saveData['name_1']                 = $request->name_1 ?? null;
-                    $saveData['name_2']                 = $request->name_2 ?? null;
-                    $saveData['store_name']             = $request->store_name ?? null;
-                    $saveData['slug']                   = generateUniqueSlug($this->model, trim($request->store_name,' '));
-                    $saveData['phone_no_1']             = $request->phone_no_1 ?? null;
-                    $saveData['whatsapp_no_1']          = $request->whatsapp_no_1 ?? null;
-                    $saveData['phone_no_2']             = $request->phone_no_2 ?? null;
-                    $saveData['whatsapp_no_2']          = $request->whatsapp_no_2 ?? null;
-                    $saveData['street']                 = $request->street ?? null;
-                    $saveData['district_region']        = $request->district_region ?? null;
-                    $saveData['zip']                    = $request->zip ?? null;
-                    $saveData['beat_name']              = $request->beat_name ?? null;
-                    $saveData['email']                  = $request->email ?? null;
-                    $saveData['sale_size_category']     = $request->sale_size_category ?? 'S';
-                    $saveData['integrity']              = $request->integrity ?? 'A+';
-                    $saveData['notes']                  = $request->notes ?? null;
-                    $saveData['sort']                   = generateSortNumber($this->model);
+                    $saveData['distributor_id']         = $request->distributor_id ?? null;
+                    $saveData['store_id']               = $request->store_id ?? null;
+                    $saveData['category_id']            = $request->category_id ?? null;
+                    $saveData['product_id']             = $request->product_id ?? null;
+                    $saveData['target_monthly_sales']   = $request->target_monthly_sales ?? null;
+                    $saveData['type_of_analysis']       = $request->type_of_analysis ?? null;
+                    $saveData['action']                 = $request->action ?? null;
+                    $saveData['result']                 = $request->result ?? null;
+                    $saveData['why']                    = $request->why ?? null;
+                    $saveData['comment']                = $request->comment ?? 'null';
                     $save = $this->model->create($saveData);
 
                     if ($save) {

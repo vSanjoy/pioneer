@@ -48,15 +48,13 @@
 								@endif
 									<th class="zeroColumn table-th-display-none"></th>
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
-									<th>@lang('custom_admin.label_name') 1</th>
-									<th>@lang('custom_admin.label_phone') 1</th>
-									<th>@lang('custom_admin.label_beat_name')</th>
+									<th>@lang('custom_admin.label_season')</th>
 									<th>@lang('custom_admin.label_distribution_area')</th>
-									<th>@lang('custom_admin.label_store_email')</th>
+									<th>@lang('custom_admin.label_distributor')</th>
 									<th>@lang('custom_admin.label_store_name')</th>
-									<th>@lang('custom_admin.label_sale_size_category')</th>
-									<th>@lang('custom_admin.label_integrity')</th>
-									{{-- <th class="modifiedColumn">@lang('custom_admin.label_modified')</th> --}}
+									<th>@lang('custom_admin.label_category')</th>
+									<th>@lang('custom_admin.label_product')</th>
+									<th>@lang('custom_admin.label_target_monthly_sales')</th>
 									<th class="row_status">@lang('custom_admin.label_status')</th>
 									<th class="actions">@lang('custom_admin.label_action')</th>
 								</tr>

@@ -1348,6 +1348,138 @@ $(document).ready(function() {
     });
     // End :: Product Form //
     
+    // Start :: Area Analysis Form //
+    $("#createAreaAnalysisForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            season_id: {
+                required: true,
+            },
+            year: {
+                required: true,
+            },
+            analysis_date: {
+                required: true,
+            },
+            distribution_area_id: {
+                required: true,
+            },
+            distributor_id: {
+                required: true,
+            },
+            store_id: {
+                required: true,
+            },
+            category_id: {
+                required: true,
+            },
+            product_id: {
+                required: true,
+            },
+            target_monthly_sales: {
+                required: true,
+            },
+            type_of_analysis: {
+                required: true,
+            },
+            action: {
+                required: true,
+            },
+            result: {
+                required: true,
+            },
+            why: {
+                required: true,
+            },
+            comment: {
+                required: true,
+            },
+        },
+        messages: {
+            season_id: {
+                required: "Please select season.",
+            },
+            year: {
+                required: "Please select year.",
+            },
+            analysis_date: {
+                required: "Please select date.",
+            },
+            distribution_area_id: {
+                required: "Please select distribution area.",
+            },
+            distributor_id: {
+                required: "Please select distributor.",
+            },
+            store_id: {
+                required: "Please select store.",
+            },
+            category_id: {
+                required: "Please select category.",
+            },
+            product_id: {
+                required: "Please select product.",
+            },
+            target_monthly_sales: {
+                required: "Please enter target monthly sales.",
+            },
+            type_of_analysis: {
+                required: "Please enter type of analysis.",
+            },
+            action: {
+                required: "Please enter action.",
+            },
+            result: {
+                required: "Please enter result.",
+            },
+            why: {
+                required: "Please enter why.",
+            },
+            comment: {
+                required: "Please enter comment.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            if ($(element).attr('id') == 'distribution_area_id') {
+                error.insertAfter($(element).parents('div#distribution_area-div'));
+            } else if($(element).attr('id') == 'distributor_id') {
+                error.insertAfter($(element).parents('div#distributor_id-div'));
+            } else if($(element).attr('id') == 'store_id') {
+                error.insertAfter($(element).parents('div#store_id-div'));
+            } else if($(element).attr('id') == 'category_id') {
+                error.insertAfter($(element).parents('div#category_id-div'));
+            } else if($(element).attr('id') == 'product_id') {
+                error.insertAfter($(element).parents('div#product_id-div'));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+
+    // End :: Area Analysis Form //
 
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //

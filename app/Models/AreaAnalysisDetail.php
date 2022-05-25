@@ -20,15 +20,15 @@ class AreaAnalysisDetail extends Model
     protected $guarded = ['id'];    // The field name inside the array is not mass-assignable
 
 	/*
-        * Function name : areaAnalysis
-        * Purpose       : To get area analysis
+        * Function name : areaAnalyses
+        * Purpose       : To get area analyses
         * Author        :
         * Created Date  :
         * Modified Date : 
         * Input Params  : 
         * Return Value  : 
     */
-  	public function areaAnalysis() {
-		return $this->belongsTo('App\Models\AreaAnalysis', 'area_analysis_id');
+  	public function areaAnalyses() {
+		return $this->belongsTo('App\Models\AreaAnalyses', 'area_analysis_id');
 	}
 }

@@ -3,7 +3,7 @@ return [
     'lang_english'                                  => 'English',
     'lang_arabic'                                   => 'Arabic',
 
-    // Labels
+/* Labels */
     'label_hash'                                    => '#',
     'label_hello'                                   => 'Hello',
     'label_extra'                                   => 'Extra',
@@ -339,9 +339,10 @@ return [
     'label_type_of_analysis'                        => 'Type of Analysis',
     'label_why'                                     => 'Why',
     'label_comment'                                 => 'Comment',
+    'label_analysis_action'                         => 'Analysis Action',
 
     
-    // Buttons
+/* Buttons */
     'btn_toggle_navigation'                         => 'Toggle Navigation',
     'btn_submit'                                    => 'Submit',
     'btn_submitting'                                => 'Submitting',
@@ -360,7 +361,7 @@ return [
     'btn_reload_gallery'                            => 'Reload Gallery',
     'btn_reloading_gallery'                         => 'Reloading Gallery',
     
-    // Errors
+/* Errors */
     'error_enter_email'                             => 'Please enter email.',
     'error_enter_valid_email'                       => 'Please enter valid email.',
     'error_enter_password'                          => 'Please enter password.',
@@ -482,9 +483,19 @@ return [
     'error_company'                                 => 'Please enter company.',
     'error_category'                                => 'Please select category.',
     'error_rate_per_pcs'                            => 'Please enter rate per pcs.',
+    'error_year'                                    => 'Please select year.',
+    'error_analysis_date'                           => 'Please select analysis date.',
+    'error_distributor'                             => 'Please select distributor.',
+    'error_store'                                   => 'Please select store.',
+    'error_product'                                 => 'Please select product.',
+    'error_target_monthly_sales'                    => 'Please enter target monthly sales.',
+    'error_type_of_analysis'                        => 'Please enter type of analysis.',
+    'error_action'                                  => 'Please enter action.',
+    'error_why'                                     => 'Please enter why.',
+    'error_comment'                                 => 'Please enter comment.',
     
 
-    // Messages
+/* Messages */
     'message_success'                               => 'Success',
     'message_error'                                 => 'Error',
     'message_warning'                               => 'Warning',
@@ -541,7 +552,7 @@ return [
     'message_inactive_related_distributor_or_store_records_exist'=> 'Related distributor or store exist, inactive those first.',
     'message_delete_related_distributor_or_store_records_exist'=> 'Related distributor or store exist, delete those first.',
     
-    // Success
+/* Success */
     'success_data_added_successfully'               => 'Data has been added successfully.',
     'success_data_updated_successfully'             => 'Data has been updated successfully.',
     'success_data_deleted_successfully'             => 'Data has been deleted successfully.',

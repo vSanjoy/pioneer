@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAreaAnalysisTable extends Migration
+class CreateAreaAnalysesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAreaAnalysisTable extends Migration
      */
     public function up()
     {
-        Schema::create('area_analysis', function (Blueprint $table) {
+        Schema::create('area_analyses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('season_id')->nullable()->comment('Id from seasons table');
             $table->integer('year')->nullable();
@@ -43,6 +43,6 @@ class CreateAreaAnalysisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('area_analysis');
+        Schema::dropIfExists('area_analyses');
     }
 }

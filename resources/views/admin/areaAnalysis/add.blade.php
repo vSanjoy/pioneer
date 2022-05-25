@@ -44,15 +44,15 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_analysis_date')<span class="red_star">*</span></label>
-										{{ Form::text('analysis"_date', null, [
-                                                                'id' => 'analysis"_date',
+										{{ Form::text('analysis_date', null, [
+                                                                'id' => 'analysis_date',
                                                                 'class' => 'form-control date',
                                                                 'placeholder' => '',
                                                                 'required' => true ]) }}
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group" id="distribution_area-div">
 										<label class="text-dark font-bold">@lang('custom_admin.label_distribution_area')<span class="red_star">*</span></label>
 										<select name="distribution_area_id" id="distribution_area_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
 											<option value="">--@lang('custom_admin.label_select')--</option>
@@ -65,7 +65,7 @@
 							</div>
 							<div class="row mt-1">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group" id="distributor_id-div">
 										<label class="text-dark font-bold">@lang('custom_admin.label_distributor')<span class="red_star">*</span></label>
 										<select name="distributor_id" id="distributor_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
 											<option value="">--@lang('custom_admin.label_select')--</option>
@@ -73,7 +73,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group" id="store_id-div">
 										<label class="text-dark font-bold">@lang('custom_admin.label_store')<span class="red_star">*</span></label>
 										<select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
 											<option value="">--@lang('custom_admin.label_select')--</option>
@@ -83,7 +83,7 @@
 							</div>
 							<div class="row mt-1">
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group" id="category_id-div">
 										<label class="text-dark font-bold">@lang('custom_admin.label_category')<span class="red_star">*</span></label>
 										<select name="category_id" id="category_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
 											<option value="">--@lang('custom_admin.label_select')--</option>
@@ -94,7 +94,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
+									<div class="form-group" id="product_id-div">
 										<label class="text-dark font-bold">@lang('custom_admin.label_product')<span class="red_star">*</span></label>
 										<select name="product_id" id="product_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
 											<option value="">--@lang('custom_admin.label_select')--</option>

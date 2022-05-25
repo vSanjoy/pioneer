@@ -94,17 +94,17 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
             });
 
             Route::group(['prefix' => 'areaAnalysis', 'as' => 'areaAnalysis.'], function () {
-                Route::get('/', 'AreaAnalysisController@list')->name('list');
-                Route::post('ajax-list-request', 'AreaAnalysisController@ajaxListRequest')->name('ajax-list-request');
-                Route::get('/add', 'AreaAnalysisController@add')->name('add');
-                Route::post('/add-submit', 'AreaAnalysisController@add')->name('add-submit');
-                Route::post('/ajax-distribution-area-wise-distributors-stores', 'AreaAnalysisController@ajaxDistributionAreaWiseDistributorsStores')->name('ajax-distribution-area-wise-distributors-stores');
-                Route::post('/ajax-category-wise-products', 'AreaAnalysisController@ajaxCategoryWiseProducts')->name('ajax-category-wise-products');
-                Route::get('/edit/{id}', 'AreaAnalysisController@edit')->name('edit');
-                Route::any('/edit-submit/{id}', 'AreaAnalysisController@edit')->name('edit-submit');
-                Route::get('/status/{id}', 'AreaAnalysisController@status')->name('change-status');
-                Route::get('/delete/{id}', 'AreaAnalysisController@delete')->name('delete');
-                Route::post('/bulk-actions', 'AreaAnalysisController@bulkActions')->name('bulk-actions');
+                Route::get('/', 'AreaAnalysesController@list')->name('list');
+                Route::post('ajax-list-request', 'AreaAnalysesController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/add', 'AreaAnalysesController@add')->name('add');
+                Route::post('/add-submit', 'AreaAnalysesController@add')->name('add-submit');
+                Route::post('/ajax-distribution-area-wise-distributors-stores', 'AreaAnalysesController@ajaxDistributionAreaWiseDistributorsStores')->name('ajax-distribution-area-wise-distributors-stores');
+                Route::post('/ajax-category-wise-products', 'AreaAnalysesController@ajaxCategoryWiseProducts')->name('ajax-category-wise-products');
+                Route::get('/edit/{id}', 'AreaAnalysesController@edit')->name('edit');
+                Route::any('/edit-submit/{id}', 'AreaAnalysesController@edit')->name('edit-submit');
+                Route::get('/status/{id}', 'AreaAnalysesController@status')->name('change-status');
+                Route::get('/delete/{id}', 'AreaAnalysesController@delete')->name('delete');
+                Route::post('/bulk-actions', 'AreaAnalysesController@bulkActions')->name('bulk-actions');
             });
             
         });
