@@ -289,9 +289,9 @@ class AreaAnalysesController extends Controller
             }
 
             $data['distributionAreas']  = DistributionArea::select('id','title')
-                                                            ->where(['status' => '1'])
-                                                            ->orderBy('title', 'ASC')
-                                                            ->get();
+                                                    ->where(['status' => '1'])
+                                                    ->orderBy('title', 'ASC')
+                                                    ->get();
             $data['seasons']            = Season::select('id','title','sort')
                                                     ->where(['status' => '1'])
                                                     ->orderBy('sort', 'ASC')
@@ -326,10 +326,13 @@ class AreaAnalysesController extends Controller
         try {
             $data['id']                 = $id;
             $data['storeId']            = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])
-                                                            ->select('id','title')
-                                                            ->get();
-            $data['details']            = $details = $this->model->where(['id' => $id])->first();
+            $data['seasons'] = Season::select('id','title','sort') -> where(['status' => '1']) -> orderBy('sort', 'ASC') -> get();
+            $data['details'] = $details = $this->model->where(['id' => $id])->first();
+            $data['distributionAreas'] = DistributionArea::where(['status' => '1'])  -> select('id','title') -> get();
+            $data['distributors'] = User::where(['status' => '1', 'type' => 'D', 'distribution_area_id' => $details->distribution_area_id ])  -> select('id','first_name') -> get();
+            $data['stores'] = Store::where(['status' => '1','distribution_area_id' => $details->distribution_area_id]) -> select('id','store_name') -> orderBy('sort', 'ASC') -> get();
+            $data['categories'] = Category::where(['status' => '1']) -> select('id','title') -> orderBy('title', 'ASC') -> get();
+            $data['products'] = Product::where(['status' => '1', 'category_id' => $details->category_id]) -> select('id','title') -> orderBy('sort', 'ASC') -> get();
             
             if ($request->isMethod('POST')) {
                 if ($id == null) {
@@ -337,18 +340,36 @@ class AreaAnalysesController extends Controller
                     return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                 }
                 $validationCondition = array(
+                    'season_id'             => 'required',
+                    'year'                  => 'required',
+                    'analysis_date'         => 'required',
                     'distribution_area_id'  => 'required',
-                    'name_1'                => 'required',
-                    'store_name'            => 'required',
-                    // 'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
+                    'distributor_id'        => 'required',
+                    'store_id'              => 'required',
+                    'category_id'           => 'required',
+                    'product_id'            => 'required',
+                    'target_monthly_sales'  => 'required',
+                    'type_of_analysis'      => 'required',
+                    'action'                => 'required',
+                    'result'                => 'required',
+                    'why'                   => 'required',
+                    'comment'               => 'required',
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => 'Please select distributor',
-                    'name_1.required'               => 'Please enter name 1',
-                    'store_name.required'           => 'Please enter store name',
-                    // 'email.required'                => trans('custom_admin.error_email'),
-                    // 'email.regex'                   => trans('custom_admin.error_valid_email'),
-                    // 'email.unique'                  => trans('custom_admin.error_email_unique'),
+                    'season_id.required'                    => trans('custom_admin.error_season_id'),
+                    'year.required'                         => trans('custom_admin.error_year'),
+                    'analysis_date.required'                => trans('custom_admin.error_analysis_date'),
+                    'distribution_area_id.required'         => trans('custom_admin.error_distribution_area'),
+                    'distributor_id.required'               => trans('custom_admin.error_distributor'),
+                    'store_id.required'                     => trans('custom_admin.error_store'),
+                    'category_id.required'                  => trans('custom_admin.error_category'),
+                    'product_id.required'                   => trans('custom_admin.error_product'),
+                    'target_monthly_sales.required'         => trans('custom_admin.error_target_monthly_sales'),
+                    'type_of_analysis.required'             => trans('custom_admin.error_type_of_analysis'),
+                    'action.required'                       => trans('custom_admin.error_action'),
+                    'result.required'                       => trans('custom_admin.error_result'),
+                    'why.required'                          => trans('custom_admin.error_why'),
+                    'comment.required'                      => trans('custom_admin.error_comment'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -356,24 +377,21 @@ class AreaAnalysesController extends Controller
                     $this->generateToastMessage('error', $validationFailedMessages, false);
                     return redirect()->back()->withInput();
                 } else {
-                    $updateData                         = [];
-                    $updateData['distribution_area_id'] = $request->distribution_area_id ?? null;
-                    $updateData['name_1']               = $request->name_1 ?? null;
-                    $updateData['name_2']               = $request->name_2 ?? null;
-                    $updateData['store_name']           = $request->store_name ?? null;
-                    $updateData['slug']                 = generateUniqueSlug($this->model, trim($request->store_name,' '), $data['id']);
-                    $updateData['phone_no_1']           = $request->phone_no_1 ?? null;
-                    $updateData['whatsapp_no_1']        = $request->whatsapp_no_1 ?? null;
-                    $updateData['phone_no_2']           = $request->phone_no_2 ?? null;
-                    $updateData['whatsapp_no_2']        = $request->whatsapp_no_2 ?? null;
-                    $updateData['street']               = $request->street ?? null;
-                    $updateData['district_region']      = $request->district_region ?? null;
-                    $updateData['zip']                  = $request->zip ?? null;
-                    $updateData['beat_name']            = $request->beat_name ?? null;
-                    $updateData['email']                = $request->email ?? null;
-                    $updateData['sale_size_category']   = $request->sale_size_category ?? 'S';
-                    $updateData['integrity']            = $request->integrity ?? 'A+';
-                    $updateData['notes']                = $request->notes ?? null;
+                    $updateData                           = [];
+                    $updateData['season_id']              = $request->season_id ?? null;
+                    $updateData['year']                   = $request->year ?? null;
+                    $updateData['analysis_date']          = date('Y-m-d', strtotime($request->analysis_date)) ?? null;
+                    $updateData['distribution_area_id']   = $request->distribution_area_id ?? null;
+                    $updateData['distributor_id']         = $request->distributor_id ?? null;
+                    $updateData['store_id']               = $request->store_id ?? null;
+                    $updateData['category_id']            = $request->category_id ?? null;
+                    $updateData['product_id']             = $request->product_id ?? null;
+                    $updateData['target_monthly_sales']   = $request->target_monthly_sales ?? null;
+                    $updateData['type_of_analysis']       = $request->type_of_analysis ?? null;
+                    $updateData['action']                 = $request->action ?? null;
+                    $updateData['result']                 = $request->result ?? null;
+                    $updateData['why']                    = $request->why ?? null;
+                    $updateData['comment']                = $request->comment ?? 'null';
                     $update = $details->update($updateData);
 
                     if ($update) {
