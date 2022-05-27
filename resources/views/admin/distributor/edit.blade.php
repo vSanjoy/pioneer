@@ -168,6 +168,18 @@
 																'placeholder' => '' ]) }}
 									</div>
 								</div>
+							</div>
+							<div class="row mt-1">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="text-dark font-bold">@lang('custom_admin.label_username')<span class="red_star">*</span></label>
+										{{ Form::text('username', $details -> username, [
+                                                                'id' => 'username',
+                                                                'class' => 'form-control',
+                                                                'placeholder' => '',
+                                                                'required' => 'required' ]) }}
+									</div>
+								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_email')<span class="red_star">*</span></label>

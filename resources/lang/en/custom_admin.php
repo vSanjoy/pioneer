@@ -346,6 +346,7 @@ return [
     'label_why'                                     => 'Why',
     'label_comment'                                 => 'Comment',
     'label_analysis_action'                         => 'Analysis Action',
+    'label_username'                               => 'Username',
 
     
 /* Buttons */
@@ -499,8 +500,10 @@ return [
     'error_action'                                  => 'Please enter action.',
     'error_why'                                     => 'Please enter why.',
     'error_comment'                                 => 'Please enter comment.',
+    'error_username'                                => 'Please enter user name.',
     'error_select_role'                             => 'Please select role.',
     'error_select_distributor_id'                   => 'Please select distributor.',
+    'error_username_unique'                         => 'Please enter unique user name.',
     
 
 /* Messages */

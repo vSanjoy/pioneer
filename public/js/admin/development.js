@@ -789,6 +789,9 @@ $(document).ready(function() {
             company: {
                 required: true
             },
+            username: {
+                required: true
+            },
             email: {
                 required: true,
                 valid_email: true
@@ -815,6 +818,9 @@ $(document).ready(function() {
             },
             company: {
                 required: "Please enter company."
+            },
+            username: {
+                required: "Please enter username."
             },
             email: {
                 required: "Please enter email.",

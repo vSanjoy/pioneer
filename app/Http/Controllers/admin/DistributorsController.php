@@ -192,6 +192,7 @@ class DistributorsController extends Controller
                     'job_title_1'           => 'required',
                     'full_name'             => 'required',
                     'company'               => 'required',
+                    'username'              => 'required|unique:'.($this->model)->getTable().',username,NULL,id,deleted_at,NULL',
                     'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
                     // 'phone_no'              => 'required',
                     'password'              => 'required|regex:'.config('global.PASSWORD_REGEX'),
@@ -203,6 +204,8 @@ class DistributorsController extends Controller
                     'job_title_1.required'          => trans('custom_admin.error_job_title_1'),
                     'full_name.required'            => trans('custom_admin.error_name_1'),
                     'company.required'              => trans('custom_admin.error_company'),
+                    'username.required'            => trans('custom_admin.error_username'),
+                    'username.unique'               => trans('custom_admin.error_username_unique'),
                     'email.required'                => trans('custom_admin.error_email'),
                     'email.regex'                   => trans('custom_admin.error_valid_email'),
                     'email.unique'                  => trans('custom_admin.error_email_unique'),
@@ -244,6 +247,7 @@ class DistributorsController extends Controller
                     $details->email                 = $request->email ?? null;
                     $details->company               = $request->company ?? null;
                     $details->phone_no              = $request->phone_no ?? null;
+                    $details->username              = $request->username ?? null;
                     $details->distribution_area_id  = $request->distribution_area_id ?? null;
                     $details->profile_pic           = $uploadedImage;
                     $details->password              = $password;
@@ -251,8 +255,8 @@ class DistributorsController extends Controller
 
                     if ($details->save()) {
                         // Start :: Inserting data to user_details table
-                        $userDetailData                     = new UserDetail;
-                        $userDetailData->user_id            = $details->id;
+                        $userDetailData                    = new UserDetail;
+                        $userDetailData->user_id           = $details->id;
                         $userDetailData->job_title_2       = $request->job_title_2 ?? null;
                         $userDetailData->full_name_2       = $request->full_name_2 ?? null;
                         $userDetailData->phone_no_2        = $request->phone_no_2 ?? null;
@@ -322,6 +326,7 @@ class DistributorsController extends Controller
                     'job_title_1'           => 'required',
                     'full_name'             => 'required',
                     'company'               => 'required',
+                    'username'              => 'required|unique:'.($this->model)->getTable().',username,'.$id.',id,deleted_at,NULL',
                     'email'                 => 'required|regex:'.config('global.EMAIL_REGEX'),
                     // 'phone_no'              => 'required',
                     'profile_pic'           => 'mimes:'.config('global.IMAGE_FILE_TYPES').'|max:'.config('global.IMAGE_MAX_UPLOAD_SIZE'),
@@ -331,6 +336,8 @@ class DistributorsController extends Controller
                     'job_title_1.required'          => trans('custom_admin.error_job_title_1'),
                     'full_name.required'            => trans('custom_admin.error_name_1'),
                     'company.required'              => trans('custom_admin.error_company'),
+                    'username.required'             => trans('custom_admin.error_username'),
+                    'username.unique'               => trans('custom_admin.error_username_unique'),
                     'email.required'                => trans('custom_admin.error_email'),
                     'email.regex'                   => trans('custom_admin.error_valid_email'),
                     'email.unique'                  => trans('custom_admin.error_email_unique'),
@@ -381,6 +388,7 @@ class DistributorsController extends Controller
                         $updateData['full_name']            = $request->full_name ?? null;
                         $updateData['email']                = $request->email ?? null;
                         $updateData['company']              = $request->company ?? null;
+                        $updateData['username']             = $request->username ?? null;
                         $updateData['phone_no']             = $request->phone_no ?? null;
                         $updateData['distribution_area_id'] = $request->distribution_area_id ?? null;
                         $update = $this->model->where(['id' => $id])->update($updateData);
