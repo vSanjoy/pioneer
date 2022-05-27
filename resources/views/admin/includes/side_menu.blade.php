@@ -131,7 +131,7 @@ $getSiteSettings = getSiteSettings();
 								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
 							</a>
 						</li>
-						@if ( ($isSuperAdmin) || (in_array($currentPage, $cmsRoutes)) )
+						@if ( ($isSuperAdmin) || (in_array('category.add', $getAllRoles)) )
 						<li class="sidebar-item">
 							<a href="{{ route('admin.category.add') }}" class="sidebar-link sub-menu">
 								<span class="hide-menu"> @lang('custom_admin.label_add')</span>
@@ -157,7 +157,7 @@ $getSiteSettings = getSiteSettings();
 								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
 							</a>
 						</li>
-						@if ( ($isSuperAdmin) || (in_array($currentPage, $cmsRoutes)) )
+						@if ( ($isSuperAdmin) || (in_array('product.add', $getAllRoles)) )
 						<li class="sidebar-item">
 							<a href="{{ route('admin.product.add') }}" class="sidebar-link sub-menu">
 								<span class="hide-menu"> @lang('custom_admin.label_add')</span>
@@ -183,13 +183,32 @@ $getSiteSettings = getSiteSettings();
 								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
 							</a>
 						</li>
-						@if ( ($isSuperAdmin) || (in_array($currentPage, $cmsRoutes)) )
+						@if ( ($isSuperAdmin) || (in_array('areaAnalysis.add', $getAllRoles)) )
 						<li class="sidebar-item">
 							<a href="{{ route('admin.areaAnalysis.add') }}" class="sidebar-link sub-menu">
 								<span class="hide-menu"> @lang('custom_admin.label_add')</span>
 							</a>
 						</li>
 						@endif
+					</ul>
+				</li>
+			@endif
+
+			<!-- Analysis Management Start -->
+			@php
+			$analysesRoutes = ['analyses.list'];
+			@endphp
+			@if ( in_array('analyses.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $analysesRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $analysesRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="life-buoy" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_analyses')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $analysesRoutes))in @endif">
+						<li class="sidebar-item">
+							<a href="{{ route('admin.analyses.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
+							</a>
+						</li>
 					</ul>
 				</li>
 			@endif

@@ -438,62 +438,24 @@ $(document).ready(function() {
     });
     // End :: Admin Password Form //
 
-    // Start :: Sub Admin Form //
-    $("#createSubAdminForm").validate({
+    // Start :: Role Assignment Form //
+    $("#createRoleAssignmentForm").validate({
         ignore: ":hidden",
         debug: false,
         rules: {
-            first_name: {
+            distributor_id: {
                 required: true
-            },
-            last_name: {
-                required: true
-            },
-            email: {
-                required: true,
-                valid_email: true
-            },
-            password: {
-                required: true,
-                valid_password: true,
-            },
-            confirm_password: {
-                required: true,
-                valid_password: true,
-                equalTo: "#password"
             },
             'role[]': {
-                required: true,
-            },
-            'service_ids[]': {
                 required: true,
             },
         },
         messages: {
-            first_name: {
-                required: "Please enter first name."
-            },
-            last_name: {
-                required: "Please enter last name."
-            },
-            email: {
-                required: "Please enter email.",
-                valid_email: "Please enter valid email.",
-            },
-            password: {
-                required: "Please enter new password.",
-                valid_password: "Min. 8, alphanumeric and special character."
-            },
-            confirm_password: {
-                required: "Please enter confirm password",
-                valid_password: "Min. 8, alphanumeric and special character.",
-                equalTo: "Password should be same as new password.",
+            distributor_id: {
+                required: "Please select distributor."
             },
             'role[]': {
                 required: "Please select role.",
-            },
-            'service_ids[]': {
-                required: "Please select service.",
             },
         },
         errorClass: 'error invalid-feedback',
@@ -514,7 +476,7 @@ $(document).ready(function() {
             toastr.error(overallErrorMessage, errorMessage+'!');
         },
         errorPlacement: function(error, element) {
-            if ($(element).attr('id') == 'role' || $(element).attr('id') == 'service_ids') {
+            if ($(element).attr('id') == 'role' || $(element).attr('id') == 'distributor_id') {
                 error.insertAfter($(element).parents('div.form-group'));
             } else {
                 error.insertAfter(element);
@@ -527,43 +489,23 @@ $(document).ready(function() {
         }
     });
 
-    $("#updateSubAdminForm").validate({
+    $("#updateRoleAssignmentForm").validate({
         ignore: ":hidden",
         debug: false,
         rules: {
-            first_name: {
+            distributor_id: {
                 required: true
-            },
-            last_name: {
-                required: true
-            },
-            email: {
-                required: true,
-                valid_email: true
             },
             'role[]': {
-                required: true,
-            },
-            'service_ids[]': {
                 required: true,
             },
         },
         messages: {
-            first_name: {
-                required: "Please enter first name."
-            },
-            last_name: {
-                required: "Please enter last name."
-            },
-            email: {
-                required: "Please enter email.",
-                valid_email: "Please enter valid email.",
+            distributor_id: {
+                required: "Please select distributor."
             },
             'role[]': {
                 required: "Please select role.",
-            },
-            'service_ids[]': {
-                required: "Please select service.",
             },
         },
         errorClass: 'error invalid-feedback',
@@ -584,7 +526,7 @@ $(document).ready(function() {
             toastr.error(overallErrorMessage, errorMessage+'!');
         },
         errorPlacement: function(error, element) {
-            if ($(element).attr('id') == 'role' || $(element).attr('id') == 'service_ids') {
+            if ($(element).attr('id') == 'role' || $(element).attr('id') == 'distributor_id') {
                 error.insertAfter($(element).parents('div.form-group'));
             } else {
                 error.insertAfter(element);
@@ -596,7 +538,7 @@ $(document).ready(function() {
             form.submit();
         }
     });
-    // End :: Sub Admin Form //
+    // End :: Role Assignment Form //
 
     // Start :: Role Form //
     $("#createRoleForm").validate({

@@ -106,6 +106,37 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/delete/{id}', 'AreaAnalysesController@delete')->name('delete');
                 Route::post('/bulk-actions', 'AreaAnalysesController@bulkActions')->name('bulk-actions');
             });
+
+            Route::group(['prefix' => 'role', 'as' => 'role.'], function () {
+                Route::get('/', 'RolesController@list')->name('list');
+                Route::post('ajax-list-request', 'RolesController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/add', 'RolesController@add')->name('add');
+                Route::post('/add-submit', 'RolesController@add')->name('add-submit');
+                Route::get('/edit/{id}', 'RolesController@edit')->name('edit');
+                Route::any('/edit-submit/{id}', 'RolesController@edit')->name('edit-submit');
+                Route::get('/status/{id}', 'RolesController@status')->name('change-status');
+                Route::get('/delete/{id}', 'RolesController@delete')->name('delete');
+                Route::post('/bulk-actions', 'RolesController@bulkActions')->name('bulk-actions');
+            });
+
+            Route::group(['prefix' => 'roleAssignment', 'as' => 'roleAssignment.'], function () {
+                Route::get('/', 'RoleAssignmentsController@list')->name('list');
+                Route::post('ajax-list-request', 'RoleAssignmentsController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/add', 'RoleAssignmentsController@add')->name('add');
+                Route::post('/add-submit', 'RoleAssignmentsController@add')->name('add-submit');
+                Route::get('/edit/{id}', 'RoleAssignmentsController@edit')->name('edit');
+                Route::any('/edit-submit/{id}', 'RoleAssignmentsController@edit')->name('edit-submit');
+                Route::get('/delete/{id}', 'RoleAssignmentsController@delete')->name('delete');
+                Route::post('/bulk-actions', 'RoleAssignmentsController@bulkActions')->name('bulk-actions');
+            });
+
+            Route::group(['prefix' => 'analyses', 'as' => 'analyses.'], function () {
+                Route::get('/', 'AnalysesController@list')->name('list');
+                Route::post('ajax-list-request', 'AnalysesController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/view/{id}', 'AnalysesController@view')->name('view');
+                
+                
+            });
             
         });
 

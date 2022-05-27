@@ -28,7 +28,7 @@ class BackendMiddleware
                 if (\Auth::guard('admin')->user()->type == 'SA') {
                     return $next($request);
                 } else {
-                    if (\Auth::guard('admin')->user()->type == 'A') {
+                    if (\Auth::guard('admin')->user()->type == 'A' || \Auth::guard('admin')->user()->type == 'D') {
                         $roleIds = [];
                         $userRoles = \Auth::guard('admin')->user()->userRoles;
                         if ($userRoles) {

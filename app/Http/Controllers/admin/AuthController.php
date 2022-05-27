@@ -112,6 +112,11 @@ class AuthController extends Controller
                             $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
                             $user->save();
                             return redirect()->route($this->routePrefix.'.dashboard');
+                        } else if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'D', 'status' => '1'])) {
+                            $user  = \Auth::guard('admin')->user();
+                            $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
+                            $user->save();
+                            return redirect()->route($this->routePrefix.'.dashboard');
                         } else if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'U', 'status' => '1'])) {
                             Auth::guard('admin')->logout();
 
@@ -198,7 +203,7 @@ class AuthController extends Controller
                     } else {
                         $user = $this->model->where(['email' => $request->email, 'status' => '1'])->first();
                         if ($user != null) {
-                            if ($user->type == 'SA' || $user->type == 'A') {
+                            if ($user->type == 'SA' || $user->type == 'A' || $user->type == 'D') {
                                 $encryptedString = customEncryptionDecryption($user->id.'~'.$user->email);
                                 $user->auth_token = $encryptedString;
                                 if ($user->save()) {

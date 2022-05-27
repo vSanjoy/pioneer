@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2022 at 08:16 AM
+-- Generation Time: May 27, 2022 at 07:24 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `up_area_analysis`
+-- Table structure for table `up_area_analyses`
 --
 
-CREATE TABLE `up_area_analysis` (
+CREATE TABLE `up_area_analyses` (
   `id` int(10) UNSIGNED NOT NULL,
   `season_id` int(11) DEFAULT NULL COMMENT 'Id from seasons table',
   `year` int(11) DEFAULT NULL,
@@ -49,6 +49,13 @@ CREATE TABLE `up_area_analysis` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `up_area_analyses`
+--
+
+INSERT INTO `up_area_analyses` (`id`, `season_id`, `year`, `analysis_date`, `distribution_area_id`, `distributor_id`, `store_id`, `category_id`, `product_id`, `target_monthly_sales`, `type_of_analysis`, `action`, `result`, `why`, `comment`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(4, 3, 2022, '2022-05-24 18:30:00', 1, 3, 1, 5, 21, '1200', 'T', 'A', 'R', 'W', 'C', '1', '2022-05-25 07:09:15', '2022-05-25 07:09:15', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -57,7 +64,7 @@ CREATE TABLE `up_area_analysis` (
 
 CREATE TABLE `up_area_analysis_details` (
   `id` int(10) UNSIGNED NOT NULL,
-  `area_analysis_id` int(11) DEFAULT NULL COMMENT 'Id from area_analysis table',
+  `area_analysis_id` int(11) DEFAULT NULL COMMENT 'Id from area_analyses table',
   `distributor_id` int(11) DEFAULT NULL COMMENT 'Id from distributors table',
   `result` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `why` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -163,7 +170,7 @@ INSERT INTO `up_migrations` (`id`, `migration`, `batch`) VALUES
 (9, '2022_05_13_065830_create_stores_table', 3),
 (10, '2022_05_16_125023_create_categories_table', 4),
 (11, '2022_05_16_131654_create_products_table', 5),
-(12, '2022_05_20_092726_create_area_analysis_table', 6),
+(12, '2022_05_20_092726_create_area_analyses_table', 6),
 (13, '2022_05_20_095527_create_area_analysis_details_table', 7),
 (14, '2022_05_20_103233_create_seasons_table', 8);
 
@@ -294,7 +301,8 @@ CREATE TABLE `up_roles` (
 --
 
 INSERT INTO `up_roles` (`id`, `name`, `slug`, `is_admin`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Super Admin', 'super-admin', '1', '1', '2022-05-06 07:39:45', '2022-05-06 07:39:45', NULL);
+(1, 'Super Admin', 'super-admin', '1', '1', '2022-05-06 07:39:45', '2022-05-06 07:39:45', NULL),
+(2, 'Distributor Role', 'distributor-role', '1', '1', '2022-05-25 23:52:00', '2022-05-26 06:43:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -307,6 +315,50 @@ CREATE TABLE `up_role_pages` (
   `routeName` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `up_role_pages`
+--
+
+INSERT INTO `up_role_pages` (`id`, `routeName`) VALUES
+(1, 'distributionArea.list'),
+(2, 'distributionArea.add'),
+(3, 'distributionArea.edit'),
+(4, 'distributionArea.change-status'),
+(5, 'distributionArea.delete'),
+(6, 'distributionArea.sort'),
+(7, 'distributor.list'),
+(8, 'distributor.add'),
+(9, 'distributor.edit'),
+(10, 'distributor.change-status'),
+(11, 'distributor.delete'),
+(12, 'store.list'),
+(13, 'store.add'),
+(14, 'store.edit'),
+(15, 'store.change-status'),
+(16, 'store.delete'),
+(17, 'category.list'),
+(18, 'category.add'),
+(19, 'category.edit'),
+(20, 'category.change-status'),
+(21, 'category.delete'),
+(22, 'product.list'),
+(23, 'product.add'),
+(24, 'product.edit'),
+(25, 'product.change-status'),
+(26, 'product.delete'),
+(27, 'areaAnalysis.list'),
+(28, 'areaAnalysis.add'),
+(29, 'areaAnalysis.edit'),
+(30, 'areaAnalysis.change-status'),
+(31, 'areaAnalysis.delete'),
+(32, 'roleAssignment.list'),
+(33, 'roleAssignment.add'),
+(34, 'roleAssignment.edit'),
+(35, 'roleAssignment.change-status'),
+(36, 'roleAssignment.delete'),
+(37, 'analyses.list'),
+(38, 'analyses.view');
+
 -- --------------------------------------------------------
 
 --
@@ -317,6 +369,14 @@ CREATE TABLE `up_role_permissions` (
   `role_id` int(11) NOT NULL,
   `page_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `up_role_permissions`
+--
+
+INSERT INTO `up_role_permissions` (`role_id`, `page_id`) VALUES
+(2, 37),
+(2, 38);
 
 -- --------------------------------------------------------
 
@@ -424,8 +484,9 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', NULL, 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', NULL, 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653282312, 'Y', '2022-05-06 07:39:45', '2022-05-22 23:35:12', NULL),
-(3, 'Owner', NULL, NULL, 'Tibrewalla', NULL, 'Tibrewalla', NULL, 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'distributor_1652101000.jpg', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-05-09 06:16:32', '2022-05-17 12:08:32', NULL);
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', NULL, 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', NULL, 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653571773, 'Y', '2022-05-06 07:39:45', '2022-05-26 07:59:33', NULL),
+(3, 'Owner', NULL, NULL, 'Tibrewalla', NULL, 'Tibrewalla', NULL, 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'distributor_1652101000.jpg', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1653567194, 'N', '2022-05-09 06:16:32', '2022-05-26 06:43:14', NULL),
+(4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', NULL, 'mahendra@yopmail.com', 'Marwari Relief Society', NULL, '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'distributor_1653562929.jpg', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-05-26 05:32:09', '2022-05-26 05:44:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -453,7 +514,8 @@ CREATE TABLE `up_user_details` (
 --
 
 INSERT INTO `up_user_details` (`id`, `user_id`, `job_title_2`, `full_name_2`, `phone_no_2`, `whatsapp_no`, `street`, `city`, `district_region`, `state_province`, `zip`, `notes`) VALUES
-(1, 3, 'Job Title 2', 'Pawan', NULL, '9876543210', '225/227,  Rabindra Sarani Barabazar H.O.', 'Kolkata', 'South 24 Parganas', 'West Bengal', '700007', 'Test Notes');
+(1, 3, 'Job Title 2', 'Pawan', NULL, '9876543210', '225/227,  Rabindra Sarani Barabazar H.O.', 'Kolkata', 'South 24 Parganas', 'West Bengal', '700007', 'Test Notes'),
+(2, 4, NULL, NULL, NULL, NULL, '225/227,  Rabindra Sarani Barabazar H.O.', 'Kolkata', 'South 24 Parganas', 'West Bengal', '700007', 'Testing');
 
 -- --------------------------------------------------------
 
@@ -465,6 +527,13 @@ CREATE TABLE `up_user_roles` (
   `user_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `up_user_roles`
+--
+
+INSERT INTO `up_user_roles` (`user_id`, `role_id`) VALUES
+(3, 2);
 
 -- --------------------------------------------------------
 
@@ -517,9 +586,9 @@ INSERT INTO `up_website_settings` (`id`, `from_email`, `to_email`, `website_titl
 --
 
 --
--- Indexes for table `up_area_analysis`
+-- Indexes for table `up_area_analyses`
 --
-ALTER TABLE `up_area_analysis`
+ALTER TABLE `up_area_analyses`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -599,10 +668,10 @@ ALTER TABLE `up_website_settings`
 --
 
 --
--- AUTO_INCREMENT for table `up_area_analysis`
+-- AUTO_INCREMENT for table `up_area_analyses`
 --
-ALTER TABLE `up_area_analysis`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `up_area_analyses`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `up_area_analysis_details`
@@ -638,13 +707,13 @@ ALTER TABLE `up_products`
 -- AUTO_INCREMENT for table `up_roles`
 --
 ALTER TABLE `up_roles`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `up_role_pages`
 --
 ALTER TABLE `up_role_pages`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `up_seasons`
@@ -662,13 +731,13 @@ ALTER TABLE `up_stores`
 -- AUTO_INCREMENT for table `up_users`
 --
 ALTER TABLE `up_users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `up_user_details`
 --
 ALTER TABLE `up_user_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `up_website_settings`
