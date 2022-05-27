@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 27, 2022 at 07:24 AM
+-- Generation Time: May 27, 2022 at 02:53 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -75,6 +75,13 @@ CREATE TABLE `up_area_analysis_details` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `up_area_analysis_details`
+--
+
+INSERT INTO `up_area_analysis_details` (`id`, `area_analysis_id`, `distributor_id`, `result`, `why`, `commented_by`, `is_viewed`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 4, 3, 'Test result', 'Test Why', 'D', 'N', '1', '2022-05-27 06:46:10', '2022-05-27 06:46:10', NULL);
 
 -- --------------------------------------------------------
 
@@ -302,7 +309,7 @@ CREATE TABLE `up_roles` (
 
 INSERT INTO `up_roles` (`id`, `name`, `slug`, `is_admin`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Super Admin', 'super-admin', '1', '1', '2022-05-06 07:39:45', '2022-05-06 07:39:45', NULL),
-(2, 'Distributor Role', 'distributor-role', '1', '1', '2022-05-25 23:52:00', '2022-05-26 06:43:41', NULL);
+(2, 'Distributor Role', 'distributor-role-1', '1', '1', '2022-05-25 23:52:00', '2022-05-27 06:58:39', NULL);
 
 -- --------------------------------------------------------
 
@@ -357,7 +364,10 @@ INSERT INTO `up_role_pages` (`id`, `routeName`) VALUES
 (35, 'roleAssignment.change-status'),
 (36, 'roleAssignment.delete'),
 (37, 'analyses.list'),
-(38, 'analyses.view');
+(38, 'analyses.view'),
+(39, 'analyses.details-list'),
+(40, 'analyses.details-add'),
+(41, 'analyses.details-edit');
 
 -- --------------------------------------------------------
 
@@ -376,7 +386,10 @@ CREATE TABLE `up_role_permissions` (
 
 INSERT INTO `up_role_permissions` (`role_id`, `page_id`) VALUES
 (2, 37),
-(2, 38);
+(2, 38),
+(2, 39),
+(2, 40),
+(2, 41);
 
 -- --------------------------------------------------------
 
@@ -484,8 +497,8 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', NULL, 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', NULL, 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653571773, 'Y', '2022-05-06 07:39:45', '2022-05-26 07:59:33', NULL),
-(3, 'Owner', NULL, NULL, 'Tibrewalla', NULL, 'Tibrewalla', NULL, 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'distributor_1652101000.jpg', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1653567194, 'N', '2022-05-09 06:16:32', '2022-05-26 06:43:14', NULL),
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', NULL, 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', NULL, 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653654501, 'Y', '2022-05-06 07:39:45', '2022-05-27 06:58:21', NULL),
+(3, 'Owner', NULL, NULL, 'Tibrewalla', NULL, 'Tibrewalla', NULL, 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'distributor_1652101000.jpg', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1653653087, 'N', '2022-05-09 06:16:32', '2022-05-27 06:34:47', NULL),
 (4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', NULL, 'mahendra@yopmail.com', 'Marwari Relief Society', NULL, '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'distributor_1653562929.jpg', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-05-26 05:32:09', '2022-05-26 05:44:05', NULL);
 
 -- --------------------------------------------------------
@@ -677,7 +690,7 @@ ALTER TABLE `up_area_analyses`
 -- AUTO_INCREMENT for table `up_area_analysis_details`
 --
 ALTER TABLE `up_area_analysis_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `up_categories`
@@ -713,7 +726,7 @@ ALTER TABLE `up_roles`
 -- AUTO_INCREMENT for table `up_role_pages`
 --
 ALTER TABLE `up_role_pages`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `up_seasons`

@@ -72,23 +72,25 @@ trait GeneralMethods
     */
     public function assignShareVariables() {
         \View::share([
-            'management'    => $this->management,
-            'modelName'     => $this->modelName,
-            'breadcrumb'    => $this->breadcrumb,
-            'routePrefix'   => $this->routePrefix,
-            'pageRoute'     => $this->pageRoute,
-            'urlPrefix'     => $this->urlPrefix ?? '',
-            'listUrl'       => $this->listUrl ?? '',
-            'listRequestUrl'=> $this->listRequestUrl ?? '',
-            'addUrl'        => $this->addUrl ?? '',
-            'editUrl'       => $this->editUrl ?? '',
-            'viewUrl'       => $this->viewUrl ?? '',
-            'statusUrl'     => $this->statusUrl ?? '',
-            'deleteUrl'     => $this->deleteUrl ?? '',
-            'sortUrl'       => $this->sortUrl ?? '',
-            'detailsUrl'    => $this->detailsUrl ?? '',
-            'galleryListUrl'=> $this->galleryListUrl ?? '',
-            'controllerName'=> $this->controllerName
+            'management'            => $this->management,
+            'modelName'             => $this->modelName,
+            'breadcrumb'            => $this->breadcrumb,
+            'routePrefix'           => $this->routePrefix,
+            'pageRoute'             => $this->pageRoute,
+            'urlPrefix'             => $this->urlPrefix ?? '',
+            'listUrl'               => $this->listUrl ?? '',
+            'listRequestUrl'        => $this->listRequestUrl ?? '',
+            'addUrl'                => $this->addUrl ?? '',
+            'editUrl'               => $this->editUrl ?? '',
+            'viewUrl'               => $this->viewUrl ?? '',
+            'statusUrl'             => $this->statusUrl ?? '',
+            'deleteUrl'             => $this->deleteUrl ?? '',
+            'sortUrl'               => $this->sortUrl ?? '',
+            'detailsUrl'            => $this->detailsUrl ?? '',
+            'detailsListUrl'        => $this->detailsListUrl ?? '',
+            'detailsListRequestUrl' => $this->detailsListRequestUrl ?? '',
+            'galleryListUrl'        => $this->galleryListUrl ?? '',
+            'controllerName'        => $this->controllerName
         ]);
     }
 

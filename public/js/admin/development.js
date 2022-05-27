@@ -1556,8 +1556,101 @@ $(document).ready(function() {
             form.submit();
         }
     });
-
     // End :: Area Analysis Form //
+
+    // Start :: Analyses Form //
+    $("#createAnalysesForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            result: {
+                required: true,
+            },
+            why: {
+                required: true,
+            },
+        },
+        messages: {
+            result: {
+                required: "Please enter result.",
+            },
+            why: {
+                required: "Please enter why.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+
+    $("#updateAnalysesForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            result: {
+                required: true,
+            },
+            why: {
+                required: true,
+            },
+        },
+        messages: {
+            result: {
+                required: "Please enter result.",
+            },
+            why: {
+                required: "Please enter why.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Analyses Form //
 
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //

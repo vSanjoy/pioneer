@@ -196,7 +196,7 @@ $getSiteSettings = getSiteSettings();
 
 			<!-- Analysis Management Start -->
 			@php
-			$analysesRoutes = ['analyses.list'];
+			$analysesRoutes = ['analyses.list','analyses.details-list','analyses.details-add','analyses.details-edit'];
 			@endphp
 			@if ( in_array('analyses.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $analysesRoutes))selected @endif">

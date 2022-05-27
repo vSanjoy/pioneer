@@ -217,12 +217,12 @@ return [
     'label_area_analysis'                           => 'Area Analysis',
     'label_add_area_analysis'                       => 'Add Area Analysis',
     'label_edit_area_analysis'                      => 'Edit Area Analysis',
-    
     'label_menu_analyses'                           => 'Analyses',
     'label_analyses_management'                     => 'Analyses Management',
     'label_analyses_list'                           => 'Analyses List',
     'label_analyses'                                => 'Analyses',
-    
+    'label_add_analyses'                            => 'Add Analyses',
+    'label_edit_analyses'                           => 'Edit Analyses',
     'label_subject'                                 => 'Subject',
     'label_location'                                => 'Location',
     'label_reset_password_link'                     => 'Reset Password Link',
@@ -351,6 +351,7 @@ return [
     
 /* Buttons */
     'btn_toggle_navigation'                         => 'Toggle Navigation',
+    'btn_add'                                       => 'Add',
     'btn_submit'                                    => 'Submit',
     'btn_submitting'                                => 'Submitting',
     'btn_update'                                    => 'Update',

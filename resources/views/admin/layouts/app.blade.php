@@ -30,7 +30,7 @@
     @endif
     <!-- Tooltip -->
     <link href="{{ asset('css/admin/plugins/tooltip/microtip.min.css') }}" rel="stylesheet">
-    @if (strpos(Route::currentRouteName(), '.list') !== false)
+    @if (strpos(Route::currentRouteName(), '.list') !== false || strpos(Route::currentRouteName(), '.details-list') !== false)
     <!-- DataTables -->
     <link href="{{ asset('css/admin/plugins/datatables.net-bs4/dataTables.bootstrap4.css') }}" rel="stylesheet">
     <link href="{{ asset('css/admin/plugins/datatables-responsive/responsive.bootstrap4.min.css') }}" rel="stylesheet">
@@ -216,7 +216,7 @@
     </script>
     @endif
 
-    @if (strpos(Route::currentRouteName(), '.list') !== false)        
+    @if (strpos(Route::currentRouteName(), '.list') !== false || strpos(Route::currentRouteName(), '.details-list') !== false)
     <!-- DataTables -->
     <script src="{{ asset('js/admin/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/admin/dist/pages/datatable/datatable-basic.init.js') }}"></script>

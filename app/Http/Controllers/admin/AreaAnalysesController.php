@@ -275,7 +275,7 @@ class AreaAnalysesController extends Controller
                     $saveData['action']                 = $request->action ?? null;
                     $saveData['result']                 = $request->result ?? null;
                     $saveData['why']                    = $request->why ?? null;
-                    $saveData['comment']                = $request->comment ?? 'null';
+                    $saveData['comment']                = $request->comment ?? null;
                     $save = $this->model->create($saveData);
 
                     if ($save) {
@@ -391,7 +391,7 @@ class AreaAnalysesController extends Controller
                     $updateData['action']                 = $request->action ?? null;
                     $updateData['result']                 = $request->result ?? null;
                     $updateData['why']                    = $request->why ?? null;
-                    $updateData['comment']                = $request->comment ?? 'null';
+                    $updateData['comment']                = $request->comment ?? null;
                     $update = $details->update($updateData);
 
                     if ($update) {

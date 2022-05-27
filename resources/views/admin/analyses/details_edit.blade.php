@@ -11,8 +11,8 @@
 						'method'=> 'POST',
 						'class' => '',
 						'route' => [$routePrefix.'.'.$editUrl.'-submit', $id],
-						'name'  => 'updateStoreForm',
-						'id'    => 'updateStoreForm',
+						'name'  => 'updateAnalysesForm',
+						'id'    => 'updateAnalysesForm',
 						'files' => true,
 						'novalidate' => true ]) }}
 						<div class="form-body mt-4-5">
