@@ -50,7 +50,6 @@
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
 									<th>@lang('custom_admin.label_season')</th>
 									<th>@lang('custom_admin.label_distribution_area')</th>
-									<th>@lang('custom_admin.label_distributor')</th>
 									<th>@lang('custom_admin.label_store_name')</th>
 									<th>@lang('custom_admin.label_category')</th>
 									<th>@lang('custom_admin.label_product')</th>

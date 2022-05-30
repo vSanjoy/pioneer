@@ -48,7 +48,6 @@ $(document).ready(function() {
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'season_id', name: 'season_id'},
 				{data: 'distribution_area_id', name: 'distribution_area_id'},
-				{data: 'distributor_id', name: 'distributor_id'},
 				{data: 'store_id', name: 'store_id'},
 				{data: 'category_id', name: 'category_id'},
 				{data: 'product_id', name: 'product_id'},
@@ -76,7 +75,7 @@ $(document).ready(function() {
 				[0, 'desc']
 			@endif
 			],
-			pageLength: 10,
+			pageLength: 25,
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
 			fnDrawCallback: function(settings) {
 				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
@@ -169,12 +168,9 @@ $(document).ready(function() {
 			@endif
 				{data: 'id', name: 'id'},
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-				{data: 'season_id', name: 'season_id'},
-				{data: 'distribution_area_id', name: 'distribution_area_id'},
-				{data: 'store_id', name: 'store_id'},
-				{data: 'category_id', name: 'category_id'},
-				{data: 'product_id', name: 'product_id'},
-				{data: 'status', name: 'status'},
+				{data: 'created_at', name: 'created_at'},
+				{data: 'result', name: 'result'},
+				{data: 'why', name: 'why'},
 			@if ($isAllow || in_array($viewUrl, $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
@@ -197,7 +193,7 @@ $(document).ready(function() {
 				[0, 'desc']
 			@endif
 			],
-			pageLength: 10,
+			pageLength: 25,
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
 			fnDrawCallback: function(settings) {
 				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
@@ -324,7 +320,34 @@ $(document).on('click', '.click-to-open', function() {
 			$('#analysis-data').html('<tr><td colspan="2">{{trans("custom_admin.message_no_records_found")}}</td></tr>');
 		}
 		$('#dark-header-modal').modal('show');
-	});
+});
+
+$(document).on('click', '.click-to-open2', function() {
+		var id = $(this).data('id');
+		if (id != '') {
+			$('.preloader').show();
+			var getPopupDataUrl = $('#admin_url').val()+'/analyses/details-view/'+id;
+			$.ajax({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: getPopupDataUrl,
+				method: 'GET',
+				data: {},
+				success: function (response) {
+					$('.preloader').hide();
+					if (response.type == 'success') {
+						$('#analysis-data').html(response.message);
+					} else {
+						$('#analysis-data').html('<tr><td colspan="2">{{trans("custom_admin.message_no_records_found")}}</td></tr>');
+					}
+				}
+			});
+		} else {
+			$('#analysis-data').html('<tr><td colspan="2">{{trans("custom_admin.message_no_records_found")}}</td></tr>');
+		}
+		$('#dark-header-modal').modal('show');
+});
 </script>
 
 <!-- View Details Modal -->

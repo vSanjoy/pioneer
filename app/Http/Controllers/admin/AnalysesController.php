@@ -277,6 +277,7 @@ class AnalysesController extends Controller
 
         try {
             $data['areaAnalysisId'] = $areaAnalysisId;
+            $data['areaAnalysis'] = $this->model->where(['id' => customEncryptionDecryption($areaAnalysisId, 'decrypt')])->first();
             // Start :: Manage restriction
             $data['isAllow'] = false;
             $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
@@ -324,71 +325,28 @@ class AnalysesController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
-                        ->addColumn('distribution_area_id', function ($row) {
-                            if ($row->areaAnalyses->distributionAreaDetails !== NULL) {
-                                return $row->areaAnalyses->distributionAreaDetails->title;
+                        ->addColumn('why', function ($row) {
+                            if ($row->why !== NULL) {
+                                return excerpts($row->why, 10);
                             } else {
                                 return 'N/A';
                             }
                         })
-                        ->addColumn('store_id', function ($row) {
-                            if ($row->areaAnalyses->storeDetails !== NULL) {
-                                return $row->areaAnalyses->storeDetails->store_name;
+                        ->addColumn('result', function ($row) {
+                            if ($row->result !== NULL) {
+                                return excerpts($row->result, 10);
                             } else {
                                 return 'N/A';
                             }
                         })
-                        ->addColumn('category_id', function ($row) {
-                            if ($row->areaAnalyses->categoryDetails !== NULL) {
-                                return $row->areaAnalyses->categoryDetails->title;
-                            } else {
-                                return 'N/A';
-                            }
-                        })
-                        ->addColumn('product_id', function ($row) {
-                            if ($row->areaAnalyses->productDetails !== NULL) {
-                                return $row->areaAnalyses->productDetails->title;
-                            } else {
-                                return 'N/A';
-                            }
-                        })
-                        ->addColumn('season_id', function ($row) {
-                            if ($row->areaAnalyses->seasonDetails !== NULL) {
-                                return $row->areaAnalyses->seasonDetails->title;
-                            } else {
-                                return 'N/A';
-                            }
-                        })
-                        ->addColumn('updated_at', function ($row) {
-                            return changeDateFormat($row->updated_at);
-                        })
-                        ->addColumn('status', function ($row) use ($isAllow, $allowedRoutes) {
-                            if ($isAllow || in_array($this->statusUrl, $allowedRoutes)) {
-                                if ($row->status == '1') {
-                                    $status = ' <a href="javascript:void(0)" data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" data-id="'.customEncryptionDecryption($row->id).'" data-action-type="inactive" class="custom_font status"><span class="badge badge-pill badge-success">'.trans('custom_admin.label_active').'</span></a>';
-                                } else {
-                                    $status = ' <a href="javascript:void(0)" data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_inactive').'" data-id="'.customEncryptionDecryption($row->id).'" data-action-type="active" class="custom_font status"><span class="badge badge-pill badge-danger">'.trans('custom_admin.label_inactive').'</span></a>';
-                                }
-                            } else {
-                                if ($row->status == '1') {
-                                    $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" class="custom_font"><span class="badge badge-pill badge-success">'.trans('custom_admin.label_active').'</span></a>';
-                                } else {
-                                    $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" class="custom_font"><span class="badge badge-pill badge-danger">'.trans('custom_admin.label_inactive').'</span></a>';
-                                }
-                            }
-                            return $status;
+                        ->addColumn('created_at', function ($row) {
+                            return date('Y-m-d', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes) {
                             $btn = '';
-                            if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
-                                $editLink = route($this->routePrefix.'.'.$this->editUrl, [customEncryptionDecryption($row->area_analysis_id), customEncryptionDecryption($row->id)]);
-
-                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'"><i class="fa fa-edit"></i></a>';
-                            }
                             if ($isAllow || in_array($this->viewUrl, $allowedRoutes)) {
-                                $viewLink = route($this->routePrefix.'.'.$this->viewUrl, customEncryptionDecryption($row->id));
 
-                                $btn .= ' <a href="javascript:void(0)" data-id="'.customEncryptionDecryption($row->id).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm click-to-open" aria-label="'.trans('custom_admin.label_view').'"><i class="fa fa-eye" style="margin-left: -2px;"></i></a>';
+                                $btn .= ' <a href="javascript:void(0)" data-id="'.customEncryptionDecryption($row->id).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm click-to-open2" aria-label="'.trans('custom_admin.label_view').'"><i class="fa fa-eye" style="margin-left: -2px;"></i></a>';
                             }
                             
                             return $btn;
@@ -464,67 +422,33 @@ class AnalysesController extends Controller
         }
     }
 
-    /*
-        * Function name : detailsEdit
-        * Purpose       : This function is to update form
-        * Input Params  : Request $request
-        * Return Value  : Returns sub admin data
-    */
-    public function detailsEdit(Request $request, $areaAnalysisId = null, $id = null) {
-        $data = [
-            'pageTitle'     => trans('custom_admin.label_edit_analyses'),
-            'panelTitle'    => trans('custom_admin.label_edit_analyses'),
-            'pageType'      => 'EDITPAGE'
-        ];
+    public function detailsView(Request $request, $id = null) {
+        $title      = trans('custom_admin.message_error');
+        $message    = '<tr><td colspan="2">'.trans("custom_admin.message_no_records_found").'</td></tr>';
+        $type       = 'error';
 
         try {
-            $data['areaAnalysisId'] = $data['id'] = $areaAnalysisId;
-            $data['id']             = $id;
-            $id                     = customEncryptionDecryption($areaAnalysisId, 'decrypt');
-            $data['details']        = $details = AreaAnalysisDetail::where(['id' => $id])->first();
-            
-            if ($request->isMethod('POST')) {
-                if ($id == null) {
-                    $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-                    return redirect()->route($this->routePrefix.'.'.$this->detailsListUrl, $areaAnalysisId);
-                }
-                $validationCondition = array(
-                    'result'    => 'required',
-                    'why'       => 'required',
-                );
-                $validationMessages = array(
-                    'result.required'   => trans('custom_admin.error_result'),
-                    'why.required'      => trans('custom_admin.error_why'),
-                );
-                $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
-                if ($validator->fails()) {
-                    $validationFailedMessages = validationMessageBeautifier($validator->messages()->getMessages());
-                    $this->generateToastMessage('error', $validationFailedMessages, false);
-                    return redirect()->back()->withInput();
-                } else {
-                    $updateData             = [];
-                    $updateData['result']   = $request->result ?? null;
-                    $updateData['why']      = $request->why ?? null;
-                    $update = $details->update($updateData);
-
-                    if ($update) {
-                        $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
-                        return redirect()->route($this->routePrefix.'.'.$this->detailsListUrl, $areaAnalysisId);
-                    } else {
-                        $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
-                        return redirect()->back()->withInput();
+            if ($request->ajax()) {
+                $id = customEncryptionDecryption($id, 'decrypt');
+                if ($id != null) {
+                    $details = AreaAnalysisDetail::where('id', $id)->first();
+                    
+                    if ($details != null) {
+                        $title      = trans('custom_admin.message_success');
+                        $type       = 'success';
+                       
+                        $message    = '<tr><td>'.trans('custom_admin.label_date').'</td><td>'.date('Y-m-d', strtotime($details->created_at)).'</td></tr>';
+                        $message    .= '<tr><td>'.trans('custom_admin.label_result').'</td><td>'.$details->result.'</td></tr>';
+                        $message    .= '<tr><td>'.trans('custom_admin.label_why').'</td><td>'.$details->why.'</td></tr>';
                     }
                 }
             }
-
-            return view($this->viewFolderPath.'.details_edit', $data);
         } catch (Exception $e) {
-            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-            return redirect()->route($this->routePrefix.'.'.$this->detailsListUrl, $areaAnalysisId);
+            $message = $e->getMessage();
         } catch (\Throwable $e) {
-            $this->generateToastMessage('error', $e->getMessage(), false);
-            return redirect()->route($this->routePrefix.'.'.$this->detailsListUrl, $areaAnalysisId);
+            $message = $e->getMessage();
         }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
     }
 
 }

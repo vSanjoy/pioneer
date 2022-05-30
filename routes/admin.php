@@ -134,14 +134,13 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/', 'AnalysesController@list')->name('list');
                 Route::post('ajax-list-request', 'AnalysesController@ajaxListRequest')->name('ajax-list-request');
                 Route::get('/view/{id}', 'AnalysesController@view')->name('view');
-
+                
                 Route::get('/details-list/{id}', 'AnalysesController@detailsList')->name('details-list');
                 Route::post('/ajax-details-list-request/{id}', 'AnalysesController@ajaxDetailsListRequest')->name('ajax-details-list-request');
                 
                 Route::get('/details-add/{id}', 'AnalysesController@detailsAdd')->name('details-add');
                 Route::post('/details-add-submit/{id}', 'AnalysesController@detailsAdd')->name('details-add-submit');
-                Route::get('/details-edit/{areaAnalysesId}/{id}', 'AnalysesController@detailsEdit')->name('details-edit');
-                Route::post('/details-edit-submit/{areaAnalysesId}/{id}', 'AnalysesController@detailsEdit')->name('details-edit-submit');
+                Route::get('/details-view/{id}', 'AnalysesController@detailsView')->name('details-view');
             });
             
         });
