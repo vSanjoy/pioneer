@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Administrator :: @if($title){{$title}} @else {{ getAppName() }} @endif</title>
+    <title>{!! env('APP_NAME', 'Pioneer Analysis Software') !!} :: @if($title){{$title}} @else {{ getAppName() }} @endif</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}" />
     <!-- Custom CSS -->

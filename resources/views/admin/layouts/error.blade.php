@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/admin/favicon.png') }}"/>
-    <title>Administrator :: @if($title){{$title}} @else {{ getAppName() }} @endif</title>
+    <title>{!! env('APP_NAME', 'Pioneer Analysis Software') !!} :: @if($title){{$title}} @else {{ getAppName() }} @endif</title>
     <!-- Custom CSS -->
     <link href="{{ asset('css/admin/dist/style.css') }}" rel="stylesheet">
     <!-- Font Awesome -->

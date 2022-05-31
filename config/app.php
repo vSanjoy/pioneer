@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Pickleball Players Network'),
+    'name' => env('APP_NAME', 'Pioneer Analysis Software'),
 
     /*
     |--------------------------------------------------------------------------

@@ -40,11 +40,6 @@ class Controller extends BaseController
                 \App::setLocale(\App::getLocale());
             }
         }
-
-        // Start :: All league related access availability
-        $isAccessAvailable  = isAccessBlocked();
-        \View::share(['isAccessAvailable' => $isAccessAvailable]);
-        // End :: All league related access availability
     }
 
     /*

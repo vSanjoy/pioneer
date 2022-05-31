@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], function() {
     Route::any('/', 'AuthController@login')->name('login');
+    Route::any('/login', 'AuthController@login')->name('login');
     Route::any('/forgot-password', 'AuthController@forgotPassword')->name('forgot-password');
     Route::any('/reset-password/{token}', 'AuthController@resetPassword')->name('reset-password');
     Route::post('/ckeditor-upload', 'CmsController@upload')->name('ckeditor-upload');

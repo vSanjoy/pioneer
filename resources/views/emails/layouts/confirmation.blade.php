@@ -27,7 +27,7 @@
                     <p style="text-align: center">
                         <a href="{!! $settingData['facebook_link'] !!}" target="_blank"><img src="{{asset('images/site/facebook.png')}}" alt="" width="20" height="20" style="border:0; width: 20px; text-decoration: none;" /></a><a href="{!! $settingData['instagram_link'] !!}" target="_blank" style="margin-left: 8px;"><img src="{{asset('images/site/instagram.png')}}" alt="" width="20" height="20" style="border:0; width: 20px; text-decoration: none;" /></a>
                     </p>
-					&copy; {{ date('Y') }} <a href="{{ getBaseUrl() }}" style="color: #ffffff; text-decoration: none;">Pickleball Players Network LLC</a>, all rights reserved.
+					&copy; {{ date('Y') }} <a href="{{ getBaseUrl() }}" style="color: #ffffff; text-decoration: none;">Pioneer Analysis Software</a>, all rights reserved.
 				</td>
       		</tr>
     	</tbody>

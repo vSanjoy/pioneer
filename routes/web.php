@@ -15,9 +15,4 @@ use Illuminate\Support\Facades\Route;
 
 include('admin.php');
 
-// Route::group(['namespace' => 'site', 'as' => 'site.'], function () {
-// });
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', 'adminpanel/');
