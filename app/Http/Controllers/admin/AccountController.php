@@ -138,6 +138,7 @@ class AccountController extends Controller
                     'last_name'     => 'required',
                     'email'         => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,'.Auth::guard('admin')->user()->id.',id,deleted_at,NULL',
                     'phone_no'      => 'required',
+                    'username'      => 'required|unique:'.($this->model)->getTable().',username,'.Auth::guard('admin')->user()->id.',id,deleted_at,NULL|regex:'.config('global.VALID_ALPHANUMERIC_WITHOUT_SPACE_SPECIAL_CHARACTERS'),
                     'profile_pic'   => 'mimes:'.config('global.IMAGE_FILE_TYPES').'|max:'.config('global.IMAGE_MAX_UPLOAD_SIZE'),
                 );
                 $validationMessages = array(
@@ -147,6 +148,7 @@ class AccountController extends Controller
                     'email.regex'           => trans('custom_admin.error_valid_email'),
                     'email.unique'          => trans('custom_admin.error_email_unique'),
                     'phone_no.required'     => trans('custom_admin.error_enter_phone_no'),
+                    'username.regex'        => trans('custom_admin.error_valid_alphanumeric_without_space_special_characters'),
                     'profile_pic.mimes'     => trans('custom_admin.error_image_mimes'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);

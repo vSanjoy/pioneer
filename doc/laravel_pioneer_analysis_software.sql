@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 27, 2022 at 02:53 PM
+-- Generation Time: May 31, 2022 at 08:47 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -497,9 +497,9 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', NULL, 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', NULL, 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653654501, 'Y', '2022-05-06 07:39:45', '2022-05-27 06:58:21', NULL),
-(3, 'Owner', NULL, NULL, 'Tibrewalla', NULL, 'Tibrewalla', NULL, 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'distributor_1652101000.jpg', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1653653087, 'N', '2022-05-09 06:16:32', '2022-05-27 06:34:47', NULL),
-(4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', NULL, 'mahendra@yopmail.com', 'Marwari Relief Society', NULL, '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'distributor_1653562929.jpg', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-05-26 05:32:09', '2022-05-26 05:44:05', NULL);
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653978494, 'Y', '2022-05-06 07:39:45', '2022-05-31 01:04:17', NULL),
+(3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1653978892, 'N', '2022-05-09 06:16:32', '2022-05-31 01:13:46', NULL),
+(4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1653979441, 'N', '2022-05-26 05:32:09', '2022-05-31 01:14:31', NULL);
 
 -- --------------------------------------------------------
 
@@ -546,7 +546,8 @@ CREATE TABLE `up_user_roles` (
 --
 
 INSERT INTO `up_user_roles` (`user_id`, `role_id`) VALUES
-(3, 2);
+(3, 2),
+(4, 2);
 
 -- --------------------------------------------------------
 

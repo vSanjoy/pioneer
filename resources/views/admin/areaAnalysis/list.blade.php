@@ -33,14 +33,14 @@
 														@lang('custom_admin.label_inactive_selected')
 													</a>
 												@endif
-												@if ($isAllow || (in_array($statusUrl, $allowedRoutes) && in_array($pageRoute, $allowedRoutes)))
+												{{-- @if ($isAllow || (in_array($statusUrl, $allowedRoutes) && in_array($pageRoute, $allowedRoutes)))
 													<div class="dropdown-divider"></div>
 												@endif
 												@if ($isAllow || in_array($pageRoute, $allowedRoutes))
 													<a class="dropdown-item bulkAction" data-action-type="delete">
 														@lang('custom_admin.label_delete_selected')
 													</a>
-												@endif
+												@endif --}}
 												</div>
 											</button>
 										</div>

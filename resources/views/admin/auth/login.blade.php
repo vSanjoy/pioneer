@@ -42,12 +42,12 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="form-group">
-                        <label class="font-bold">@lang('custom_admin.label_email')<span class="red_star">*</span></label>
-                        {{ Form::text('email', null, array(
-                                                        'id' => 'email',
+                        <label class="font-bold">@lang('custom_admin.label_email') or @lang('custom_admin.label_username')<span class="red_star">*</span></label>
+                        {{ Form::text('credential', null, array(
+                                                        'id' => 'credential',
                                                         'class' => 'form-control',
                                                         'placeholder' => '',
-                                                        'required' => 'required' )) }}
+                                                        'required' => true )) }}
                     </div>
                 </div>
                 <div class="col-lg-12">
@@ -57,7 +57,7 @@
                                                             'id' => 'password',
                                                             'class' => 'form-control',
                                                             'placeholder' => '',
-                                                            'required' => 'required' )) }}
+                                                            'required' => true )) }}
                     </div>
                 </div>
                 {{-- <div class="col-lg-12">

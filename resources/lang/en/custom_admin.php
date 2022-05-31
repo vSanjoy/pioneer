@@ -505,6 +505,9 @@ return [
     'error_select_role'                             => 'Please select role.',
     'error_select_distributor_id'                   => 'Please select distributor.',
     'error_username_unique'                         => 'Please enter unique user name.',
+    'error_valid_alphanumeric_without_space_special_characters' => "Please enter username (alphanumeric without space and special characters).",
+    'error_enter_email_or_username'                 => 'Please enter email or username.',
+    'error_please_provide_credential'               => 'Please provide credentials (email or username).',
     
 
 /* Messages */

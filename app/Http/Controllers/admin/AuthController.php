@@ -79,13 +79,15 @@ class AuthController extends Controller
             try {
                 if ($request->isMethod('POST')) {
                     $validationCondition = array(
-                        'email'     => 'required|regex:'.config('global.EMAIL_REGEX'),
+                        // 'email'     => 'required|regex:'.config('global.EMAIL_REGEX'),
+                        'credential'=> 'required',
                         'password'  => 'required',
                     );
                     $validationMessages = array(
-                        'email.required'    => trans('custom_admin.error_enter_email'),
-                        'email.regex'       => trans('custom_admin.error_enter_valid_email'),
-                        'password.required' => trans('custom_admin.error_enter_password'),
+                        // 'email.required'    => trans('custom_admin.error_enter_email'),
+                        // 'email.regex'       => trans('custom_admin.error_enter_valid_email'),
+                        'credential.required'   => trans('custom.error_enter_email_or_username'),
+                        'password.required'     => trans('custom_admin.error_enter_password'),
                     );
                     $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                     if ($validator->fails()) {
@@ -94,36 +96,49 @@ class AuthController extends Controller
                         $this->generateToastMessage('error', $validationFailedMessages, false);
                         return redirect()->route($this->routePrefix.'.login')->withInput();
                     } else {
-                        $rememberMe = (!empty($request->remember_me)) ? true : false;
-                        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'SA', 'status' => '1'], $rememberMe)) {
-                            if (Auth::guard('admin')->user()->checkRolePermission == null) {
-                                Auth::guard('admin')->logout();
+                        $emailOrUsername= $request->credential;
+                        $password       = $request->password;
 
-                                $this->generateToastMessage('error', trans('custom_admin.error_permission_denied'), false);
-                                return redirect()->route($this->routePrefix.'.login')->withInput();
+                        if ($emailOrUsername && $password) {
+                            $credentialField = ['email' => $emailOrUsername];
+                            if (!strpos($emailOrUsername, '@') !== false) {
+                                $credentialField = ['username' => $emailOrUsername];
+                            }
+                            $credentialField['password']= $password;
+                            $credentialField['status']  = '1';
+
+                            $rememberMe = (!empty($request->remember_me)) ? true : false;
+                            
+                            if (Auth::guard('admin')->attempt($credentialField, $rememberMe)) {
+                                if (Auth::guard('admin')->user()->type == 'SA') {
+                                    if (Auth::guard('admin')->user()->checkRolePermission == null) {
+                                        Auth::guard('admin')->logout();
+    
+                                        $this->generateToastMessage('error', trans('custom_admin.error_permission_denied'), false);
+                                        return redirect()->route($this->routePrefix.'.login')->withInput();
+                                    } else {
+                                        $user  = Auth::guard('admin')->user();
+                                        $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
+                                        $user->save();
+                                        return redirect()->route($this->routePrefix.'.dashboard');
+                                    }
+                                } else if (Auth::guard('admin')->user()->type == 'D' || Auth::guard('admin')->user()->type == 'A') {
+                                    $user  = Auth::guard('admin')->user();
+                                    $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
+                                    $user->save();
+                                    return redirect()->route($this->routePrefix.'.dashboard');
+                                } else {
+                                    Auth::guard('admin')->logout();
+    
+                                    $this->generateToastMessage('error', trans('custom_admin.error_permission_denied'), false);
+                                    return redirect()->route($this->routePrefix.'.login')->withInput();
+                                }
                             } else {
-                                $user  = \Auth::guard('admin')->user();
-                                $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
-                                $user->save();
-                                return redirect()->route($this->routePrefix.'.dashboard');
-                            }                            
-                        } else if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'A', 'status' => '1'])) {
-                            $user  = \Auth::guard('admin')->user();
-                            $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
-                            $user->save();
-                            return redirect()->route($this->routePrefix.'.dashboard');
-                        } else if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'D', 'status' => '1'])) {
-                            $user  = \Auth::guard('admin')->user();
-                            $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
-                            $user->save();
-                            return redirect()->route($this->routePrefix.'.dashboard');
-                        } else if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'U', 'status' => '1'])) {
-                            Auth::guard('admin')->logout();
-
-                            $this->generateToastMessage('error', trans('custom_admin.error_not_authorized'), false);
-                            return redirect()->route($this->routePrefix.'.login')->withInput();
+                                $this->generateToastMessage('error', trans('custom_admin.error_invalid_credentials_inactive_user'), false);
+                                return redirect()->route($this->routePrefix.'.login')->withInput();
+                            }
                         } else {
-                            $this->generateToastMessage('error', trans('custom_admin.error_invalid_credentials_inactive_user'), false);
+                            $this->generateToastMessage('error', trans('custom_admin.error_please_provide_credential'), false);
                             return redirect()->route($this->routePrefix.'.login')->withInput();
                         }
                     }

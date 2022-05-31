@@ -119,6 +119,15 @@ $.validator.addMethod("valid_youtube_url", function(value, element) {
     }
 });
 
+// Alphanumeric without space special characters
+$.validator.addMethod("valid_alphanumeric_without_space_special_characters", function(value, element) {
+    if (/^[a-zA-Z0-9_]+$/.test(value)) {
+        return true;
+    } else {
+        return false;
+    }
+});
+
 // Ckeditor
 $.validator.addMethod("ckrequired", function (value, element) {  
     var idname = $(element).attr('id');  
@@ -173,18 +182,16 @@ $(document).ready(function() {
         ignore: [],
         debug: false,
         rules: {
-            email: {
+            credential: {
                 required: true,
-                valid_email: true
             },
             password: {
                 required: true
             }
         },
         messages: {
-            email: {
-                required: "Please enter email.",
-                valid_email: "Please enter valid email."
+            credential: {
+                required: "Please enter email or username.",
             },
             password: {
                 required: "Please enter password.",
@@ -334,6 +341,10 @@ $(document).ready(function() {
             phone_no: {
                 required: true,
             },
+            username: {
+                required: true,
+                valid_alphanumeric_without_space_special_characters: true,
+            },
         },
         messages: {
             first_name: {
@@ -348,6 +359,10 @@ $(document).ready(function() {
             },
             phone_no: {
                 required: "Please enter phone number.",
+            },
+            username: {
+                required: "Please enter username.",
+                valid_alphanumeric_without_space_special_characters: "Please enter username (alphanumeric without space and special characters).",
             },
         },
         errorClass: 'error invalid-feedback',
@@ -790,7 +805,8 @@ $(document).ready(function() {
                 required: true
             },
             username: {
-                required: true
+                required: true,
+                valid_alphanumeric_without_space_special_characters: true,
             },
             email: {
                 required: true,
@@ -820,7 +836,8 @@ $(document).ready(function() {
                 required: "Please enter company."
             },
             username: {
-                required: "Please enter username."
+                required: "Please enter username.",
+                valid_alphanumeric_without_space_special_characters: "Please enter username (alphanumeric without space and special characters).",
             },
             email: {
                 required: "Please enter email.",
@@ -879,6 +896,10 @@ $(document).ready(function() {
             company: {
                 required: true
             },
+            username: {
+                required: true,
+                valid_alphanumeric_without_space_special_characters: true,
+            },
             email: {
                 required: true,
                 valid_email: true
@@ -905,6 +926,10 @@ $(document).ready(function() {
             },
             company: {
                 required: "Please enter company."
+            },
+            username: {
+                required: "Please enter username.",
+                valid_alphanumeric_without_space_special_characters: "Please enter username (alphanumeric without space and special characters).",
             },
             email: {
                 required: "Please enter email.",

@@ -422,6 +422,15 @@ class AnalysesController extends Controller
         }
     }
 
+    /*
+        * Function name : detailsView
+        * Purpose       : This function is to view details
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : Request $request, $id = null
+        * Return Value  : Returns json
+    */
     public function detailsView(Request $request, $id = null) {
         $title      = trans('custom_admin.message_error');
         $message    = '<tr><td colspan="2">'.trans("custom_admin.message_no_records_found").'</td></tr>';
@@ -437,7 +446,7 @@ class AnalysesController extends Controller
                         $title      = trans('custom_admin.message_success');
                         $type       = 'success';
                        
-                        $message    = '<tr><td>'.trans('custom_admin.label_date').'</td><td>'.date('Y-m-d', strtotime($details->created_at)).'</td></tr>';
+                        $message    = '<tr><td>'.trans('custom_admin.label_date').'</td><td>'.changeDateFormat($details->created_at).'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_result').'</td><td>'.$details->result.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_why').'</td><td>'.$details->why.'</td></tr>';
                     }

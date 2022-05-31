@@ -8,33 +8,33 @@
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>
 					{{ Form::open([
-						'method'=> 'POST',
-						'class' => '',
-						'route' => [$routePrefix.'.profile'],
-						'name'  => 'updateProfileForm',
-						'id'    => 'updateProfileForm',
-						'files' => true,
-						'novalidate' => true ]) }}
+								'method'=> 'POST',
+								'class' => '',
+								'route' => [$routePrefix.'.profile'],
+								'name'  => 'updateProfileForm',
+								'id'    => 'updateProfileForm',
+								'files' => true,
+								'novalidate' => true ]) }}
 						<div class="form-body mt-4-5">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_first_name')<span class="red_star">*</span></label>
-										{{ Form::text('first_name', $adminDetail->first_name, array(
+										{{ Form::text('first_name', $adminDetail->first_name ?? null, array(
                                                                 'id' => 'first_name',
                                                                 'class' => 'form-control',
                                                                 'placeholder' => '',
-                                                                'required' => 'required' )) }}
+                                                                'required' => true )) }}
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_last_name')<span class="red_star">*</span></label>
-										{{ Form::text('last_name', $adminDetail->last_name, array(
+										{{ Form::text('last_name', $adminDetail->last_name ?? null, array(
                                                                 'id' => 'last_name',
                                                                 'class' => 'form-control',
                                                                 'placeholder' => '',
-                                                                'required' => 'required' )) }}
+                                                                'required' => true )) }}
 									</div>
 								</div>
 							</div>
@@ -42,21 +42,33 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_email')<span class="red_star">*</span></label>
-										{{ Form::text('email', $adminDetail->email, array(
+										{{ Form::text('email', $adminDetail->email ?? null, array(
                                                                 'id' => 'email',
                                                                 'class' => 'form-control',
                                                                 'placeholder' => '',
-                                                                'required' => 'required' )) }}
+                                                                'required' => true )) }}
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_phone_number')<span class="red_star">*</span></label>
-										{{ Form::text('phone_no', $adminDetail->phone_no, array(
+										{{ Form::text('phone_no', $adminDetail->phone_no ?? null, array(
                                                                 'id' => 'phone_no',
                                                                 'class' => 'form-control',
                                                                 'placeholder' => '',
-                                                                'required' => 'required' )) }}
+                                                                'required' => true )) }}
+									</div>
+								</div>
+							</div>
+							<div class="row mt-1">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="text-dark font-bold">@lang('custom_admin.label_username')<span class="red_star">*</span></label>
+										{{ Form::text('username', $adminDetail->username ?? null, array(
+                                                                'id' => 'username',
+                                                                'class' => 'form-control',
+                                                                'placeholder' => '',
+                                                                'required' => true )) }}
 									</div>
 								</div>
 							</div>

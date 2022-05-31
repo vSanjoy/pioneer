@@ -17,6 +17,7 @@ use App\Traits\GeneralMethods;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\DistributionArea;
+use App\Models\UserRole;
 use DataTables;
 
 class DistributorsController extends Controller
@@ -192,7 +193,7 @@ class DistributorsController extends Controller
                     'job_title_1'           => 'required',
                     'full_name'             => 'required',
                     'company'               => 'required',
-                    'username'              => 'required|unique:'.($this->model)->getTable().',username,NULL,id,deleted_at,NULL',
+                    'username'              => 'required|unique:'.($this->model)->getTable().',username,NULL,id,deleted_at,NULL|regex:'.config('global.VALID_ALPHANUMERIC_WITHOUT_SPACE_SPECIAL_CHARACTERS'),
                     'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
                     // 'phone_no'              => 'required',
                     'password'              => 'required|regex:'.config('global.PASSWORD_REGEX'),
@@ -204,8 +205,9 @@ class DistributorsController extends Controller
                     'job_title_1.required'          => trans('custom_admin.error_job_title_1'),
                     'full_name.required'            => trans('custom_admin.error_name_1'),
                     'company.required'              => trans('custom_admin.error_company'),
-                    'username.required'            => trans('custom_admin.error_username'),
+                    'username.required'             => trans('custom_admin.error_username'),
                     'username.unique'               => trans('custom_admin.error_username_unique'),
+                    'username.regex'                => trans('custom_admin.error_valid_alphanumeric_without_space_special_characters'),
                     'email.required'                => trans('custom_admin.error_email'),
                     'email.regex'                   => trans('custom_admin.error_valid_email'),
                     'email.unique'                  => trans('custom_admin.error_email_unique'),
@@ -230,7 +232,7 @@ class DistributorsController extends Controller
                     $profilePic         = $request->file('profile_pic');
                     $uploadedImage      = '';
                     if ($profilePic != '') {
-                        $uploadedImage      = singleImageUpload($this->modelName, $profilePic, 'distributor', $this->pageRoute, true); // If thumb true, mention size in global.php
+                        $uploadedImage  = singleImageUpload($this->modelName, $profilePic, 'distributor', $this->pageRoute, true); // If thumb true, mention size in global.php
                     }
 
                     if ($request->full_name == trim($request->full_name) && strpos($request->full_name, ' ') !== false) {
@@ -269,6 +271,13 @@ class DistributorsController extends Controller
                         $userDetailData->notes             = $request->notes ?? null;
                         $userDetailData->save();
                         // End :: Inserting data to user_details table
+
+                        // Start :: Inserting data to user_roles table
+                        $userRoleData           = new UserRole;
+                        $userRoleData->user_id  = $details->id;
+                        $userRoleData->role_id  = 2;    // Role id (2 => Distributor Role) from roles table
+                        $userRoleData->save();
+                        // End :: Inserting data to user_roles table
 
                         $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
                         return redirect()->route($this->routePrefix.'.'.$this->listUrl);
@@ -326,7 +335,7 @@ class DistributorsController extends Controller
                     'job_title_1'           => 'required',
                     'full_name'             => 'required',
                     'company'               => 'required',
-                    'username'              => 'required|unique:'.($this->model)->getTable().',username,'.$id.',id,deleted_at,NULL',
+                    'username'              => 'required|unique:'.($this->model)->getTable().',username,'.$id.',id,deleted_at,NULL|regex:'.config('global.VALID_ALPHANUMERIC_WITHOUT_SPACE_SPECIAL_CHARACTERS'),
                     'email'                 => 'required|regex:'.config('global.EMAIL_REGEX'),
                     // 'phone_no'              => 'required',
                     'profile_pic'           => 'mimes:'.config('global.IMAGE_FILE_TYPES').'|max:'.config('global.IMAGE_MAX_UPLOAD_SIZE'),
@@ -338,6 +347,7 @@ class DistributorsController extends Controller
                     'company.required'              => trans('custom_admin.error_company'),
                     'username.required'             => trans('custom_admin.error_username'),
                     'username.unique'               => trans('custom_admin.error_username_unique'),
+                    'username.regex'                => trans('custom_admin.error_valid_alphanumeric_without_space_special_characters'),
                     'email.required'                => trans('custom_admin.error_email'),
                     'email.regex'                   => trans('custom_admin.error_valid_email'),
                     'email.unique'                  => trans('custom_admin.error_email_unique'),
@@ -407,7 +417,15 @@ class DistributorsController extends Controller
                                 'zip'           => $request->zip ?? null,
                                 'notes'         => $request->notes ?? null
                             ]);
-                            // End :: update data to user_details table                        
+                            // End :: update data to user_details table
+
+                            // Start :: Inserting data to user_roles table
+                            $isExistUserRole = UserRole::where('user_id', $id)->delete();
+                            $userRoleData           = new UserRole;
+                            $userRoleData->user_id  = $id;
+                            $userRoleData->role_id  = 2;    // Role id (2 => Distributor Role) from roles table
+                            $userRoleData->save();
+                            // End :: Inserting data to user_roles table
 
                             $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
                             return redirect()->route($this->routePrefix.'.'.$this->listUrl);
