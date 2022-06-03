@@ -20,10 +20,10 @@
 						<div class="form-body mt-4-5">
 							<div class="row mt-1">
 								<div class="col-md-12">
-									<div class="form-group">
+									<div class="form-group" id="distribution-area-div">
 										<label class="text-dark font-bold">@lang('custom_admin.label_distribution_area')<span class="red_star">*</span></label>
-										<select name="distribution_area_id" id="distribution_area_id" class="form-control">
-											<option value="">--Select--</option>
+										<select name="distribution_area_id" id="distribution_area_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required>
+											<option value="">--@lang('custom_admin.label_select')--</option>
 										@foreach ($distributionAreas as $item)
 											<option value="{{ $item->id }}">{!! $item->title !!}</option>
 										@endforeach

@@ -871,7 +871,11 @@ $(document).ready(function() {
             toastr.error(overallErrorMessage, errorMessage+'!');
         },
         errorPlacement: function(error, element) {
-            error.insertAfter(element);
+            if ($(element).attr('id') == 'distribution_area_id') {
+                error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else {
+                error.insertAfter(element);
+            }
         },
         submitHandler: function(form) {
             $('#btn-processing').html(btnSavingPreloader);
@@ -963,7 +967,11 @@ $(document).ready(function() {
             toastr.error(overallErrorMessage, errorMessage+'!');
         },
         errorPlacement: function(error, element) {
-            error.insertAfter(element);
+            if ($(element).attr('id') == 'distribution_area_id') {
+                error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else {
+                error.insertAfter(element);
+            }
         },
         submitHandler: function(form) {
             $('#btn-processing').html(btnSavingPreloader);
@@ -1028,7 +1036,11 @@ $(document).ready(function() {
             toastr.error(overallErrorMessage, errorMessage+'!');
         },
         errorPlacement: function(error, element) {
-            error.insertAfter(element);
+            if ($(element).attr('id') == 'distribution_area_id') {
+                error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else {
+                error.insertAfter(element);
+            }
         },
         submitHandler: function(form) {
             $('#btn-processing').html(btnSavingPreloader);
@@ -1091,7 +1103,11 @@ $(document).ready(function() {
             toastr.error(overallErrorMessage, errorMessage+'!');
         },
         errorPlacement: function(error, element) {
-            error.insertAfter(element);
+            if ($(element).attr('id') == 'distribution_area_id') {
+                error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else {
+                error.insertAfter(element);
+            }
         },
         submitHandler: function(form) {
             $('#btn-processing').html(btnSavingPreloader);

@@ -214,7 +214,7 @@ $getSiteSettings = getSiteSettings();
 			@endif
 
 			<!-- Website Settings Management Start -->
-			@php
+			{{-- @php
 			$siteSettingRoutes 	= ['website-settings'];
 			@endphp
 			@if ( ($isSuperAdmin) || in_array('website-settings', $getAllRoles) )
@@ -228,7 +228,7 @@ $getSiteSettings = getSiteSettings();
 					</a>
 				</li>
 				@endif
-			@endif
+			@endif --}}
 
 				<li class="list-divider"></li>
 				<li class="sidebar-item">

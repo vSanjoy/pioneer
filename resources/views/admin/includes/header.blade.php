@@ -40,11 +40,11 @@
                 <!-- ============================================================== -->
                 <!-- create new -->
                 <!-- ============================================================== -->
-                <li class="nav-item dropdown">
+                {{-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{{ route('admin.website-settings') }}">
                         <i data-feather="settings" class="svg-icon"></i>
                     </a>
-                </li>
+                </li> --}}
                 {{-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{{ url('/') }}" target="_blank">
                         @lang('custom_admin.label_view') @lang('custom_admin.label_website') <i data-feather="external-link" class="svg-icon"></i>

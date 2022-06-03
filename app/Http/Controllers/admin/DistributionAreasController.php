@@ -318,8 +318,8 @@ class DistributionAreasController extends Controller
                     $details = $this->model->where('id', $id)->first();
                     if ($details != null) {
                         if ($details->status == '1') {
-                            $isRelatedDistributorExist  = User::where(['distribution_area_id' => $id, 'type' => 'D', 'status' => '1'])->count();
-                            $isRelatedStoreExist        = Store::where(['distribution_area_id' => $id, 'status' => '1'])->count();
+                            $isRelatedDistributorExist  = User::where(['distribution_area_id' => $id, 'type' => 'D'])->count();
+                            $isRelatedStoreExist        = Store::where(['distribution_area_id' => $id])->count();
                             if ($isRelatedDistributorExist || $isRelatedStoreExist) {
                                 $title      = trans('custom_admin.message_warning');
                                 $message    = trans('custom_admin.message_inactive_related_distributor_or_store_records_exist');
