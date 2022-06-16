@@ -27,20 +27,22 @@ use DataTables;
 class AreaAnalysesController extends Controller
 {
     use GeneralMethods;
-    public $controllerName  = 'AreaAnalyses';
+    public $controllerName          = 'AreaAnalyses';
     public $management;
-    public $modelName       = 'AreaAnalyses';
+    public $modelName               = 'AreaAnalyses';
     public $breadcrumb;
-    public $routePrefix     = 'admin';
-    public $pageRoute       = 'areaAnalysis';
-    public $listUrl         = 'areaAnalysis.list';
-    public $listRequestUrl  = 'areaAnalysis.ajax-list-request';
-    public $addUrl          = 'areaAnalysis.add';
-    public $editUrl         = 'areaAnalysis.edit';
-    public $statusUrl       = 'areaAnalysis.change-status';
-    public $deleteUrl       = 'areaAnalysis.delete';
-    public $viewFolderPath  = 'admin.areaAnalysis';
-    public $model           = 'AreaAnalyses';
+    public $routePrefix             = 'admin';
+    public $pageRoute               = 'areaAnalysis';
+    public $listUrl                 = 'areaAnalysis.list';
+    public $listRequestUrl          = 'areaAnalysis.ajax-list-request';
+    public $addUrl                  = 'areaAnalysis.add';
+    public $editUrl                 = 'areaAnalysis.edit';
+    public $statusUrl               = 'areaAnalysis.change-status';
+    public $deleteUrl               = 'areaAnalysis.delete';
+    public $detailsListUrl          = 'areaAnalysis.details-list';
+    public $detailsListRequestUrl   = 'areaAnalysis.ajax-details-list-request';
+    public $viewFolderPath          = 'admin.areaAnalysis';
+    public $model                   = 'AreaAnalyses';
 
     /*
         * Function Name : __construct
@@ -54,6 +56,10 @@ class AreaAnalysesController extends Controller
 
         $this->management  = trans('custom_admin.label_menu_area_analysis');
         $this->model       = new AreaAnalyses();
+
+        if (strpos(\Route::currentRouteName(), 'areaAnalysis.details-list') !== false) {
+            $this->management  = trans('custom_admin.label_area_analysis_details');
+        }
 
         // Assign breadcrumb
         $this->assignBreadcrumb();
@@ -85,6 +91,12 @@ class AreaAnalysesController extends Controller
             $data['allowedRoutes'] = $restrictions['allow_routes'];
             // End :: Manage restriction
 
+            $data['seasons']            = Season::where(['status' => '1'])->whereNull(['deleted_at'])->select('id','title')->orderBy('sort', 'ASC')->get();
+            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->whereNull(['deleted_at'])->select('id','title')->orderBy('sort', 'ASC')->get();
+            $data['distributors']       = User::where(['type' => 'D', 'status' => '1'])->whereNull(['deleted_at'])->select('id','full_name','email')->orderBy('full_name', 'ASC')->get();
+            $data['stores']             = Store::where(['status' => '1'])->whereNull(['deleted_at'])->select('id','store_name','email')->orderBy('sort', 'ASC')->get();
+            $data['categories']         = Category::where(['status' => '1'])->select('id','title')->orderBy('title', 'ASC')->get();
+
             return view($this->viewFolderPath.'.list', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -107,7 +119,75 @@ class AreaAnalysesController extends Controller
 
         try {
             if ($request->ajax()) {
+                // Season
+                $seasonId         = $request->season_id;
+                $filterBySeason   = false;
+                if ($seasonId != '') {
+                    $filterBySeason = true;
+                    $filter['season_id'] = $seasonId;
+                }
+                // Distribution Area
+                $distributionAreaId         = $request->distribution_area_id;
+                $filterByDistributionArea   = false;
+                if ($distributionAreaId != '') {
+                    $filterByDistributionArea = true;
+                    $filter['distribution_area_id'] = $distributionAreaId;
+                }
+                // Distributor
+                $distributorId       = $request->distributor_id;
+                $filterByDistributor = false;
+                if ($distributorId != '') {
+                    $filterByDistributor = true;
+                    $filter['distributor_id'] = $distributorId;
+                }
+                // Store
+                $storeId         = $request->store_id;
+                $filterByStore   = false;
+                if ($storeId != '') {
+                    $filterByStore = true;
+                    $filter['store_id'] = $storeId;
+                }
+                // Category
+                $categoryId         = $request->category_id;
+                $filterByCategory   = false;
+                if ($categoryId != '') {
+                    $filterByCategory = true;
+                    $filter['category_id'] = $categoryId;
+                }
+                // product
+                $productId       = $request->product_id;
+                $filterByProduct = false;
+                if ($productId != '') {
+                    $filterByProduct = true;
+                    $filter['product_id'] = $productId;
+                }
+
                 $data = $this->model->whereNull('deleted_at');
+
+                // Based on season filter
+                if ($filterBySeason) {
+                    $data = $data->where('season_id', $seasonId);
+                }
+                // Based on distribution area filter
+                if ($filterByDistributionArea) {
+                    $data = $data->where('distribution_area_id', $distributionAreaId);
+                }
+                // Based on distributor filter
+                if ($filterByDistributor) {
+                    $data = $data->where('distributor_id', $distributorId);
+                }
+                // Based on store filter
+                if ($filterByStore) {
+                    $data = $data->where('store_id', $storeId);
+                }
+                // Based on category filter
+                if ($filterByCategory) {
+                    $data = $data->where('category_id', $categoryId);
+                }
+                // Based on product filter
+                if ($filterByProduct) {
+                    $data = $data->where('product_id', $productId);
+                }
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -162,8 +242,6 @@ class AreaAnalysesController extends Controller
                                 return 'N/A';
                             }
                         })
-                   
-                      
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
                         })
@@ -193,6 +271,13 @@ class AreaAnalysesController extends Controller
                             // if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
                             //     $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
                             // }
+
+                            if ($isAllow || in_array($this->detailsListUrl, $allowedRoutes)) {
+                                $detailsListLink = route($this->routePrefix.'.'.$this->detailsListUrl, customEncryptionDecryption($row->id));
+
+                                $btn .= ' <a href="'.$detailsListLink.'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_details').' '.trans('custom_admin.label_list').'"><i class="fa fa-list"></i></a>';
+                            }
+
                             return $btn;
                         })
                         ->rawColumns(['status','action'])
@@ -574,10 +659,10 @@ class AreaAnalysesController extends Controller
                         }
                     }
                     // Stores
-                    $stores = Store::select('id','store_name','distribution_area_id')->where(['distribution_area_id' => $distributionAreaId, 'status' => '1'])->whereNull('deleted_at')->orderBy('store_name', 'ASC')->get();
+                    $stores = Store::select('id','store_name','email','distribution_area_id')->where(['distribution_area_id' => $distributionAreaId, 'status' => '1'])->whereNull('deleted_at')->orderBy('store_name', 'ASC')->get();
                     if ($stores->count()) {
                         foreach ($stores as $keystore => $valStore) {
-                            $storeOptions .= '<option value="'.$valStore->id.'">'.$valStore->store_name.'</option>';
+                            $storeOptions .= '<option value="'.$valStore->id.'">'.$valStore->store_name.' ('.$valStore->email.')</option>';
                         }
                     }
                 }
@@ -627,6 +712,104 @@ class AreaAnalysesController extends Controller
             $message = $e->getMessage();
         }
         return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'options' => $options]);
+    }
+
+    /*
+        * Function name : detailsList
+        * Purpose       : This function is for the details list
+        * Input Params  : Request $request
+        * Return Value  : Returns to the details list page
+    */
+    public function detailsList(Request $request, $areaAnalysisId = null) {
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_area_analysis_details_list'),
+            'panelTitle'    => trans('custom_admin.label_area_analysis_details_list'),
+            'pageType'      => 'LISTPAGE'
+        ];
+
+        try {
+            $data['areaAnalysisId'] = $areaAnalysisId;
+            $data['areaAnalysis'] = $this->model->where(['id' => customEncryptionDecryption($areaAnalysisId, 'decrypt')])->first();
+            // Start :: Manage restriction
+            $data['isAllow'] = false;
+            $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
+            if ($restrictions['is_super_admin']) {
+                $data['isAllow'] = true;
+            }
+            $data['allowedRoutes'] = $restrictions['allow_routes'];
+            // End :: Manage restriction
+
+            return view($this->viewFolderPath.'.details_list', $data);
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.dashboard');
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.dashboard');
+        }
+    }
+
+    /*
+        * Function name : ajaxDetailsListRequest
+        * Purpose       : This function is for the reutrn ajax data
+        * Input Params  : Request $request
+        * Return Value  : Returns data
+    */
+    public function ajaxDetailsListRequest(Request $request, $areaAnalysisId = null) {
+        $data['pageTitle'] = trans('custom_admin.label_area_analysis_details_list');
+        $data['panelTitle']= trans('custom_admin.label_area_analysis_details_list');
+
+        try {
+            if ($request->ajax()) {
+                $data = AreaAnalysisDetail::where(['area_analysis_id' => customEncryptionDecryption($areaAnalysisId, 'decrypt')])->whereNull('deleted_at');
+
+                // Start :: Manage restriction
+                $isAllow = false;
+                $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
+                if ($restrictions['is_super_admin']) {
+                    $isAllow = true;
+                }
+                $allowedRoutes  = $restrictions['allow_routes'];
+                // End :: Manage restriction
+
+                return Datatables::of($data, $isAllow, $allowedRoutes)
+                        ->addIndexColumn()
+                        ->addColumn('why', function ($row) {
+                            if ($row->why !== NULL) {
+                                return excerpts($row->why, 10);
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('result', function ($row) {
+                            if ($row->result !== NULL) {
+                                return excerpts($row->result, 10);
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('created_at', function ($row) {
+                            return date('d-m-Y', strtotime($row->created_at));
+                        })
+                        ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes) {
+                            $btn = '';
+                            if ($isAllow || in_array($this->viewUrl, $allowedRoutes)) {
+                                $btn .= ' <a href="javascript:void(0)" data-id="'.customEncryptionDecryption($row->id).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm click-to-open2" aria-label="'.trans('custom_admin.label_view').'"><i class="fa fa-eye" style="margin-left: -2px;"></i></a>';
+                            }
+                            
+                            return $btn;
+                        })
+                        ->rawColumns(['status','action'])
+                        ->make(true);
+            }
+            return view($this->viewFolderPath.'.details_list');
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return '';
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return '';
+        }
     }
 
 }

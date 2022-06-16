@@ -191,14 +191,16 @@ class StoresController extends Controller
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
                     'distribution_area_id'  => 'required',
-                    'name_1'                => 'required',
-                    'store_name'            => 'required',
+                    'name_1'                => 'required|unique:'.($this->model)->getTable().',name_1,NULL,id,deleted_at,NULL',
+                    'store_name'            => 'required|unique:'.($this->model)->getTable().',store_name,NULL,id,deleted_at,NULL',
                     // 'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => 'Please select distribution area',
-                    'name_1.required'               => 'Please enter name 1',
-                    'store_name.required'           => 'Please enter store name',
+                    'distribution_area_id.required' => 'Please select distribution area.',
+                    'name_1.required'               => 'Please enter name 1.',
+                    'name_1.unique'                 => 'Please enter unique name 1.',
+                    'store_name.required'           => 'Please enter store name.',
+                    'store_name.unique'             => 'Please enter unique store name.',
                     // 'email.required'            => trans('custom_admin.error_email'),
                     // 'email.regex'               => trans('custom_admin.error_valid_email'),
                     // 'email.unique'              => trans('custom_admin.error_email_unique'),
@@ -281,14 +283,16 @@ class StoresController extends Controller
                 }
                 $validationCondition = array(
                     'distribution_area_id'  => 'required',
-                    'name_1'                => 'required',
-                    'store_name'            => 'required',
+                    'name_1'                => 'required|unique:'.($this->model)->getTable().',name_1,'.$id.',id,deleted_at,NULL',
+                    'store_name'            => 'required|unique:'.($this->model)->getTable().',store_name,'.$id.',id,deleted_at,NULL',
                     // 'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => 'Please select distributor',
-                    'name_1.required'               => 'Please enter name 1',
-                    'store_name.required'           => 'Please enter store name',
+                    'distribution_area_id.required' => 'Please select distributor.',
+                    'name_1.required'               => 'Please enter name 1.',
+                    'name_1.unique'                 => 'Please enter unique name 1.',
+                    'store_name.required'           => 'Please enter store name.',
+                    'store_name.unique'             => 'Please enter unique store name.',
                     // 'email.required'                => trans('custom_admin.error_email'),
                     // 'email.regex'                   => trans('custom_admin.error_valid_email'),
                     // 'email.unique'                  => trans('custom_admin.error_email_unique'),

@@ -15,8 +15,8 @@
 						</div>
 					</h4>	
 					<h3>
-						{{$areaAnalysis->seasonDetails->title}} - {{ $areaAnalysis -> distributionAreaDetails -> title }} - {{ $areaAnalysis -> storeDetails -> store_name }} - {{ $areaAnalysis->categoryDetails->title }} - {{ $areaAnalysis->productDetails->title }}
-					</h3>				
+						{!! $areaAnalysis->seasonDetails->title !!} - {!! $areaAnalysis->distributionAreaDetails->title !!} - {!! $areaAnalysis->storeDetails->store_name !!} - {!! $areaAnalysis->categoryDetails->title !!} - {!! $areaAnalysis->productDetails->title !!}
+					</h3>
 					<div class="table-responsive mt-4-5">
 						<table id="list-table" class="table table-striped table-bordered no-wrap list-data custom-table custom-table-second-column">
 							<thead>
@@ -58,9 +58,9 @@
 								@endif
 									<th class="zeroColumn table-th-display-none"></th>
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
-									<th>@lang('custom_admin.label_date')</th>
 									<th>@lang('custom_admin.label_result')</th>
 									<th>@lang('custom_admin.label_why')</th>
+									<th>@lang('custom_admin.label_date')</th>
 									<th class="actions">@lang('custom_admin.label_action')</th>
 								</tr>
 							</thead>							

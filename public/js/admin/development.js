@@ -2407,7 +2407,7 @@ $(document).on('click', '.clickToCopy', function(e) {
     e.preventDefault();
     var type        = $(this).data('type');
     var copyText    = $(this).data('values');
-    
+
     document.addEventListener('copy', function(e) {
         e.clipboardData.setData('text/plain', copyText);
         e.preventDefault();
@@ -2417,8 +2417,8 @@ $(document).on('click', '.clickToCopy', function(e) {
 
     $(".copied").html('<div id="toast-container" class="toast-top-right"><div class="toast toast-success" aria-live="assertive" style=""><button class="toast-close-button" role="button"><i class="fa fa-times" aria-hidden="true"></i></button><div class="toast-message">'+copiedToClipBoard+'</div></div></div>').show().fadeOut(2000);
 
-    if (type == 'email') {
-        $('#email').focus();
+    if (type == 'credential') {
+        $('#credential').focus();
     } else {
         $('#password').focus();
     }

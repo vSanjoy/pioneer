@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2022 at 08:47 AM
+-- Generation Time: Jun 16, 2022 at 09:26 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -54,7 +54,7 @@ CREATE TABLE `up_area_analyses` (
 --
 
 INSERT INTO `up_area_analyses` (`id`, `season_id`, `year`, `analysis_date`, `distribution_area_id`, `distributor_id`, `store_id`, `category_id`, `product_id`, `target_monthly_sales`, `type_of_analysis`, `action`, `result`, `why`, `comment`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(4, 3, 2022, '2022-05-24 18:30:00', 1, 3, 1, 5, 21, '1200', 'T', 'A', 'R', 'W', 'C', '1', '2022-05-25 07:09:15', '2022-05-25 07:09:15', NULL);
+(4, 3, 2022, '2022-05-24 18:30:00', 1, 3, 1, 5, 21, '1200', 'Test Type of Analysis', 'Test Analysis Action', 'Test Result', 'Test Why', 'Test Comment', '1', '2022-05-25 07:09:15', '2022-06-16 01:46:57', NULL);
 
 -- --------------------------------------------------------
 
@@ -81,7 +81,8 @@ CREATE TABLE `up_area_analysis_details` (
 --
 
 INSERT INTO `up_area_analysis_details` (`id`, `area_analysis_id`, `distributor_id`, `result`, `why`, `commented_by`, `is_viewed`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 4, 3, 'Test result', 'Test Why', 'D', 'N', '1', '2022-05-27 06:46:10', '2022-05-27 06:46:10', NULL);
+(1, 4, 3, 'Test result', 'Test Why', 'D', 'N', '1', '2022-05-27 06:46:10', '2022-05-27 06:46:10', NULL),
+(2, 4, 3, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'D', 'N', '1', '2022-06-15 23:45:23', '2022-06-15 23:45:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -284,7 +285,7 @@ INSERT INTO `up_products` (`id`, `category_id`, `title`, `slug`, `rate_per_pcs`,
 (76, 16, 'Pioneer 36 Page Scrap', '-71', 36.08, 70.00, 75, '1', '2022-05-17 05:24:55', '2022-05-17 05:24:55', NULL),
 (77, 17, 'Pioneer 2No St. Graph', '-72', 9.50, 14.00, 76, '1', '2022-05-17 05:25:10', '2022-05-17 07:04:01', NULL),
 (78, 17, 'Pioneer 44Page Big Graph', '-73', 22.42, 38.00, 77, '1', '2022-05-17 05:25:31', '2022-05-17 07:04:01', NULL),
-(79, 17, 'Pioneer 4No. St. Graph', '-74', 13.42, 20.00, 78, '1', '2022-05-17 05:25:47', '2022-05-17 07:04:01', NULL);
+(79, 17, 'Pioneer 4No. St. Graph', 'pioneer-4no-st-graph', 13.42, 20.00, 78, '1', '2022-05-17 05:25:47', '2022-06-14 07:19:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -497,9 +498,9 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1653978494, 'Y', '2022-05-06 07:39:45', '2022-05-31 01:04:17', NULL),
-(3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1653978892, 'N', '2022-05-09 06:16:32', '2022-05-31 01:13:46', NULL),
-(4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1653979441, 'N', '2022-05-26 05:32:09', '2022-05-31 01:14:31', NULL);
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1655356685, 'Y', '2022-05-06 07:39:45', '2022-06-15 23:48:05', NULL),
+(3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1655357183, 'N', '2022-05-09 06:16:32', '2022-06-15 23:56:23', NULL),
+(4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1653979441, 'N', '2022-05-26 05:32:09', '2022-06-03 07:31:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -691,7 +692,7 @@ ALTER TABLE `up_area_analyses`
 -- AUTO_INCREMENT for table `up_area_analysis_details`
 --
 ALTER TABLE `up_area_analysis_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `up_categories`

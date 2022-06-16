@@ -191,10 +191,11 @@ class CategoriesController extends Controller
         try {
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
-                    'title' => 'required',
+                    'title' => 'required|unique:'.($this->model)->getTable().',title,NULL,id,deleted_at,NULL',
                 );
                 $validationMessages = array(
                     'title.required'=> trans('custom_admin.error_title'),
+                    'title.unique'  => trans('custom_admin.error_unique_category_title'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -254,10 +255,11 @@ class CategoriesController extends Controller
                     return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                 }
                 $validationCondition = array(
-                    'title' => 'required',
+                    'title' => 'required|unique:'.($this->model)->getTable().',title,'.$id.',id,deleted_at,NULL',
                 );
                 $validationMessages = array(
-                    'title.required'    => trans('custom_admin.error_title'),
+                    'title.required'=> trans('custom_admin.error_title'),
+                    'title.unique'  => trans('custom_admin.error_unique_category_title'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {

@@ -1,6 +1,8 @@
 @extends('admin.layouts.app', ['title' => $panelTitle])
 
-	@section('content')  
+	@section('content')
+
+	@include($routePrefix.'.includes.filter_by_category')
 
 	<div class="row">
 		<div class="col-12">

@@ -175,6 +175,7 @@ class AccountController extends Controller
                         'full_name'     => $request->first_name." ".$request->last_name,
                         'email'         => $request->email,
                         'phone_no'      => $request->phone_no,
+                        'username'      => $request->username,
                         'profile_pic'   => $uploadedImage,
                     );
                     $saveAdminData = $this->model->where('id', $adminDetail->id)->update($updateAdminData);

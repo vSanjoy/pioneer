@@ -78,6 +78,7 @@ class ProductsController extends Controller
             }
             $data['allowedRoutes'] = $restrictions['allow_routes'];
             // End :: Manage restriction
+            $data['categories'] = Category::where(['status' => '1'])->whereNull(['deleted_at'])->select('id', 'title')->orderBy('sort', 'ASC')->get();
 
             return view($this->viewFolderPath.'.list', $data);
         } catch (Exception $e) {
@@ -101,8 +102,13 @@ class ProductsController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = $this->model->whereNull('deleted_at');
-
+                $categoryId = $request->category_id ?? '';
+                if ($categoryId == '') {
+                    $data = $this->model->whereNull('deleted_at')->get();
+                } else {
+                    $data = $this->model->where(['category_id' => $categoryId])->whereNull('deleted_at')->get();    // Based on category search
+                }
+                
                 // Start :: Manage restriction
                 $isAllow = false;
                 $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
@@ -192,13 +198,14 @@ class ProductsController extends Controller
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
                     'category_id'   => 'required',
-                    'title'         => 'required',
+                    'title'         => 'required|unique:'.($this->model)->getTable().',title,NULL,id,deleted_at,NULL',
                     'rate_per_pcs'  => 'required|regex:'.config('global.VALID_AMOUNT_REGEX'),
                     'mrp'           => 'nullable|regex:'.config('global.VALID_AMOUNT_REGEX'),
                 );
                 $validationMessages = array(
                     'category_id.required'  => trans('custom_admin.error_category'),
                     'title.required'        => trans('custom_admin.error_title'),
+                    'title.unique'          => trans('custom_admin.error_unique_product_title'),
                     'rate_per_pcs.required' => trans('custom_admin.error_rate_per_pcs'),
                     'rate_per_pcs.regex'    => trans('custom_admin.error_valid_amount'),
                     'mrp.regex'             => trans('custom_admin.error_valid_amount'),
@@ -269,13 +276,14 @@ class ProductsController extends Controller
                 }
                 $validationCondition = array(
                     'category_id'   => 'required',
-                    'title'         => 'required',
+                    'title'         => 'required|unique:'.($this->model)->getTable().',title,'.$id.',id,deleted_at,NULL',
                     'rate_per_pcs'  => 'required|regex:'.config('global.VALID_AMOUNT_REGEX'),
                     'mrp'           => 'nullable|regex:'.config('global.VALID_AMOUNT_REGEX'),
                 );
                 $validationMessages = array(
                     'category_id.required'  => trans('custom_admin.error_category'),
                     'title.required'        => trans('custom_admin.error_title'),
+                    'title.unique'          => trans('custom_admin.error_unique_product_title'),
                     'rate_per_pcs.required' => trans('custom_admin.error_rate_per_pcs'),
                     'rate_per_pcs.regex'    => trans('custom_admin.error_valid_amount'),
                     'mrp.regex'             => trans('custom_admin.error_valid_amount'),

@@ -2,6 +2,8 @@
 
 @section('content')
 
+	@include($routePrefix.'.includes.filter_for_analyses')
+
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
@@ -53,7 +55,8 @@
 									<th>@lang('custom_admin.label_store_name')</th>
 									<th>@lang('custom_admin.label_category')</th>
 									<th>@lang('custom_admin.label_product')</th>
-									<th>@lang('custom_admin.label_target_monthly_sales')</th>
+									<th>@lang('custom_admin.label_target_monthly_sales') (@lang('custom_admin.label_rs'))</th>
+									<th>@lang('custom_admin.label_analysis_date')</th>
 									{{-- <th class="row_status">@lang('custom_admin.label_status')</th> --}}
 									<th class="actions">@lang('custom_admin.label_action')</th>
 								</tr>

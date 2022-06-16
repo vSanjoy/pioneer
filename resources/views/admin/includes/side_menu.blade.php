@@ -170,7 +170,7 @@ $getSiteSettings = getSiteSettings();
 
 			<!-- Area Analysis Management Start -->
 			@php
-			$areaAnalysisRoutes = ['areaAnalysis.list','areaAnalysis.add','areaAnalysis.edit','areaAnalysis.sort'];
+			$areaAnalysisRoutes = ['areaAnalysis.list','areaAnalysis.add','areaAnalysis.edit','areaAnalysis.sort','areaAnalysis.details-list'];
 			@endphp
 			@if ( ($isSuperAdmin) || in_array('areaAnalysis.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $areaAnalysisRoutes))selected @endif">

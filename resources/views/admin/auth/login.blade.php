@@ -20,7 +20,7 @@
         @if ($superAdminDetails)
         <p class="text-center">
             @lang('custom_admin.label_demo_login_details')<br>
-            <a class="clickToCopy" href="javascript: void(0);" data-type="email" data-values="{{ $email }}" data-microtip-position="top" role="tooltip" aria-label="{{ trans('custom_admin.label_click_to_copy') }}">
+            <a class="clickToCopy" href="javascript: void(0);" data-type="credential" data-values="{{ $email }}" data-microtip-position="top" role="tooltip" aria-label="{{ trans('custom_admin.label_click_to_copy') }}">
                 {{ $email }}
             </a> / 
             <a class="clickToCopy" href="javascript: void(0);" data-type="password" data-values="{{ $password }}" data-microtip-position="top" role="tooltip" aria-label="{{ trans('custom_admin.label_click_to_copy') }}">

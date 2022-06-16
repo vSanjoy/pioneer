@@ -18,6 +18,8 @@ use App\Traits\GeneralMethods;
 use App\Models\User;
 use App\Models\AreaAnalyses;
 use App\Models\AreaAnalysisDetail;
+use App\Models\Store;
+use App\Models\Category;
 use DataTables;
 
 class AnalysesController extends Controller
@@ -84,6 +86,9 @@ class AnalysesController extends Controller
             $data['allowedRoutes'] = $restrictions['allow_routes'];
             // End :: Manage restriction
 
+            $data['stores']     = Store::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'status' => '1'])->whereNull(['deleted_at'])->select('id','store_name','email')->orderBy('sort', 'ASC')->get();
+            $data['categories'] = Category::where(['status' => '1'])->select('id','title')->orderBy('title', 'ASC')->get();
+
             return view($this->viewFolderPath.'.list', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -106,7 +111,42 @@ class AnalysesController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = $this->model->where('distributor_id', Auth::guard('admin')->user()->id)->whereNull('deleted_at');
+                // Store
+                $storeId         = $request->store_id;
+                $filterByStore   = false;
+                if ($storeId != '') {
+                    $filterByStore = true;
+                    $filter['store_id'] = $storeId;
+                }
+                // Category
+                $categoryId         = $request->category_id;
+                $filterByCategory   = false;
+                if ($categoryId != '') {
+                    $filterByCategory = true;
+                    $filter['category_id'] = $categoryId;
+                }
+                // product
+                $productId       = $request->product_id;
+                $filterByProduct = false;
+                if ($productId != '') {
+                    $filterByProduct = true;
+                    $filter['product_id'] = $productId;
+                }
+
+                $data = $this->model->where(['distributor_id' => Auth::guard('admin')->user()->id, 'status' => '1'])->whereNull('deleted_at');
+
+                // Based on store filter
+                if ($filterByStore) {
+                    $data = $data->where('store_id', $storeId);
+                }
+                // Based on category filter
+                if ($filterByCategory) {
+                    $data = $data->where('category_id', $categoryId);
+                }
+                // Based on product filter
+                if ($filterByProduct) {
+                    $data = $data->where('product_id', $productId);
+                }
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -161,8 +201,8 @@ class AnalysesController extends Controller
                                 return 'N/A';
                             }
                         })
-                        ->addColumn('updated_at', function ($row) {
-                            return changeDateFormat($row->updated_at);
+                        ->addColumn('created_at', function ($row) {
+                            return changeDateFormat($row->created_at, 'd-m-Y');
                         })
                         ->addColumn('status', function ($row) use ($isAllow, $allowedRoutes) {
                             if ($isAllow || in_array($this->statusUrl, $allowedRoutes)) {
@@ -239,13 +279,13 @@ class AnalysesController extends Controller
                         $type       = 'success';
                         $message    = '<tr><td>'.trans('custom_admin.label_season').'</td><td>'.$season.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_year').'</td><td>'.$details->year.'</td></tr>';
-                        $message    .= '<tr><td>'.trans('custom_admin.label_analysis_date').'</td><td>'.$details->analysis_date.'</td></tr>';
+                        $message    .= '<tr><td>'.trans('custom_admin.label_analysis_date').'</td><td>'.changeDateFormat($details->analysis_date, 'd-m-Y').'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_distribution_area').'</td><td>'.$distributionArea.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_distributor').'</td><td>'.$distributor.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_store').'</td><td>'.$store.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_category').'</td><td>'.$category.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_product').'</td><td>'.$product.'</td></tr>';
-                        $message    .= '<tr><td>'.trans('custom_admin.label_target_monthly_sales').'</td><td>'.$details->target_monthly_sales.'</td></tr>';
+                        $message    .= '<tr><td>'.trans('custom_admin.label_target_monthly_sales').' ('.trans('custom_admin.label_rs').')</td><td>'.$details->target_monthly_sales.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_type_of_analysis').'</td><td>'.$details->type_of_analysis.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_analysis_action').'</td><td>'.$details->action.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_result').'</td><td>'.$details->result.'</td></tr>';
@@ -340,7 +380,7 @@ class AnalysesController extends Controller
                             }
                         })
                         ->addColumn('created_at', function ($row) {
-                            return date('Y-m-d', strtotime($row->created_at));
+                            return date('d-m-Y', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes) {
                             $btn = '';
@@ -379,6 +419,8 @@ class AnalysesController extends Controller
 
         try {
             $data['areaAnalysisId'] = $areaAnalysisId;
+            $data['areaAnalysis']   = $this->model->where(['id' => customEncryptionDecryption($areaAnalysisId, 'decrypt')])->first();
+
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
                     'result'    => 'required',
@@ -446,9 +488,9 @@ class AnalysesController extends Controller
                         $title      = trans('custom_admin.message_success');
                         $type       = 'success';
                        
-                        $message    = '<tr><td>'.trans('custom_admin.label_date').'</td><td>'.changeDateFormat($details->created_at).'</td></tr>';
-                        $message    .= '<tr><td>'.trans('custom_admin.label_result').'</td><td>'.$details->result.'</td></tr>';
+                        $message    = '<tr><td>'.trans('custom_admin.label_result').'</td><td>'.$details->result.'</td></tr>';
                         $message    .= '<tr><td>'.trans('custom_admin.label_why').'</td><td>'.$details->why.'</td></tr>';
+                        $message    .= '<tr><td>'.trans('custom_admin.label_date').'</td><td>'.changeDateFormat($details->created_at, 'd-m-Y').'</td></tr>';
                     }
                 }
             }

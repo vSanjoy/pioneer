@@ -217,6 +217,8 @@ return [
     'label_area_analysis'                           => 'Area Analysis',
     'label_add_area_analysis'                       => 'Add Area Analysis',
     'label_edit_area_analysis'                      => 'Edit Area Analysis',
+    'label_area_analysis_details'                   => 'Area Analysis Details',
+    'label_area_analysis_details_list'              => 'Area Analysis Details List',
     'label_menu_analyses'                           => 'Analyses',
     'label_analyses_management'                     => 'Analyses Management',
     'label_analyses_list'                           => 'Analyses List',
@@ -346,7 +348,8 @@ return [
     'label_why'                                     => 'Why',
     'label_comment'                                 => 'Comment',
     'label_analysis_action'                         => 'Analysis Action',
-    'label_username'                               => 'Username',
+    'label_username'                                => 'Username',
+    'label_rs'                                      => 'Rs.',
 
     
 /* Buttons */
@@ -484,6 +487,8 @@ return [
     'error_not_authorized'                          => 'You are not authorized.',
     'error_distribution_area'                       => 'Please enter area name.',
     'error_unique_distribution_area'                => 'Please enter unique area name.',
+    'error_unique_category_title'                   => 'Please enter unique category title.',
+    'error_unique_product_title'                    => 'Please enter unique product title.',
     'error_distribution_area_definition'            => 'Please enter definition.',
     'error_select_distribution_area'                => 'Please select distribution area.',
     'error_job_title_1'                             => 'Please enter job title 1.',
@@ -556,7 +561,7 @@ return [
     'message_registered_email'                      => 'Please enter your registered email to reset password.',
     'message_reset_password_text'                   => 'Please check your email for reset password link.',
     'message_password_updated_success'              => 'Your password has been updated successfully.',
-    'message_welcome_to_admin_panel'                => 'Welcome To :websiteTitle Admin Panel',
+    'message_welcome_to_admin_panel'                => 'Welcome To :websiteTitle',
     'message_gallery_note'                          => 'Note: Click on the Reload Gallery, after successful upload.',
     'message_account_active_inactive_to_user'       => 'Your profile is :profileStatus.',
     'message_delete_related_player_league_assignment_exist' => 'Player already exist in league assignments.',

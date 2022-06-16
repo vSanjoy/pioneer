@@ -105,7 +105,7 @@
 							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_target_monthly_sales')<span class="red_star">*</span></label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_target_monthly_sales') (@lang('custom_admin.label_rs'))<span class="red_star">*</span></label>
 										{{ Form::text('target_monthly_sales', null, [
                                                                 'id' => 'target_monthly_sales',
                                                                 'class' => 'form-control',

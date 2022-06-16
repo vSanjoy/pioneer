@@ -2,7 +2,48 @@
 $(document).ready(function() {
 	@if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)
 	// Get list page data
-	var getListDataUrl = "{{route($routePrefix.'.'.$listRequestUrl)}}";	
+	getList();
+
+	// Status section
+	$(document).on('click', '.status', function() {
+		var id 			= $(this).data('id');
+		var actionType 	= $(this).data('action-type');
+		listActions('{{ $pageRoute }}', 'status', id, actionType, dTable);
+	});
+	
+	// Delete section
+	$(document).on('click', '.delete', function() {
+		var id = $(this).data('id');
+		var actionType 	= $(this).data('action-type');
+		listActions('{{ $pageRoute }}', 'delete', id, actionType, dTable);
+	});
+
+	// Bulk Action
+    $('.bulkAction').on('click', function() {
+        var selectedIds = [];
+        $("input:checkbox[class=delete_checkbox]:checked").each(function () {
+            selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length > 0) {
+            var actionType = $(this).data('action-type');
+            bulkActions('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType, dTable);
+        } else {
+            toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
+        }
+    });
+
+	@include($routePrefix.'.includes.filter_by_category_script')
+
+	@endif
+
+});
+
+@if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)
+// Get list of records
+function getList() {
+	var categoryId = $('#categoryid').val();
+	var getListDataUrl = "{{route($routePrefix.'.'.$listRequestUrl)}}";
 	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
 			destroy: true,
 			autoWidth: false,
@@ -26,12 +67,12 @@ $(document).ready(function() {
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
-	        	url: getListDataUrl,
+	        	url: getListDataUrl + '?category_id=' + categoryId,
 				type: 'POST',
 				data: function(data) {},
 	        },
 	        columns: [
-			@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
+				@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
 				{
 					data: 'id',
 					orderable: false,
@@ -90,36 +131,6 @@ $(document).ready(function() {
 		$('#dataTableLoading').hide();
 		toastr.error(message, "@lang('custom_admin.message_error')");
 	});
-	
-	// Status section
-	$(document).on('click', '.status', function() {
-		var id 			= $(this).data('id');
-		var actionType 	= $(this).data('action-type');
-		listActions('{{ $pageRoute }}', 'status', id, actionType, dTable);
-	});
-	
-	// Delete section
-	$(document).on('click', '.delete', function() {
-		var id = $(this).data('id');
-		var actionType 	= $(this).data('action-type');
-		listActions('{{ $pageRoute }}', 'delete', id, actionType, dTable);
-	});
-
-	// Bulk Action
-    $('.bulkAction').on('click', function() {
-        var selectedIds = [];
-        $("input:checkbox[class=delete_checkbox]:checked").each(function () {
-            selectedIds.push($(this).val());
-        });
-
-        if (selectedIds.length > 0) {
-            var actionType = $(this).data('action-type');
-            bulkActions('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType, dTable);
-        } else {
-            toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
-        }
-    });
-	@endif
-
-});
+}
+@endif
 </script>
