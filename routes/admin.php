@@ -106,8 +106,6 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/status/{id}', 'AreaAnalysesController@status')->name('change-status');
                 Route::get('/delete/{id}', 'AreaAnalysesController@delete')->name('delete');
                 Route::post('/bulk-actions', 'AreaAnalysesController@bulkActions')->name('bulk-actions');
-
-                
                 Route::get('/details-list/{id}', 'AreaAnalysesController@detailsList')->name('details-list');
                 Route::post('/ajax-details-list-request/{id}', 'AreaAnalysesController@ajaxDetailsListRequest')->name('ajax-details-list-request');
                 Route::get('/details-view/{id}', 'AreaAnalysesController@detailsView')->name('details-view');
