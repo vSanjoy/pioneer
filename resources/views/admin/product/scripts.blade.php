@@ -8,14 +8,14 @@ $(document).ready(function() {
 	$(document).on('click', '.status', function() {
 		var id 			= $(this).data('id');
 		var actionType 	= $(this).data('action-type');
-		listActions('{{ $pageRoute }}', 'status', id, actionType, dTable);
+		listActionsWithFilter('{{ $pageRoute }}', 'status', id, actionType);
 	});
 	
 	// Delete section
 	$(document).on('click', '.delete', function() {
 		var id = $(this).data('id');
 		var actionType 	= $(this).data('action-type');
-		listActions('{{ $pageRoute }}', 'delete', id, actionType, dTable);
+		listActionsWithFilter('{{ $pageRoute }}', 'delete', id, actionType);
 	});
 
 	// Bulk Action
@@ -27,7 +27,7 @@ $(document).ready(function() {
 
         if (selectedIds.length > 0) {
             var actionType = $(this).data('action-type');
-            bulkActions('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType, dTable);
+			bulkActionsWithFilter('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType);
         } else {
             toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
         }
