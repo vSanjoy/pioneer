@@ -144,6 +144,28 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::post('/details-add-submit/{id}', 'AnalysesController@detailsAdd')->name('details-add-submit');
                 Route::get('/details-view/{id}', 'AnalysesController@detailsView')->name('details-view');
             });
+
+            Route::group(['prefix' => 'analysisSeason', 'as' => 'analysisSeason.'], function () {
+                Route::get('/', 'AnalysisSeasonsController@list')->name('list');
+                Route::post('ajax-list-request', 'AnalysisSeasonsController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/add', 'AnalysisSeasonsController@add')->name('add');
+                Route::post('/add-submit', 'AnalysisSeasonsController@add')->name('add-submit');
+                Route::get('/edit/{id}', 'AnalysisSeasonsController@edit')->name('edit');
+                Route::any('/edit-submit/{id}', 'AnalysisSeasonsController@edit')->name('edit-submit');
+                
+                // Distribution Area
+                Route::get('/distribution-area-list/{id}', 'AnalysisSeasonsController@distributionAreaList')->name('distribution-area-list');
+                Route::post('/ajax-distribution-area-list-request/{id}', 'AnalysisSeasonsController@ajaxDistributionAreaListRequest')->name('ajax-distribution-area-list-request');
+
+                // Distributor
+                Route::get('/distributor-list/{analysisSeasonId}/{distributionAreaId}', 'AnalysisSeasonsController@distributorList')->name('distributor-list');
+                Route::post('/ajax-distributor-list-request/{analysisSeasonId}/{distributionAreaId}', 'AnalysisSeasonsController@ajaxDistributorListRequest')->name('ajax-distributor-list-request');
+
+                // Store
+                Route::get('/store-list/{analysisSeasonId}/{distributionAreaId}/{distributorId}', 'AnalysisSeasonsController@storeList')->name('store-list');
+                Route::post('/ajax-store-list-request/{analysisSeasonId}/{distributionAreaId}/{distributorId}', 'AnalysisSeasonsController@ajaxStoreListRequest')->name('ajax-store-list-request');
+
+            });
             
         });
 

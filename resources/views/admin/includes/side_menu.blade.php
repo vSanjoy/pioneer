@@ -230,6 +230,32 @@ $getSiteSettings = getSiteSettings();
 				@endif
 			@endif --}}
 
+			<!-- Season Management Start -->
+			@php
+			$analysisSeasonRoutes = ['analysisSeason.list','analysisSeason.add','analysisSeason.edit','analysisSeason.distribution-area-list','analysisSeason.distributor-list','analysisSeason.store-list'];
+			@endphp
+			@if ( ($isSuperAdmin) || in_array('analysisSeason.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $analysisSeasonRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $analysisSeasonRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="map" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_analysis_season')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $analysisSeasonRoutes))in @endif">
+						<li class="sidebar-item">
+							<a href="{{ route('admin.analysisSeason.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
+							</a>
+						</li>
+						@if ( ($isSuperAdmin) || (in_array('analysisSeason.add', $getAllRoles)) )
+						<li class="sidebar-item">
+							<a href="{{ route('admin.analysisSeason.add') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_add')</span>
+							</a>
+						</li>
+						@endif
+					</ul>
+				</li>
+			@endif
+
 				<li class="list-divider"></li>
 				<li class="sidebar-item">
 					<a class="sidebar-link sidebar-link" href="{{ route('admin.logout') }}" aria-expanded="false">

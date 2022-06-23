@@ -36,7 +36,7 @@
 										<select name="year" id="year" class="form-control">
 											<option value="">--@lang('custom_admin.label_select')--</option>
 										@for ($i = date('Y'); $i >= 2022; $i--)
-											<option value="{{ $i }}" @if ($i == date('Y'))selected @endif>{!! $i !!}</option>
+											<option value="{{ $i }}" @if ($i == $details->year)selected @endif>{!! $i !!}</option>
 										@endfor
 										</select>
 									</div>

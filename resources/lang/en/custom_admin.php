@@ -225,6 +225,12 @@ return [
     'label_analyses'                                => 'Analyses',
     'label_add_analyses'                            => 'Add Analyses',
     'label_edit_analyses'                           => 'Edit Analyses',
+    'label_menu_analysis_season'                    => 'Analysis Season',
+    'label_analysis_season_management'              => 'Analysis Season Management',
+    'label_analysis_season_list'                    => 'Analysis Season List',
+    'label_analysis_season'                         => 'Analysis Season',
+    'label_add_analysis_season'                     => 'Add Analysis Season',
+    'label_edit_analysis_season'                    => 'Edit Analysis Season',
     'label_subject'                                 => 'Subject',
     'label_location'                                => 'Location',
     'label_reset_password_link'                     => 'Reset Password Link',
@@ -350,6 +356,7 @@ return [
     'label_analysis_action'                         => 'Analysis Action',
     'label_username'                                => 'Username',
     'label_rs'                                      => 'Rs.',
+    'label_analysis'                                => 'Analysis',
 
     
 /* Buttons */
