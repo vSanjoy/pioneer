@@ -357,6 +357,8 @@ return [
     'label_username'                                => 'Username',
     'label_rs'                                      => 'Rs.',
     'label_analysis'                                => 'Analysis',
+    'label_in_progress'                             => 'In-Progress',
+    'label_complete'                                => 'Complete',
 
     
 /* Buttons */

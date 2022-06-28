@@ -96,9 +96,9 @@
             <!-- ============================================================== -->
             <!-- Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
-            @if (strpos(Route::currentRouteName(), 'analysisSeason.distribution-area-list') === false && strpos(Route::currentRouteName(), 'analysisSeason.distributor-list') === false)
+            @if (strpos(Route::currentRouteName(), 'analysisSeason.distribution-area-list') === false && strpos(Route::currentRouteName(), 'analysisSeason.distributor-list') === false && strpos(Route::currentRouteName(), 'analysisSeason.store-list') === false && strpos(Route::currentRouteName(), 'analysisSeason.analysis') === false)
             @include('admin.includes.breadcrumb')
-            @elseif (strpos(Route::currentRouteName(), 'analysisSeason.distribution-area-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.distributor-list') == true)
+            @elseif (strpos(Route::currentRouteName(), 'analysisSeason.distribution-area-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.distributor-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.store-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.analysis') == true)
             @include('admin.includes.analysis_breadcrumb')
             @endif
             <!-- ============================================================== -->

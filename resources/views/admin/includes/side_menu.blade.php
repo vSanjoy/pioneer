@@ -97,7 +97,7 @@ $getSiteSettings = getSiteSettings();
 			@if ( ($isSuperAdmin) || in_array('store.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $storeRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $storeRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
-						<i data-feather="database" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_store')</span>
+						<i class="fa fa-university" aria-hidden="true" style="font-size: 20px;"></i><span class="hide-menu"> @lang('custom_admin.label_menu_store')</span>
 					</a>
 					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $storeRoutes))in @endif">
 						<li class="sidebar-item">
@@ -149,7 +149,7 @@ $getSiteSettings = getSiteSettings();
 			@if ( ($isSuperAdmin) || in_array('product.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $productRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $productRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
-						<i data-feather="life-buoy" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_product')</span>
+						<i data-feather="command" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_product')</span>
 					</a>
 					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $productRoutes))in @endif">
 						<li class="sidebar-item">
@@ -169,7 +169,7 @@ $getSiteSettings = getSiteSettings();
 			@endif
 
 			<!-- Area Analysis Management Start -->
-			@php
+			{{-- @php
 			$areaAnalysisRoutes = ['areaAnalysis.list','areaAnalysis.add','areaAnalysis.edit','areaAnalysis.sort','areaAnalysis.details-list'];
 			@endphp
 			@if ( ($isSuperAdmin) || in_array('areaAnalysis.list', $getAllRoles) )
@@ -192,7 +192,7 @@ $getSiteSettings = getSiteSettings();
 						@endif
 					</ul>
 				</li>
-			@endif
+			@endif --}}
 
 			<!-- Analysis Management Start -->
 			@php
@@ -213,31 +213,14 @@ $getSiteSettings = getSiteSettings();
 				</li>
 			@endif
 
-			<!-- Website Settings Management Start -->
-			{{-- @php
-			$siteSettingRoutes 	= ['website-settings'];
-			@endphp
-			@if ( ($isSuperAdmin) || in_array('website-settings', $getAllRoles) )
-				<li class="list-divider"></li>
-				<li class="nav-small-cap"><span class="hide-menu">@lang('custom_admin.label_miscellaneous')</span></li>
-
-				@if ( ($isSuperAdmin) || (in_array('website-settings', $getAllRoles)) )
-				<li class="sidebar-item @if (in_array($currentPage, $siteSettingRoutes))selected @endif"> 
-					<a class="sidebar-link sidebar-link @if (in_array($currentPage, $siteSettingRoutes))active @endif" href="{{ route('admin.website-settings') }}" aria-expanded="false">
-						<i data-feather="settings" class="feather-icon"></i><span class="hide-menu">@lang('custom_admin.label_website_settings')</span>
-					</a>
-				</li>
-				@endif
-			@endif --}}
-
 			<!-- Season Management Start -->
 			@php
-			$analysisSeasonRoutes = ['analysisSeason.list','analysisSeason.add','analysisSeason.edit','analysisSeason.distribution-area-list','analysisSeason.distributor-list','analysisSeason.store-list'];
+			$analysisSeasonRoutes = ['analysisSeason.list','analysisSeason.add','analysisSeason.edit','analysisSeason.distribution-area-list','analysisSeason.distributor-list','analysisSeason.store-list','analysisSeason.analysis'];
 			@endphp
 			@if ( ($isSuperAdmin) || in_array('analysisSeason.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $analysisSeasonRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $analysisSeasonRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
-						<i data-feather="map" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_analysis_season')</span>
+						<i data-feather="life-buoy" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_analysis_season')</span>
 					</a>
 					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $analysisSeasonRoutes))in @endif">
 						<li class="sidebar-item">
@@ -255,6 +238,23 @@ $getSiteSettings = getSiteSettings();
 					</ul>
 				</li>
 			@endif
+
+			<!-- Website Settings Management Start -->
+			{{-- @php
+			$siteSettingRoutes 	= ['website-settings'];
+			@endphp
+			@if ( ($isSuperAdmin) || in_array('website-settings', $getAllRoles) )
+				<li class="list-divider"></li>
+				<li class="nav-small-cap"><span class="hide-menu">@lang('custom_admin.label_miscellaneous')</span></li>
+
+				@if ( ($isSuperAdmin) || (in_array('website-settings', $getAllRoles)) )
+				<li class="sidebar-item @if (in_array($currentPage, $siteSettingRoutes))selected @endif"> 
+					<a class="sidebar-link sidebar-link @if (in_array($currentPage, $siteSettingRoutes))active @endif" href="{{ route('admin.website-settings') }}" aria-expanded="false">
+						<i data-feather="settings" class="feather-icon"></i><span class="hide-menu">@lang('custom_admin.label_website_settings')</span>
+					</a>
+				</li>
+				@endif
+			@endif --}}
 
 				<li class="list-divider"></li>
 				<li class="sidebar-item">

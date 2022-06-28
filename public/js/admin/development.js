@@ -1787,6 +1787,48 @@ $(document).ready(function() {
     });
     // End :: Analysis Season Form //
 
+    // Start :: Analysis Form //
+    $("#updateAnalysisForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            analysis_date: {
+                required: true,
+            },
+        },
+        messages: {
+            analysis_date: {
+                required: "Please select date.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Analysis Form //
+
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //
 	$('.checkAll').click(function() {
@@ -2182,6 +2224,64 @@ function listActionsWithFilter(routePrefix, actionRoute, id, actionType) {
     }
 }
 // End :: Admin List Actions With Filter //
+
+// Start :: Admin List Store Status Actions With Filter //
+function listStoreStatusActionsWithFilter(routePrefix, actionRoute, id, actionType) {
+    var message = actionUrl = '';
+
+    if (actionRoute != '') {
+        actionUrl = adminPanelUrl+'/'+routePrefix+'/'+actionRoute+'/'+id;
+    }
+
+    if (actionType == 'IP') {            // In-Progress
+        message = 'Are you sure, to set status to In-Progress?';
+    } else if (actionType == 'CP') {            // Complete
+        message = 'Are you sure, to set status to Complete?';
+    } else {
+        message = somethingWrongMessage;
+    }
+    
+    if (actionUrl != '') {
+        swal.fire({
+            text: message,
+            type: 'warning',
+            allowOutsideClick: false,
+            confirmButtonColor: btnConfirmYesColor,
+            cancelButtonColor: btnCancelNoColor,
+            showCancelButton: true,
+            confirmButtonText: btnYes,
+            cancelButtonText: btnNo,
+        }).then((result) => {
+            if (result.value) {
+                $('.preloader').show();
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: actionUrl,
+                    method: 'GET',
+                    data: {
+                        'actionType': actionType
+                    },
+                    success: function (response) {
+                        $('.preloader').hide();
+                        if (response.type == 'success') {
+                            getStoreList();
+                            toastr.success(response.message, response.title+'!');
+                        } else if (response.type == 'warning') {
+                            toastr.warning(response.message, response.title+'!');
+                        } else {
+                            toastr.error(response.message, response.title+'!');
+                        }
+                    }
+                });
+            }
+        });
+    } else {
+        toastr.error(message, errorMessage+'!');
+    }
+}
+// End :: Admin List Store Status Actions With Filter //
 
 // Start :: Admin List Bulk Actions With Filter //
 function bulkActionsWithFilter(routePrefix, actionRoute, selectedIds, actionType) {

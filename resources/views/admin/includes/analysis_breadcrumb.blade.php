@@ -8,11 +8,34 @@
                         @if ($analysisSeasonId)
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.analysisSeason.list') }}" class="">@lang('custom_admin.label_analysis_season_list')</a></li>
                         @endif
-                        @if (isset($distributionAreaId) && $distributionAreaId)
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.analysisSeason.distribution-area-list', $distributionAreaId) }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
+                        {{-- Distribution area --}}
+                        @if (!isset($distributionAreaId) && !isset($distributorId) && !isset($storeId))
+                        <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }}</li>
+                        @elseif (isset($distributionAreaId) && !isset($distributorId) && !isset($storeId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.analysisSeason.distribution-area-list', [$analysisSeasonId]) }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($distributorId) && !isset($storeId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.analysisSeason.distribution-area-list', [$analysisSeasonId]) }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($distributorId) && isset($storeId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.analysisSeason.distribution-area-list', [$analysisSeasonId]) }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
                         @endif
-                        @if (isset($distributionAreaId) && $distributionAreaId && isset($distributorId) && $distributorId)
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.analysisSeason.distributor-list', [$distributionAreaId, $distributorId]) }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
+
+                        {{-- Distributor --}}
+                        @if (isset($distributionAreaId) && !isset($distributorId))
+                        <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }}</li>
+                        @elseif (isset($distributionAreaId) && isset($distributorId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.analysisSeason.distributor-list', [$analysisSeasonId, $distributionAreaId]) }}" class="">@lang('custom_admin.label_distributor_list')</a></li>
+                        @endif
+
+                        {{-- Store --}}
+                        @if (isset($distributionAreaId) && isset($distributorId) && !isset($storeId))
+                        <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }}</li>
+                        @elseif (isset($distributionAreaId) && isset($distributorId) && isset($storeId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, $distributorId]) }}" class="">@lang('custom_admin.label_store_list')</a></li>
+                        @endif
+
+                        {{-- Analysis --}}
+                        @if (isset($id))
+                        <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }}</li>
                         @endif
                     </ol>
                 </nav>

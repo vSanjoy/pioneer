@@ -22,6 +22,19 @@ $(document).on('click', '.filterList', function() {
 		getList();
 	}
 });
+// Filter on change
+$('#categoryid').on('change', function() {
+	var categoryId = $(this).val();
+	if (categoryId != '') {
+		var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}?category_id="+categoryId;
+		window.history.pushState({href: getListUrlWithFilter}, '', getListUrlWithFilter);
+		getList();
+	} else {
+		var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}";
+		window.history.pushState({href: getListUrlWithFilter}, '', getListUrlWithFilter);
+		getList();
+	}
+});
 // Reset Filter
 $(document).on('click', '.resetFilter', function() {
 	var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}";

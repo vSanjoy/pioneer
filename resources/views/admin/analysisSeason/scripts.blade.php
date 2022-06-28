@@ -14,6 +14,28 @@ $(document).ready(function() {
 
 	@if (Route::currentRouteName() == $routePrefix.'.analysisSeason.store-list')
 	getStoreList();
+
+	// Store Status section
+	$(document).on('click', '.store-status', function() {
+		var id 			= $(this).data('id');
+		var actionType 	= $(this).data('action-type');
+		listStoreStatusActionsWithFilter('{{ $pageRoute }}', 'status', id, actionType);
+	});
+	@endif
+	
+	@if (Route::currentRouteName() == $routePrefix.'.analysisSeason.analysis')
+	// Filter
+	$(document).on('click', '.toggleCategoryhBox', function() {
+		var catId = $(this).data('catid');
+		if ($('#showFilterStatus_'+catId).is(':visible')) {
+			$('#plus_'+catId).show();
+			$('#minus_'+catId).hide();	
+		} else {
+			$('#minus_'+catId).show();
+			$('#plus_'+catId).hide();
+		}
+		$('#showFilterStatus_'+catId).toggle(400);
+	});
 	@endif
 });
 
@@ -194,7 +216,8 @@ function getDistributorList() {
 				{data: 'phone_no', name: 'phone_no'},
 				{data: 'whatsapp_no', name: 'whatsapp_no'},
 				{data: 'company', name: 'company'},
-				{data: 'email', name: 'email'},
+				// {data: 'email', name: 'email'},
+				{data: 'distribution_area_id', name: 'distribution_area_id'},
 				// {data: 'created_at', name: 'created_at', orderable: false, searchable: false},
 			@if ($isAllow || in_array($viewUrl, $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},
@@ -265,12 +288,10 @@ function getStoreList() {
 				{data: 'name_1', name: 'name_1'},
 				{data: 'phone_no_1', name: 'phone_no_1'},
 				{data: 'beat_name', name: 'beat_name'},
-				{data: 'distribution_area_id', name: 'distribution_area_id'},
+				// {data: 'distribution_area_id', name: 'distribution_area_id'},
 				{data: 'email', name: 'email'},
 				{data: 'store_name', name: 'store_name'},
-				{data: 'sale_size_category', name: 'sale_size_category'},
-				{data: 'integrity', name: 'integrity'},
-				// {data: 'created_at', name: 'created_at', orderable: false, searchable: false},
+				{data: 'progress_status', name: 'progress_status', orderable: false, searchable: false},
 			@if ($isAllow || in_array($viewUrl, $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif

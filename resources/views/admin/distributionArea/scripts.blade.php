@@ -2,6 +2,53 @@
 $(document).ready(function() {
 	@if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)
 	// Get list page data
+	getList();
+
+	// Status section
+	$(document).on('click', '.status', function() {
+		var id 			= $(this).data('id');
+		var actionType 	= $(this).data('action-type');
+		listActions('{{ $pageRoute }}', 'status', id, actionType, dTable);
+	});
+	
+	// Delete section
+	$(document).on('click', '.delete', function() {
+		var id = $(this).data('id');
+		var actionType 	= $(this).data('action-type');
+		listActions('{{ $pageRoute }}', 'delete', id, actionType, dTable);
+	});
+
+	// Bulk Action
+    $('.bulkAction').on('click', function() {
+        var selectedIds = [];
+        $("input:checkbox[class=delete_checkbox]:checked").each(function () {
+            selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length > 0) {
+            var actionType = $(this).data('action-type');
+            bulkActions('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType, dTable);
+        } else {
+            toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
+        }
+    });
+
+	// Call get list on browser tab change
+	// document.addEventListener('visibilitychange', function() {
+	// 	document.title = document.visibilityState;	// Return either "visible" or "hidden"
+	// 	if (document.visibilityState == 'visible') {
+	// 		getList();
+	// 	}
+	// });
+
+	@endif
+
+});
+
+@if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)
+// Get list of records
+function getList() {
+	// Get list page data
 	var getListDataUrl = "{{route($routePrefix.'.'.$listRequestUrl)}}";	
 	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
 			destroy: true,
@@ -87,36 +134,6 @@ $(document).ready(function() {
 		$('#dataTableLoading').hide();
 		toastr.error(message, "@lang('custom_admin.message_error')");
 	});
-	
-	// Status section
-	$(document).on('click', '.status', function() {
-		var id 			= $(this).data('id');
-		var actionType 	= $(this).data('action-type');
-		listActions('{{ $pageRoute }}', 'status', id, actionType, dTable);
-	});
-	
-	// Delete section
-	$(document).on('click', '.delete', function() {
-		var id = $(this).data('id');
-		var actionType 	= $(this).data('action-type');
-		listActions('{{ $pageRoute }}', 'delete', id, actionType, dTable);
-	});
-
-	// Bulk Action
-    $('.bulkAction').on('click', function() {
-        var selectedIds = [];
-        $("input:checkbox[class=delete_checkbox]:checked").each(function () {
-            selectedIds.push($(this).val());
-        });
-
-        if (selectedIds.length > 0) {
-            var actionType = $(this).data('action-type');
-            bulkActions('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType, dTable);
-        } else {
-            toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
-        }
-    });
-	@endif
-
-});
+}
+@endif
 </script>

@@ -2,6 +2,8 @@
 
 @section('content')
 
+	@include($routePrefix.'.includes.filter_for_store')
+
 	<div class="row">
 		<div class="col-12">
 			<div class="card">

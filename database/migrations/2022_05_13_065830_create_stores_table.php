@@ -34,6 +34,7 @@ class CreateStoresTable extends Migration
             $table->text('notes')->nullable();
             $table->integer('sort')->default('0');
             $table->enum('status', ['0','1'])->default('1')->comment('0=>Inactive, 1=>Active');
+            $table->enum('progress_status', ['IP','CP'])->default('IP')->comment('IP=>In-Progress, CP=>Complete');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(DB::raw('NULL ON UPDATE CURRENT_TIMESTAMP'))->nullable();
             $table->softDeletes();

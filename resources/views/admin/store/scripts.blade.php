@@ -2,6 +2,51 @@
 $(document).ready(function() {
 	@if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)
 	// Get list page data
+	getList();
+
+	// Status section
+	$(document).on('click', '.status', function() {
+		var id 			= $(this).data('id');
+		var actionType 	= $(this).data('action-type');
+		listActionsWithFilter('{{ $pageRoute }}', 'status', id, actionType);
+	});
+	
+	// Delete section
+	$(document).on('click', '.delete', function() {
+		var id = $(this).data('id');
+		var actionType 	= $(this).data('action-type');
+		listActionsWithFilter('{{ $pageRoute }}', 'delete', id, actionType);
+	});
+
+	// Bulk Action
+	$('.bulkAction').on('click', function() {
+		var selectedIds = [];
+		$("input:checkbox[class=delete_checkbox]:checked").each(function () {
+			selectedIds.push($(this).val());
+		});
+
+		if (selectedIds.length > 0) {
+			var actionType = $(this).data('action-type');
+			bulkActionsWithFilter('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType);
+		} else {
+			toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
+		}
+	});
+	@endif
+
+	@include($routePrefix.'.includes.filter_for_store_script')
+
+});
+
+@if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)
+// Get list of records
+function getList() {
+	var distributionAreaId	= $('#distribution_area_id').val();
+	var distributorId 		= $('#distributor_id').val();
+	var beatId 				= $('#beat_id').val();
+	var storeId 			= $('#store_id').val();
+	var name1Id 			= $('#name_1_id').val();
+
 	var getListDataUrl = "{{route($routePrefix.'.'.$listRequestUrl)}}";	
 	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
 			destroy: true,
@@ -26,7 +71,7 @@ $(document).ready(function() {
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
-	        	url: getListDataUrl,
+	        	url: getListDataUrl + '?distribution_area_id=' + distributionAreaId + '&distributor_id=' + distributorId + '&beat_id=' + beatId + '&store_id=' + storeId + '&name_1_id=' + name1Id,
 				type: 'POST',
 				data: function(data) {},
 	        },
@@ -78,7 +123,7 @@ $(document).ready(function() {
 				[0, 'desc']
 			@endif
 			],
-			pageLength: 10,
+			pageLength: 25,
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
 			fnDrawCallback: function(settings) {
 				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
@@ -94,36 +139,25 @@ $(document).ready(function() {
 		$('#dataTableLoading').hide();
 		toastr.error(message, "@lang('custom_admin.message_error')");
 	});
-	
-	// Status section
-	$(document).on('click', '.status', function() {
-		var id 			= $(this).data('id');
-		var actionType 	= $(this).data('action-type');
-		listActions('{{ $pageRoute }}', 'status', id, actionType, dTable);
-	});
-	
-	// Delete section
-	$(document).on('click', '.delete', function() {
-		var id = $(this).data('id');
-		var actionType 	= $(this).data('action-type');
-		listActions('{{ $pageRoute }}', 'delete', id, actionType, dTable);
-	});
+}
 
-	// Bulk Action
-	$('.bulkAction').on('click', function() {
-		var selectedIds = [];
-		$("input:checkbox[class=delete_checkbox]:checked").each(function () {
-			selectedIds.push($(this).val());
-		});
+// Filter
+function urlBuilder() {
+	var distributionAreaId  = $('#distribution_area_id').val();
+    var distributorId		= $('#distributor_id').val();
+    var beatId              = $('#beat_id').val();
+    var storeId             = $('#store_id').val();
+    var name1Id             = $('#name_1_id').val();
 
-		if (selectedIds.length > 0) {
-			var actionType = $(this).data('action-type');
-			bulkActions('{{ $pageRoute }}', 'bulk-actions', selectedIds, actionType, dTable);
-		} else {
-			toastr.error("@lang('custom_admin.error_no_checkbox_checked')", "@lang('custom_admin.message_error')!");
-		}
-	});
-	@endif
-
-});
+    if (distributionAreaId != '' || distributorId != '' || beatId != '' || storeId != '' || name1Id != '') {
+		var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}?distribution_area_id=" + distributionAreaId + "&distributor_id=" + distributorId + "&beat_id=" + beatId + "&store_id=" + storeId + "&name_1_id=" + name1Id;
+		window.history.pushState({href: getListUrlWithFilter}, '', getListUrlWithFilter);
+		getList();
+	} else {
+		var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}";
+		window.history.pushState({href: getListUrlWithFilter}, '', getListUrlWithFilter);
+		getList();
+	}
+}
+@endif
 </script>

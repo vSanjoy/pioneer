@@ -38,11 +38,11 @@ if ( isset($_GET['category_id']) && $_GET['category_id'] != '' ) {
 							<div class="col-md-6">
 								<div class="form-group">
 									<label class="text-dark font-bold">&nbsp;</label><br />
-									<button class="btn btn-info btn-circle btn-circle-sm filterList" type="button" title="Filter">
+									{{-- <button class="btn btn-info btn-circle btn-circle-sm filterList" type="button" title="Filter">
 										<i class="fas fa-search"></i>
-									</button>
-									<button class="btn btn-dark btn-circle btn-circle-sm ml-1 resetFilter" type="button" title="Reset">
-										<i class="fas fa-sync-alt" aria-hidden="true"></i>
+									</button> --}}
+									<button class="btn btn-dark btn-circle btn-circle-sm resetFilter" type="button" title="Reset">
+										<i class="fas fa-sync-alt ml_minus_1" aria-hidden="true"></i>
 									</button>
 								</div>
 							</div>

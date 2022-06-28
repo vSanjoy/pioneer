@@ -1,34 +1,34 @@
 <?php
 /*
-    * Class name    : Category
+    * Class name    : Analyses
     * Purpose       : Table declaration
-    * Author        : 
-    * Created Date  : 
-    * Modified date : 
+    * Author        :
+    * Created Date  :
+    * Modified date :
 */
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends Model
+class Analyses extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $guarded = ['id'];    // The field name inside the array is not mass-assignable
 
     /*
-        * Function name : products
-        * Purpose       : To get products
+        * Function name : analysesDetails
+        * Purpose       : To get analyses details
         * Author        :
         * Created Date  :
         * Modified Date : 
         * Input Params  : 
         * Return Value  : 
     */
-	public function products() {
-		return $this->hasMany('App\Models\Product', 'category_id')->orderBy('title', 'ASC');
+	public function analysesDetails() {
+		return $this->hasMany('App\Models\AnalysesDetail', 'analyses_id');
 	}
+    
 }

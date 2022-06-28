@@ -152,5 +152,18 @@ class User extends Authenticatable
 	public function userDetails() {
 		return $this->hasOne('App\Models\UserDetail', 'user_id');
 	}
+
+    /*
+        * Function name : distributionAreaDetails
+        * Purpose       : To get distribution area details
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : 
+        * Return Value  : 
+    */
+    public function distributionAreaDetails() {
+        return $this->belongsTo('App\Models\DistributionArea', 'distribution_area_id');
+    }
     
 }

@@ -117,5 +117,22 @@ class Controller extends BaseController
 
         return $randonString;
     }
+    
+    /*
+        * Function Name : windowCloseOnSuccess
+        * Purpose       : This function is to show message and close tab
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : 
+        * Return Value  : 
+    */
+    public function windowCloseOnSuccess() {
+        echo '<script>
+                setTimeout(() => {
+                    window.close();
+                }, 1000);
+            </script>';
+    }
 
 }

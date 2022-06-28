@@ -1,0 +1,56 @@
+CREATE TABLE `up_analyses` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `analysis_season_id` int(11) DEFAULT NULL COMMENT 'Id from analysis_seasons table',
+  `distribution_area_id` int(11) DEFAULT NULL COMMENT 'Id from distribution_areas table',
+  `distributor_id` int(11) DEFAULT NULL COMMENT 'Id from users table',
+  `store_id` int(11) DEFAULT NULL COMMENT 'Id from stores table',
+  `analysis_date` timestamp NULL DEFAULT NULL,
+  `status` enum('0','1','2') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active, 2=>Blocked',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `up_analyses_details` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `analyses_id` int(11) DEFAULT NULL COMMENT 'Id from analyses table',
+  `category_id` int(11) DEFAULT NULL COMMENT 'Id from categories table',
+  `product_id` int(11) DEFAULT NULL COMMENT 'Id from products table',
+  `target_monthly_sales` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type_of_analysis` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `up_analysis_seasons` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
+  `sort` int(11) NOT NULL DEFAULT 0,
+  `status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `up_analyses`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `up_analyses_details`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `up_analysis_seasons`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `up_analyses`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+ALTER TABLE `up_analyses_details`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+ALTER TABLE `up_analysis_seasons`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+ALTER TABLE `up_stores` ADD `progress_status` ENUM('IP','CP') NOT NULL DEFAULT 'IP' COMMENT 'IP=>In-Progress, CP=>Complete' AFTER `status`;

@@ -129,6 +129,13 @@ class DistributorsController extends Controller
                         ->addColumn('whatsapp_no', function ($row) {
                             return $row->userDetails->whatsapp_no;
                         })
+                        ->addColumn('distribution_area_id', function ($row) {
+                            if ($row->distributionAreaDetails) {
+                                return $row->distributionAreaDetails->title;
+                            } else {
+                                return 'NA';
+                            }
+                        })
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
                         })
@@ -153,7 +160,7 @@ class DistributorsController extends Controller
                             if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
                                 $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
 
-                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'"><i class="fa fa-edit"></i></a>';
+                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
                             }
                             if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
                                 $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
@@ -428,7 +435,8 @@ class DistributorsController extends Controller
                             // End :: Inserting data to user_roles table
 
                             $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
-                            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+                            $this->windowCloseOnSuccess();
+                            // return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                         } else {
                             // If files uploaded then delete those files
                             unlinkFiles($uploadedImage, $this->pageRoute, false);

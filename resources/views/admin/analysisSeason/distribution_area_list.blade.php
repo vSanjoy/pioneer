@@ -7,6 +7,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>	
+					<h3>{!! $analysisSeason->title.' ('.$analysisSeason->year.')' !!}</h3>
 					<div class="table-responsive mt-4-5">
 						<table id="list-table" class="table table-striped table-bordered no-wrap list-data custom-table custom-table-second-column">
 							<thead>

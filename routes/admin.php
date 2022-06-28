@@ -152,6 +152,7 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::post('/add-submit', 'AnalysisSeasonsController@add')->name('add-submit');
                 Route::get('/edit/{id}', 'AnalysisSeasonsController@edit')->name('edit');
                 Route::any('/edit-submit/{id}', 'AnalysisSeasonsController@edit')->name('edit-submit');
+                Route::get('/status/{id}', 'AnalysisSeasonsController@status')->name('change-status');
                 
                 // Distribution Area
                 Route::get('/distribution-area-list/{id}', 'AnalysisSeasonsController@distributionAreaList')->name('distribution-area-list');
@@ -165,6 +166,9 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/store-list/{analysisSeasonId}/{distributionAreaId}/{distributorId}', 'AnalysisSeasonsController@storeList')->name('store-list');
                 Route::post('/ajax-store-list-request/{analysisSeasonId}/{distributionAreaId}/{distributorId}', 'AnalysisSeasonsController@ajaxStoreListRequest')->name('ajax-store-list-request');
 
+                // Analysis
+                Route::get('/analysis/{analysisSeasonId}/{distributionAreaId}/{distributorId}/{storeId}', 'AnalysisSeasonsController@analysisUpdate')->name('analysis');
+                Route::post('/analysis-update/{analysisSeasonId}/{distributionAreaId}/{distributorId}/{storeId}', 'AnalysisSeasonsController@analysisUpdate')->name('analysis-update');
             });
             
         });

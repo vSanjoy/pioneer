@@ -52,6 +52,7 @@ $(document).ready(function() {
 				{data: 'whatsapp_no', name: 'whatsapp_no'},
 				{data: 'company', name: 'company'},
 				{data: 'email', name: 'email'},
+				{data: 'distribution_area_id', name: 'distribution_area_id'},
 				// {data: 'updated_at', name: 'updated_at', orderable: false, searchable: false},
 				{data: 'status', name: 'status'},
 			@if ($isAllow || in_array($editUrl, $allowedRoutes))

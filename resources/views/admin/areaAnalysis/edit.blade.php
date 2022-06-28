@@ -46,7 +46,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_analysis_date')<span class="red_star">*</span></label>
-										{{ Form::text('analysis_date', date('m/d/Y', strtotime($details -> analysis_date)),[
+										{{ Form::text('analysis_date', date('m/d/Y', strtotime($details->analysis_date)),[
 												'id' => 'analysis_date', 
 												'class' => 'form-control date', 
 												'placeholder' => '', 

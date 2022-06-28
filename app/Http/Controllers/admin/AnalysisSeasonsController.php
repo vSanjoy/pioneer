@@ -18,6 +18,9 @@ use App\Models\AnalysisSeason;
 use App\Models\DistributionArea;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\Analyses;
+use App\Models\AnalysesDetail;
+use App\Models\Category;
 use DataTables;
 
 class AnalysisSeasonsController extends Controller
@@ -142,7 +145,7 @@ class AnalysisSeasonsController extends Controller
                             if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
                                 $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
 
-                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'"><i class="fa fa-edit"></i></a>';
+                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
                             }
                             // if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
                             //     $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
@@ -151,7 +154,7 @@ class AnalysisSeasonsController extends Controller
                             if ($isAllow || in_array($this->detailsListUrl, $allowedRoutes)) {
                                 $detailsListLink = route($this->routePrefix.'.'.$this->detailsListUrl, customEncryptionDecryption($row->id));
 
-                                $btn .= ' <a href="'.$detailsListLink.'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'"><i class="fa fa-list"></i></a>';
+                                $btn .= ' <a href="'.$detailsListLink.'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'" target="_blank"><i class="fa fa-list"></i></a>';
                             }
 
                             return $btn;
@@ -272,7 +275,8 @@ class AnalysisSeasonsController extends Controller
 
                     if ($update) {
                         $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
-                        return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+                        $this->windowCloseOnSuccess();
+                        // return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                     } else {
                         $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
                         return redirect()->back()->withInput();
@@ -288,136 +292,6 @@ class AnalysisSeasonsController extends Controller
             $this->generateToastMessage('error', $e->getMessage(), false);
             return redirect()->route($this->routePrefix.'.'.$this->listUrl);
         }
-    }
-
-    /*
-        * Function name : status
-        * Purpose       : This function is to status
-        * Input Params  : Request $request, $id = null
-        * Return Value  : Returns json
-    */
-    public function status(Request $request, $id = null) {
-        $title      = trans('custom_admin.message_error');
-        $message    = trans('custom_admin.error_something_went_wrong');
-        $type       = 'error';
-
-        try {
-            if ($request->ajax()) {
-                $id = customEncryptionDecryption($id, 'decrypt');
-                if ($id != null) {
-                    $details = $this->model->where('id', $id)->first();
-                    if ($details != null) {
-                        if ($details->status == 1) {
-                            $details->status = '0';
-                            $details->save();
-                            
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_status_updated_successfully');
-                            $type       = 'success';        
-                        } else if ($details->status == 0) {
-                            $details->status = '1';
-                            $details->save();
-        
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_status_updated_successfully');
-                            $type       = 'success';
-                        }
-                    } else {
-                        $message = trans('custom_admin.error_invalid');
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-        } catch (\Throwable $e) {
-            $message = $e->getMessage();
-        }
-        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
-    }
-
-    /*
-        * Function name : delete
-        * Purpose       : This function is to delete record
-        * Input Params  : Request $request, $id = null
-        * Return Value  : Returns json
-    */
-    public function delete(Request $request, $id = null) {
-        $title      = trans('custom_admin.message_error');
-        $message    = trans('custom_admin.error_something_went_wrong');
-        $type       = 'error';
-
-        try {
-            if ($request->ajax()) {
-                $id = customEncryptionDecryption($id, 'decrypt');
-                if ($id != null) {
-                    $details = $this->model->where('id', $id)->first();
-                    if ($details != null) {
-                        $delete = $details->delete();
-                        if ($delete) {
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_data_deleted_successfully');
-                            $type       = 'success';
-                        } else {
-                            $message    = trans('custom_admin.error_took_place_while_deleting');
-                        }
-                    } else {
-                        $message = trans('custom_admin.error_invalid');
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-        } catch (\Throwable $e) {
-            $message = $e->getMessage();
-        }
-        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
-    }
-
-    /*
-        * Function name : bulkActions
-        * Purpose       : This function is to delete record, active/inactive
-        * Input Params  : Request $request
-        * Return Value  : Returns json
-    */
-    public function bulkActions(Request $request) {
-        $title      = trans('custom_admin.message_error');
-        $message    = trans('custom_admin.error_something_went_wrong');
-        $type       = 'error';
-
-        try {
-            if ($request->ajax()) {
-                $selectedIds    = $request->selectedIds;
-                $actionType     = $request->actionType;
-                if (count($selectedIds) > 0) {
-                    if ($actionType ==  'active') {
-                        $this->model->whereIn('id', $selectedIds)->update(['status' => '1']);
-                        
-                        $title      = trans('custom_admin.message_success');
-                        $message    = trans('custom_admin.success_status_updated_successfully');
-                        $type       = 'success';
-                    } elseif ($actionType ==  'inactive') {
-                        $this->model->whereIn('id', $selectedIds)->update(['status' => '0']);
-
-                        $title      = trans('custom_admin.message_success');
-                        $message    = trans('custom_admin.success_status_updated_successfully');
-                        $type       = 'success';
-                    } else {
-                        $this->model->whereIn('id', $selectedIds)->delete();
-
-                        $title      = trans('custom_admin.message_success');
-                        $message    = trans('custom_admin.success_data_deleted_successfully');
-                        $type       = 'success';
-                    }
-                } else {
-                    $message = trans('custom_admin.error_invalid');
-                }
-            }
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-        } catch (\Throwable $e) {
-            $message = $e->getMessage();
-        }
-        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
     }
 
     
@@ -438,6 +312,7 @@ class AnalysisSeasonsController extends Controller
 
         try {
             $data['analysisSeasonId']   = $analysisSeasonId;
+            $data['analysisSeason']     = $this->model->where(['id' => customEncryptionDecryption($analysisSeasonId, 'decrypt')])->first();
 
             // Start :: Manage restriction
             $data['isAllow'] = false;
@@ -490,7 +365,7 @@ class AnalysisSeasonsController extends Controller
                             return date('d-m-Y', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $analysisSeasonId) {
-                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.distributor-list', [$analysisSeasonId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_distributor').'"><i class="fa fa-user"></i></a>';
+                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.distributor-list', [$analysisSeasonId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_distributor').'"><i class="fa fa-user ml_minus_1"></i></a>';
 
                             return $btn;
                         })
@@ -527,6 +402,8 @@ class AnalysisSeasonsController extends Controller
         try {
             $data['analysisSeasonId']   = $analysisSeasonId;
             $data['distributionAreaId'] = $distributionAreaId;
+            $data['analysisSeason']     = $this->model->where(['id' => customEncryptionDecryption($analysisSeasonId, 'decrypt')])->first();
+            $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
 
             // Start :: Manage restriction
             $data['isAllow'] = false;
@@ -575,11 +452,18 @@ class AnalysisSeasonsController extends Controller
                         ->addColumn('whatsapp_no', function ($row) {
                             return $row->userDetails->whatsapp_no;
                         })
+                        ->addColumn('distribution_area_id', function ($row) {
+                            if ($row->distributionAreaDetails) {
+                                return $row->distributionAreaDetails->title;
+                            } else {
+                                return 'NA';
+                            }
+                        })
                         ->addColumn('created_at', function ($row) {
                             return date('d-m-Y', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $analysisSeasonId, $distributionAreaId) {
-                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_store').'"><i class="fa fa-database"></i></a>';
+                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_store').'"><i class="fa fa-university ml_minus_1" aria-hidden="true"></i></a>';
 
                             return $btn;
                         })
@@ -617,6 +501,9 @@ class AnalysisSeasonsController extends Controller
             $data['analysisSeasonId']   = $analysisSeasonId;
             $data['distributionAreaId'] = $distributionAreaId;
             $data['distributorId']      = $distributorId;
+            $data['analysisSeason']     = $this->model->where(['id' => customEncryptionDecryption($analysisSeasonId, 'decrypt')])->first();
+            $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
+            $data['distributor']        = User::where(['id' => customEncryptionDecryption($distributorId, 'decrypt')])->first();
 
             // Start :: Manage restriction
             $data['isAllow'] = false;
@@ -643,7 +530,7 @@ class AnalysisSeasonsController extends Controller
         * Input Params  : Request $request
         * Return Value  : Returns data
     */
-    public function ajaxStoreListRequest(Request $request, $analysisSeasonId = null, $distributionAreaId = null, $distributorId = null) {
+    public function ajaxStoreListRequest(Request $request, $analysisSeasonId = null, $distributionAreaId = null, $distributorId = null, $storeId = null) {
         $data['pageTitle'] = trans('custom_admin.label_store_list');
         $data['panelTitle']= trans('custom_admin.label_store_list');
 
@@ -660,7 +547,7 @@ class AnalysisSeasonsController extends Controller
                 $allowedRoutes  = $restrictions['allow_routes'];
                 // End :: Manage restriction
 
-                return Datatables::of($data, $isAllow, $allowedRoutes, $analysisSeasonId, $distributionAreaId, $distributorId)
+                return Datatables::of($data, $isAllow, $allowedRoutes, $analysisSeasonId, $distributionAreaId, $distributorId, $storeId)
                         ->addIndexColumn()
                         ->addColumn('distribution_area_id', function ($row) {
                             if ($row->distributionAreaDetails !== NULL) {
@@ -681,12 +568,41 @@ class AnalysisSeasonsController extends Controller
                         ->addColumn('created_at', function ($row) {
                             return date('d-m-Y', strtotime($row->created_at));
                         })
+                        ->addColumn('progress_status', function ($row) {
+                            $currentStatus = 'NA';
+                            $bgColor = 'btn-secondary';
+                            if ($row->progress_status == 'IP') {
+                                $currentStatus = trans('custom_admin.label_in_progress');
+                                $bgColor = 'btn-success';
+                            } else if ($row->progress_status == 'CP') {
+                                $currentStatus = trans('custom_admin.label_complete');
+                                $bgColor = 'btn-dark';
+                            }
+
+                            $storeProgressStatuses = '';
+                            $storeProgressStatuses .= '<div class="btn-group dropdownstatus">';
+                            $storeProgressStatuses .=      '<button type="button" class="btn '.$bgColor.' btn-rounded dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                            $storeProgressStatuses .=          $currentStatus;
+                            $storeProgressStatuses .= '    </button>';
+                            $storeProgressStatuses .= '    <div class="dropdown-menu">';
+
+                            if ($row->progress_status != 'IP') {
+                                $storeProgressStatuses .= '        <a class="dropdown-item store-status" href="javascript:void(0)" data-id="'.customEncryptionDecryption($row->id).'" data-action-type="IP">'.trans('custom_admin.label_in_progress').'</a>';
+                            }
+                            if ($row->progress_status != 'CP') {
+                                $storeProgressStatuses .= '        <a class="dropdown-item store-status" href="javascript:void(0)" data-id="'.customEncryptionDecryption($row->id).'" data-action-type="CP">'.trans('custom_admin.label_complete').'</a>';
+                            }
+                            $storeProgressStatuses .= '    </div>';
+                            $storeProgressStatuses .= '</div>';
+
+                            return $storeProgressStatuses;
+                        })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $analysisSeasonId, $distributionAreaId, $distributorId) {
-                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, $distributorId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_store').'"><i class="fa fa-database"></i></a>';
+                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.analysis', [$analysisSeasonId, $distributionAreaId, $distributorId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'" target="_blank"><i class="fas fa-chart-bar ml_minus_1" aria-hidden="true"></i>';
 
                             return $btn;
                         })
-                        ->rawColumns(['distribution_area_id','sale_size_category','status','action'])
+                        ->rawColumns(['distribution_area_id','sale_size_category','progress_status','action'])
                         ->make(true);
             }
 
@@ -697,6 +613,221 @@ class AnalysisSeasonsController extends Controller
         } catch (\Throwable $e) {
             $this->generateToastMessage('error', $e->getMessage(), false);
             return '';
+        }
+    }
+
+    /*
+        * Function name : status
+        * Purpose       : This function is to status
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request, $id = null
+        * Return Value  : Returns json
+    */
+    public function status(Request $request, $id = null) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+
+        try {
+            if ($request->ajax()) {
+                $id         = customEncryptionDecryption($id, 'decrypt');
+                $actionType = $request->actionType ?? null;
+
+                if ($id != null && $actionType != null) {
+                    $details = Store::where('id', $id)->first();
+                    if ($details != null) {
+                        if ($actionType == 'IP') {
+                            $details->progress_status = 'IP';
+                        } else if ($actionType == 'CP') {
+                            $details->progress_status = 'CP';
+                        }
+                        $details->save();
+                            
+                        $title      = trans('custom_admin.message_success');
+                        $message    = trans('custom_admin.success_status_updated_successfully');
+                        $type       = 'success';
+                    } else {
+                        $message = trans('custom_admin.error_invalid');
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
+    }
+    
+    
+    /******************************************************** Analysis ********************************************************/
+    /*
+        * Function name : analysisUpdate
+        * Purpose       : This function is to update form
+        * Input Params  : Request $request
+        * Return Value  : Returns sub admin data
+    */
+    public function analysisUpdate(Request $request, $analysisSeasonId = null, $distributionAreaId = null, $distributorId = null, $storeId = null) {
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_analysis'),
+            'panelTitle'    => trans('custom_admin.label_analysis'),
+            'pageType'      => 'EDITPAGE'
+        ];
+
+        try {
+            $data['id']             = 0;
+            $data['analysisValues'] = $analysisValues = [];
+            $data['details']        = $details = Analyses::where([
+                                                            'analysis_season_id' => customEncryptionDecryption($analysisSeasonId, 'decrypt'),
+                                                            'distribution_area_id' => customEncryptionDecryption($distributionAreaId, 'decrypt'),
+                                                            'distributor_id' => customEncryptionDecryption($distributorId, 'decrypt'),
+                                                            'store_id' => customEncryptionDecryption($storeId, 'decrypt')
+                                                        ])->first();
+            if ($details) {
+                $data['id']     = $details->id;
+
+                foreach ($details->analysesDetails as $item) {
+                    $categoryId = $item->category_id;
+                    $productId  = $item->product_id;
+
+                    $analysisValues[$categoryId][$productId]['analyses_details_id'] = $item->id;
+                    $analysisValues[$categoryId][$productId]['target_monthly_sales']= $item->target_monthly_sales;
+                    $analysisValues[$categoryId][$productId]['type_of_analysis']    = $item->type_of_analysis;
+                    $analysisValues[$categoryId][$productId]['action']              = $item->action;
+                }
+
+                if (count($analysisValues)) {
+                    $data['analysisValues'] = $analysisValues;
+                }
+            }
+                                            
+            $data['analysisSeasonId']   = $analysisSeasonId;
+            $data['distributionAreaId'] = $distributionAreaId;
+            $data['distributorId']      = $distributorId;
+            $data['storeId']            = $storeId;
+            
+            $decryptAnalysisSeasonId    = customEncryptionDecryption($analysisSeasonId, 'decrypt');
+            $decryptDistributionAreaId  = customEncryptionDecryption($distributionAreaId, 'decrypt');
+            $decryptDistributorId       = customEncryptionDecryption($distributorId, 'decrypt');
+            $decryptStoreId             = customEncryptionDecryption($storeId, 'decrypt');
+
+            $data['analysisSeason']     = $this->model->where(['id' => $decryptAnalysisSeasonId])->first();
+            $data['distributionArea']   = DistributionArea::where(['id' => $decryptDistributionAreaId])->first();
+            $data['distributor']        = User::where(['id' => $decryptDistributorId])->first();
+            $data['store']              = Store::where(['id' => $decryptStoreId])->first();
+            $data['categories']         = Category::orderBy('title', 'ASC')->get();
+            
+            if ($request->isMethod('POST')) {
+                $validationCondition = array(
+                    'analysis_date' => 'required',
+                );
+                $validationMessages = array(
+                    'analysis_date.required'    => trans('custom_admin.error_analysis_date'),
+                );
+                $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
+                if ($validator->fails()) {
+                    $validationFailedMessages = validationMessageBeautifier($validator->messages()->getMessages());
+                    $this->generateToastMessage('error', $validationFailedMessages, false);
+                    return redirect()->back()->withInput();
+                } else {
+                    if ($details == null) { // Insert first time
+                        $saveData                           = [];
+                        $saveData['analysis_season_id']     = $decryptAnalysisSeasonId;
+                        $saveData['distribution_area_id']   = $decryptDistributionAreaId;
+                        $saveData['distributor_id']         = $decryptDistributorId;
+                        $saveData['store_id']               = $decryptStoreId;
+                        $saveData['analysis_date']          = date('Y-m-d', strtotime($request->analysis_date)) ?? null;
+                        $save = Analyses::create($saveData);
+
+                        if ($save) {
+                            $i = 0; $analysesArray = [];
+                            if (isset($request->analyses) && count($request->analyses)) {
+                                foreach ($request->analyses as $itemAnalyses) {
+                                    if (isset($itemAnalyses['products']) && count($itemAnalyses['products'])) {
+                                        foreach ($itemAnalyses['products'] as $item) {
+                                            if ($item['target_monthly_sales'] != null || $item['type_of_analysis'] != null || $item['action'] != null) {
+                                                $analysesArray[$i]['analyses_id']            = $save->id;
+                                                $analysesArray[$i]['category_id']            = $item['category_id'];
+                                                $analysesArray[$i]['product_id']             = $item['id'];
+                                                $analysesArray[$i]['target_monthly_sales']   = $item['target_monthly_sales'];
+                                                $analysesArray[$i]['type_of_analysis']       = $item['type_of_analysis'];
+                                                $analysesArray[$i]['action']                 = $item['action'];
+
+                                                $i++;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                if (count($analysesArray)) {
+                                    AnalysesDetail::insert($analysesArray);
+                                }
+                            }
+
+                            $this->generateToastMessage('success', trans('custom_admin.success_data_added_successfully'), false);
+                            return redirect()->route($this->routePrefix.'.analysisSeason.analysis', [$analysisSeasonId, $distributionAreaId, $distributorId, $storeId]);
+                        } else {
+                            $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_adding'), false);
+                            return redirect()->back()->withInput();
+                        }
+                    } else {                // Update
+                        $details->analysis_date = date('Y-m-d', strtotime($request->analysis_date)) ?? null;
+                        $update = $details->update();
+                        if ($update) {
+                            $i = 0; $analysesArray = [];
+                            if (isset($request->analyses) && count($request->analyses)) {
+                                foreach ($request->analyses as $itemAnalyses) {
+                                    if (isset($itemAnalyses['products']) && count($itemAnalyses['products'])) {
+                                        foreach ($itemAnalyses['products'] as $item) {
+                                            if (($item['target_monthly_sales'] != null || $item['type_of_analysis'] != null || $item['action'] != null) && $item['analyses_details_id'] == null) {
+                                                $analysesArray[$i]['analyses_id']            = $details->id;
+                                                $analysesArray[$i]['category_id']            = $item['category_id'];
+                                                $analysesArray[$i]['product_id']             = $item['id'];
+                                                $analysesArray[$i]['target_monthly_sales']   = $item['target_monthly_sales'];
+                                                $analysesArray[$i]['type_of_analysis']       = $item['type_of_analysis'];
+                                                $analysesArray[$i]['action']                 = $item['action'];
+
+                                                $i++;
+                                            } else if ($item['analyses_details_id'] != null) {
+                                                AnalysesDetail::where([
+                                                                    'id'                    => $item['analyses_details_id'],
+                                                                    'analyses_id'           => $details->id,
+                                                                    'category_id'           => $item['category_id'],
+                                                                    'product_id'            => $item['id'],
+                                                                ])->update([
+                                                                    'target_monthly_sales'  => $item['target_monthly_sales'],
+                                                                    'type_of_analysis'      => $item['type_of_analysis'],
+                                                                    'action'                => $item['action']
+                                                                ]);
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                if (count($analysesArray)) {
+                                    AnalysesDetail::insert($analysesArray);
+                                }
+                            }
+
+                            $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
+                            return redirect()->route($this->routePrefix.'.analysisSeason.analysis', [$analysisSeasonId, $distributionAreaId, $distributorId, $storeId]);
+                        } else {
+                            $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
+                            return redirect()->back()->withInput();
+                        }
+                    }
+                }
+            }
+
+            return view($this->viewFolderPath.'.analysis_edit', $data);
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, $distributorId]);
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, $distributorId]);
         }
     }
 

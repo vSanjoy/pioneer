@@ -6,7 +6,8 @@
 		<div class="col-12">
 			<div class="card">
 				<div class="card-body">
-					<h4 class="card-title">{{ $pageTitle }}</h4>	
+					<h4 class="card-title">{{ $pageTitle }}</h4>
+					<h3>{!! $analysisSeason->title.' ('.$analysisSeason->year.')' !!} - {!! $distributionArea->title !!}</h3>
 					<div class="table-responsive mt-4-5">
 						<table id="list-table" class="table table-striped table-bordered no-wrap list-data custom-table custom-table-second-column">
 							<thead>
@@ -18,7 +19,8 @@
 									<th>@lang('custom_admin.label_phone') 1</th>
 									<th>@lang('custom_admin.label_whatsapp_no')</th>
 									<th>@lang('custom_admin.label_company')</th>
-									<th>@lang('custom_admin.label_email')</th>
+									{{-- <th>@lang('custom_admin.label_email')</th> --}}
+									<th>@lang('custom_admin.label_distribution_area')</th>
 									<th class="actions">@lang('custom_admin.label_action')</th>
 								</tr>
 							</thead>							

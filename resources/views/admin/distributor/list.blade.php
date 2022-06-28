@@ -54,6 +54,7 @@
 									<th>@lang('custom_admin.label_whatsapp_no')</th>
 									<th>@lang('custom_admin.label_company')</th>
 									<th>@lang('custom_admin.label_email')</th>
+									<th>@lang('custom_admin.label_distribution_area')</th>
 									{{-- <th class="modifiedColumn">@lang('custom_admin.label_modified')</th> --}}
 									<th class="row_status">@lang('custom_admin.label_status')</th>
 									<th class="actions">@lang('custom_admin.label_action')</th>

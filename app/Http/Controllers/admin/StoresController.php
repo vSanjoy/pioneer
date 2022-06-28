@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Traits\GeneralMethods;
 use App\Models\Store;
 use App\Models\DistributionArea;
+use App\Models\User;
 use DataTables;
 
 class StoresController extends Controller
@@ -79,6 +80,11 @@ class StoresController extends Controller
             $data['allowedRoutes'] = $restrictions['allow_routes'];
             // End :: Manage restriction
 
+            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
+            $data['distributors']       = User::where(['type' => 'D', 'status' => '1'])->whereNull('deleted_at')->select('id','full_name','email')->orderBy('full_name', 'ASC')->get();
+            $data['stores']             = $this->model->where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1')->orderBy('store_name', 'ASC')->get();
+            $data['beats']              = $this->model->where('beat_name','<>',null)->where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name','beat_name')->orderBy('beat_name', 'ASC')->get();
+
             return view($this->viewFolderPath.'.list', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -101,8 +107,6 @@ class StoresController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = $this->model->whereNull('deleted_at');
-
                 // Start :: Manage restriction
                 $isAllow = false;
                 $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
@@ -111,6 +115,69 @@ class StoresController extends Controller
                 }
                 $allowedRoutes  = $restrictions['allow_routes'];
                 // End :: Manage restriction
+
+                // Distribution Area
+                $distributionAreaId         = $request->distribution_area_id;
+                $filterBydistributionArea   = false;
+                if ($distributionAreaId != '') {
+                    $filterBydistributionArea = true;
+                    $filter['distribution_area_id'] = $distributionAreaId;
+                }
+                // Distributor
+                $distributorId         = $request->distributor_id;
+                $filterByDistributor   = false;
+                if ($distributorId != '') {
+                    $filterByDistributor = true;
+                    $filter['distributor_id'] = $distributorId;
+                }
+                // Beat
+                $beatId       = $request->beat_id;
+                $filterByBeat = false;
+                if ($beatId != '') {
+                    $filterByBeat = true;
+                    $filter['beat_id'] = $beatId;
+                }
+                // Store
+                $storeId       = $request->store_id;
+                $filterByStore = false;
+                if ($storeId != '') {
+                    $filterByStore = true;
+                    $filter['store_id'] = $storeId;
+                }
+                // Name 1
+                $name1Id         = $request->name_1_id;
+                $filterByName1   = false;
+                if ($name1Id != '') {
+                    $filterByName1 = true;
+                    $filter['name_1_id'] = $name1Id;
+                }
+                
+                // Main query
+                $data = $this->model->whereNull(['deleted_at']);
+
+                // Based on disribution area filter
+                if ($filterBydistributionArea) {
+                    $data = $data->where('distribution_area_id', $distributionAreaId);
+                }
+                // Based on distributor filter
+                if ($filterByDistributor) {
+                    $distributorDetails = User::where(['id' => $distributorId])->select('id','distribution_area_id')->first();
+                    if ($distributorDetails != null) {
+                        $data = $data->where('distribution_area_id', $distributorDetails->distribution_area_id);
+                    }
+                }
+                // Based on beat filter
+                if ($filterByBeat) {
+                    $data = $data->where('id', $beatId);
+                }
+                // Based on store filter
+                if ($filterByStore) {
+                    $data = $data->where('id', $storeId);
+                }
+                // Based on name filter
+                if ($filterByName1) {
+                    $data = $data->where('id', $name1Id);
+                }
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
@@ -154,7 +221,7 @@ class StoresController extends Controller
                             if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
                                 $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
 
-                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'"><i class="fa fa-edit"></i></a>';
+                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
                             }
                             if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
                                 $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
@@ -325,7 +392,8 @@ class StoresController extends Controller
 
                     if ($update) {
                         $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
-                        return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+                        $this->windowCloseOnSuccess();
+                        // return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                     } else {
                         $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
                         return redirect()->back()->withInput();

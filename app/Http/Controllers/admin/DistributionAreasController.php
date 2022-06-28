@@ -151,7 +151,7 @@ class DistributionAreasController extends Controller
                             if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
                                 $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
 
-                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'"><i class="fa fa-edit"></i></a>';
+                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
                             }
                             if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
                                 $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
@@ -280,7 +280,8 @@ class DistributionAreasController extends Controller
 
                     if ($update) {
                         $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
-                        return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+                        $this->windowCloseOnSuccess();
+                        // return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                     } else {
                         $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
                         return redirect()->back()->withInput();
