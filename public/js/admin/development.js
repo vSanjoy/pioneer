@@ -981,6 +981,90 @@ $(document).ready(function() {
     });
     // End :: Distributor Form //
 
+    // Start :: Beat Form //
+    $("#createBeatForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            title: {
+                required: true,
+            },
+        },
+        messages: {
+            title: {
+                required: "Please enter title.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+                $('#lang-tabs a[href="#' + jQuery(validator.errorList[0].element).closest(".tab-pane").attr('id') + '"]').tab('show');
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+
+    $("#updateBeatForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            title: {
+                required: true,
+            },
+        },
+        messages: {
+            title: {
+                required: "Please enter title.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+                $('#lang-tabs a[href="#' + jQuery(validator.errorList[0].element).closest(".tab-pane").attr('id') + '"]').tab('show');
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Beat Form //
+
     // Start :: Store Form //
     $("#createStoreForm").validate({
         ignore: ":hidden",
@@ -993,6 +1077,9 @@ $(document).ready(function() {
                 required: true
             },
             store_name: {
+                required: true
+            },
+            beat_id: {
                 required: true
             },
             // email: {
@@ -1010,8 +1097,8 @@ $(document).ready(function() {
             store_name: {
                 required: "Please enter store name."
             },
-            company: {
-                required: "Please enter company."
+            beat_id: {
+                required: "Please select beat."
             },
             // email: {
             //     required: "Please enter email.",
@@ -1038,6 +1125,8 @@ $(document).ready(function() {
         errorPlacement: function(error, element) {
             if ($(element).attr('id') == 'distribution_area_id') {
                 error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else if ($(element).attr('id') == 'beat_id') {
+                error.insertAfter($(element).parents('div#beat-div'));
             } else {
                 error.insertAfter(element);
             }
@@ -1062,6 +1151,9 @@ $(document).ready(function() {
             store_name: {
                 required: true
             },
+            beat_id: {
+                required: true
+            },
             // email: {
             //     required: true,
             //     valid_email: true
@@ -1079,6 +1171,9 @@ $(document).ready(function() {
             },
             company: {
                 required: "Please enter company."
+            },
+            beat_id: {
+                required: "Please select beat."
             },
             // email: {
             //     required: "Please enter email.",
@@ -1105,6 +1200,8 @@ $(document).ready(function() {
         errorPlacement: function(error, element) {
             if ($(element).attr('id') == 'distribution_area_id') {
                 error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else if ($(element).attr('id') == 'beat_id') {
+                error.insertAfter($(element).parents('div#beat-div'));
             } else {
                 error.insertAfter(element);
             }
@@ -1220,6 +1317,10 @@ $(document).ready(function() {
                 // required: true,
                 valid_amount_not_empty: true,
             },
+            retailer_price: {
+                required: true,
+                valid_amount: true,
+            },
         },
         messages: {
             category_id: {
@@ -1235,6 +1336,10 @@ $(document).ready(function() {
             mrp: {
                 // required: "Please enter mrp.",
                 valid_amount_not_empty: "Please enter valid amount.",
+            },
+            retailer_price: {
+                required: "Please enter retailer price.",
+                valid_amount: "Please enter valid amount.",
             },
         },
         errorClass: 'error invalid-feedback',
@@ -1287,6 +1392,10 @@ $(document).ready(function() {
                 // required: true,
                 valid_amount_not_empty: true,
             },
+            retailer_price: {
+                required: true,
+                valid_amount: true,
+            },
         },
         messages: {
             category_id: {
@@ -1302,6 +1411,10 @@ $(document).ready(function() {
             mrp: {
                 // required: "Please enter mrp.",
                 valid_amount_not_empty: "Please enter valid amount.",
+            },
+            retailer_price: {
+                required: "Please enter retailer price.",
+                valid_amount: "Please enter valid amount.",
             },
         },
         errorClass: 'error invalid-feedback',

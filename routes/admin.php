@@ -58,6 +58,18 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::post('/bulk-actions', 'DistributorsController@bulkActions')->name('bulk-actions');
             });
 
+            Route::group(['prefix' => 'beat', 'as' => 'beat.'], function () {
+                Route::get('/list', 'BeatsController@list')->name('list');
+                Route::post('/ajax-list-request', 'BeatsController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/add', 'BeatsController@add')->name('add');
+                Route::post('/add-submit', 'BeatsController@add')->name('add-submit');
+                Route::get('/edit/{id}', 'BeatsController@edit')->name('edit');
+                Route::post('/edit-submit/{id}', 'BeatsController@edit')->name('edit-submit');
+                Route::get('/status/{id}', 'BeatsController@status')->name('change-status');
+                Route::get('/delete/{id}', 'BeatsController@delete')->name('delete');
+                Route::post('/bulk-actions', 'BeatsController@bulkActions')->name('bulk-actions');
+            });
+
             Route::group(['prefix' => 'store', 'as' => 'store.'], function () {
                 Route::get('/list', 'StoresController@list')->name('list');
                 Route::post('/ajax-list-request', 'StoresController@ajaxListRequest')->name('ajax-list-request');

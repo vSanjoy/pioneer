@@ -47,7 +47,7 @@ function getList() {
 	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
 			destroy: true,
 			autoWidth: false,
-	        responsive: true,
+	        responsive: false,
 			processing: true,
 			language: {
 				processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
@@ -91,6 +91,7 @@ function getList() {
 				{data: 'title', name: 'title'},
 				{data: 'rate_per_pcs', name: 'rate_per_pcs', orderable: false, searchable: false},
 				{data: 'mrp', name: 'mrp', orderable: false, searchable: false},
+				{data: 'retailer_price', name: 'retailer_price', orderable: false, searchable: false},
 				// {data: 'updated_at', name: 'updated_at', orderable: false, searchable: false},
 				{data: 'status', name: 'status'},
 			@if ($isAllow || in_array($editUrl, $allowedRoutes))

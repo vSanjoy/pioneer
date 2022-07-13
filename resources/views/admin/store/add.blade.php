@@ -143,6 +143,17 @@
 									</div>
 								</div>
 								<div class="col-md-6">
+									<div class="form-group" id="beat-div">
+										<label class="text-dark font-bold">@lang('custom_admin.label_beat_name')<span class="red_star">*</span></label>
+										<select name="beat_id" id="beat_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required>
+											<option value="">--@lang('custom_admin.label_select')--</option>
+										@foreach ($beats as $item)
+											<option value="{{ $item->id }}">{!! $item->title !!}</option>
+										@endforeach
+										</select>
+									</div>
+								</div>
+								{{-- <div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_beat_name')</label>
 										{{ Form::text('beat_name', null, [
@@ -150,9 +161,20 @@
 																		'class' => 'form-control',
 																		'placeholder' => '' ]) }}
 									</div>
-								</div>
+								</div> --}}
 							</div>
 							<div class="row mt-1">
+								<div class="col-md-6">
+									<div class="form-group" id="grade-div">
+										<label class="text-dark font-bold">@lang('custom_admin.label_grade_name')</label>
+										<select name="grade_id" id="grade_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+											<option value="">--@lang('custom_admin.label_select')--</option>
+										@foreach ($grades as $item)
+											<option value="{{ $item->id }}">{!! $item->title !!}</option>
+										@endforeach
+										</select>
+									</div>
+								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_sale_size_category')</label>
@@ -164,6 +186,8 @@
 										</select>
 									</div>
 								</div>
+							</div>
+							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_integrity')</label>
@@ -177,8 +201,6 @@
 										</select>
 									</div>
 								</div>
-							</div>
-							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_notes')</label>

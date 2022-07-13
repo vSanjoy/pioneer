@@ -13,7 +13,7 @@ $(document).on('click', '#toggleSearchBox', function() {
 // On change filters
 $(function() {
     // Distribution area on change
-    $('#distribution_area_id, #distributor_id, #beat_id, #store_id, #name_1_id').on('change', function() {
+    $('#distribution_area_id, #distributor_id, #beat_id, #store_id, #name_1_id, #grade_id').on('change', function() {
 		urlBuilder();
     });
 });

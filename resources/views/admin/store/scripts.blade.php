@@ -46,6 +46,7 @@ function getList() {
 	var beatId 				= $('#beat_id').val();
 	var storeId 			= $('#store_id').val();
 	var name1Id 			= $('#name_1_id').val();
+	var gradeId 			= $('#grade_id').val();
 
 	var getListDataUrl = "{{route($routePrefix.'.'.$listRequestUrl)}}";	
 	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
@@ -71,7 +72,7 @@ function getList() {
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
-	        	url: getListDataUrl + '?distribution_area_id=' + distributionAreaId + '&distributor_id=' + distributorId + '&beat_id=' + beatId + '&store_id=' + storeId + '&name_1_id=' + name1Id,
+	        	url: getListDataUrl + '?distribution_area_id=' + distributionAreaId + '&distributor_id=' + distributorId + '&beat_id=' + beatId + '&store_id=' + storeId + '&name_1_id=' + name1Id + '&grade_id=' + gradeId,
 				type: 'POST',
 				data: function(data) {},
 	        },
@@ -93,10 +94,11 @@ function getList() {
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'name_1', name: 'name_1'},
 				{data: 'phone_no_1', name: 'phone_no_1'},
-				{data: 'beat_name', name: 'beat_name'},
+				{data: 'beat_id', name: 'beat_id'},
 				{data: 'distribution_area_id', name: 'distribution_area_id'},
 				{data: 'email', name: 'email'},
 				{data: 'store_name', name: 'store_name'},
+				{data: 'grade_id', name: 'grade_id'},
 				{data: 'sale_size_category', name: 'sale_size_category'},
 				{data: 'integrity', name: 'integrity'},
 				// {data: 'updated_at', name: 'updated_at', orderable: false, searchable: false},
@@ -148,9 +150,10 @@ function urlBuilder() {
     var beatId              = $('#beat_id').val();
     var storeId             = $('#store_id').val();
     var name1Id             = $('#name_1_id').val();
+	var gradeId             = $('#grade_id').val();
 
-    if (distributionAreaId != '' || distributorId != '' || beatId != '' || storeId != '' || name1Id != '') {
-		var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}?distribution_area_id=" + distributionAreaId + "&distributor_id=" + distributorId + "&beat_id=" + beatId + "&store_id=" + storeId + "&name_1_id=" + name1Id;
+	if (distributionAreaId != '' || distributorId != '' || beatId != '' || storeId != '' || name1Id != '' || gradeId != '') {
+		var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}?distribution_area_id=" + distributionAreaId + "&distributor_id=" + distributorId + "&beat_id=" + beatId + "&store_id=" + storeId + "&name_1_id=" + name1Id + "&grade_id=" + gradeId;
 		window.history.pushState({href: getListUrlWithFilter}, '', getListUrlWithFilter);
 		getList();
 	} else {

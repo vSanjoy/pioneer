@@ -17,6 +17,8 @@ use App\Traits\GeneralMethods;
 use App\Models\Store;
 use App\Models\DistributionArea;
 use App\Models\User;
+use App\Models\Beat;
+use App\Models\Grade;
 use DataTables;
 
 class StoresController extends Controller
@@ -83,7 +85,8 @@ class StoresController extends Controller
             $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
             $data['distributors']       = User::where(['type' => 'D', 'status' => '1'])->whereNull('deleted_at')->select('id','full_name','email')->orderBy('full_name', 'ASC')->get();
             $data['stores']             = $this->model->where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1')->orderBy('store_name', 'ASC')->get();
-            $data['beats']              = $this->model->where('beat_name','<>',null)->where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name','beat_name')->orderBy('beat_name', 'ASC')->get();
+            $data['beats']              = Beat::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
+            $data['grades']             = Grade::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
 
             return view($this->viewFolderPath.'.list', $data);
         } catch (Exception $e) {
@@ -151,7 +154,14 @@ class StoresController extends Controller
                     $filterByName1 = true;
                     $filter['name_1_id'] = $name1Id;
                 }
-                
+                // Grade
+                $gradeId       = $request->grade_id;
+                $filterByGrade = false;
+                if ($gradeId != '') {
+                    $filterByGrade = true;
+                    $filter['grade_id'] = $gradeId;
+                }
+
                 // Main query
                 $data = $this->model->whereNull(['deleted_at']);
 
@@ -168,7 +178,7 @@ class StoresController extends Controller
                 }
                 // Based on beat filter
                 if ($filterByBeat) {
-                    $data = $data->where('id', $beatId);
+                    $data = $data->where('beat_id', $beatId);
                 }
                 // Based on store filter
                 if ($filterByStore) {
@@ -178,12 +188,30 @@ class StoresController extends Controller
                 if ($filterByName1) {
                     $data = $data->where('id', $name1Id);
                 }
+                // Based on grade filter
+                if ($filterByGrade) {
+                    $data = $data->where('grade_id', $gradeId);
+                }
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
+                        ->addColumn('beat_id', function ($row) {
+                            if ($row->beatDetails !== NULL) {
+                                return $row->beatDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
                         ->addColumn('distribution_area_id', function ($row) {
                             if ($row->distributionAreaDetails !== NULL) {
                                 return $row->distributionAreaDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('grade_id', function ($row) {
+                            if ($row->gradeDetails !== NULL) {
+                                return $row->gradeDetails->title;
                             } else {
                                 return 'N/A';
                             }
@@ -261,6 +289,7 @@ class StoresController extends Controller
                     'name_1'                => 'required|unique:'.($this->model)->getTable().',name_1,NULL,id,deleted_at,NULL',
                     'store_name'            => 'required|unique:'.($this->model)->getTable().',store_name,NULL,id,deleted_at,NULL',
                     // 'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
+                    'beat_id'               => 'required',
                 );
                 $validationMessages = array(
                     'distribution_area_id.required' => 'Please select distribution area.',
@@ -271,6 +300,7 @@ class StoresController extends Controller
                     // 'email.required'            => trans('custom_admin.error_email'),
                     // 'email.regex'               => trans('custom_admin.error_valid_email'),
                     // 'email.unique'              => trans('custom_admin.error_email_unique'),
+                    'beat_id.required'             => 'Please select beat.',
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -291,6 +321,8 @@ class StoresController extends Controller
                     $saveData['street']                 = $request->street ?? null;
                     $saveData['district_region']        = $request->district_region ?? null;
                     $saveData['zip']                    = $request->zip ?? null;
+                    $saveData['beat_id']                = $request->beat_id ?? null;
+                    $saveData['grade_id']               = $request->grade_id ?? null;
                     $saveData['beat_name']              = $request->beat_name ?? null;
                     $saveData['email']                  = $request->email ?? null;
                     $saveData['sale_size_category']     = $request->sale_size_category ?? 'S';
@@ -312,6 +344,8 @@ class StoresController extends Controller
             $data['distributionAreas'] = DistributionArea::where(['status' => '1'])
                                                             ->select('id','title')
                                                             ->get();
+            $data['beats'] = Beat::where(['status' => '1'])->select('id','title')->get();
+            $data['grades']= Grade::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
             return view($this->viewFolderPath.'.add', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -338,9 +372,9 @@ class StoresController extends Controller
         try {
             $data['id']                 = $id;
             $data['storeId']            = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])
-                                                            ->select('id','title')
-                                                            ->get();
+            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->select('id','title')->get();
+            $data['beats']              = Beat::where(['status' => '1'])->select('id','title')->get();
+            $data['grades']             = Grade::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
             $data['details']            = $details = $this->model->where(['id' => $id])->first();
             
             if ($request->isMethod('POST')) {
@@ -353,6 +387,7 @@ class StoresController extends Controller
                     'name_1'                => 'required|unique:'.($this->model)->getTable().',name_1,'.$id.',id,deleted_at,NULL',
                     'store_name'            => 'required|unique:'.($this->model)->getTable().',store_name,'.$id.',id,deleted_at,NULL',
                     // 'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
+                    'beat_id'               => 'required',
                 );
                 $validationMessages = array(
                     'distribution_area_id.required' => 'Please select distributor.',
@@ -363,6 +398,7 @@ class StoresController extends Controller
                     // 'email.required'                => trans('custom_admin.error_email'),
                     // 'email.regex'                   => trans('custom_admin.error_valid_email'),
                     // 'email.unique'                  => trans('custom_admin.error_email_unique'),
+                    'beat_id.required'             => 'Please select beat.',
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -383,6 +419,8 @@ class StoresController extends Controller
                     $updateData['street']               = $request->street ?? null;
                     $updateData['district_region']      = $request->district_region ?? null;
                     $updateData['zip']                  = $request->zip ?? null;
+                    $updateData['beat_id']              = $request->beat_id ?? null;
+                    $updateData['grade_id']             = $request->grade_id ?? null;
                     $updateData['beat_name']            = $request->beat_name ?? null;
                     $updateData['email']                = $request->email ?? null;
                     $updateData['sale_size_category']   = $request->sale_size_category ?? 'S';

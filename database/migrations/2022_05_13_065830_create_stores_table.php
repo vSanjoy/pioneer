@@ -28,6 +28,8 @@ class CreateStoresTable extends Migration
             $table->string('district_region')->nullable();
             $table->string('zip')->nullable();
             $table->string('beat_name')->nullable();
+            $table->integer('beat_id')->nullable()->comment('Id from beats table');
+            $table->integer('grade_id')->nullable()->comment('Id from grades table');
             $table->string('email')->nullable();
             $table->enum('sale_size_category', ['S','M','L'])->default('S')->comment('S=>Small, M=>Medium, L=>Large');
             $table->enum('integrity', ['A+','A','B','B-','C'])->default('A+')->comment('A+=>A+, A=>A, B=>B, B-=>B-, C=>C');

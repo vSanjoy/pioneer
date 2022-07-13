@@ -148,6 +148,12 @@ return [
     'label_distributor'                             => 'Distributor',
     'label_add_distributor'                         => 'Add Distributor',
     'label_edit_distributor'                        => 'Edit Distributor',
+    'label_menu_beat'                               => 'Beat',
+    'label_beat_management'                         => 'Beat Management',
+    'label_beat_list'                               => 'Beat List',
+    'label_beat'                                    => 'Beat',
+    'label_add_beat'                                => 'Add Beat',
+    'label_edit_beat'                               => 'Edit Beat',
     'label_menu_store'                              => 'Store',
     'label_store_management'                        => 'Store Management',
     'label_store_list'                              => 'Store List',
@@ -359,6 +365,9 @@ return [
     'label_analysis'                                => 'Analysis',
     'label_in_progress'                             => 'In-Progress',
     'label_complete'                                => 'Complete',
+    'label_grade_name'                              => 'Grade',
+    'label_retailer_price'                          => 'Retailer Price',
+    'label_pack_size'                               => 'Pack Size',
 
     
 /* Buttons */
@@ -522,6 +531,7 @@ return [
     'error_valid_alphanumeric_without_space_special_characters' => "Please enter username (alphanumeric without space and special characters).",
     'error_enter_email_or_username'                 => 'Please enter email or username.',
     'error_please_provide_credential'               => 'Please provide credentials (email or username).',
+    'error_retailer_price'                          => 'Please enter retailer price.',
     
 
 /* Messages */
@@ -580,6 +590,8 @@ return [
     'message_delete_related_product_records_exist'  => 'Related product exist, delete those first.',
     'message_inactive_related_distributor_or_store_records_exist'=> 'Related distributor or store exist, inactive those first.',
     'message_delete_related_distributor_or_store_records_exist'=> 'Related distributor or store exist, delete those first.',
+    'message_inactive_related_store_records_exist'  => 'Related store exist, inactive those first.',
+    'message_delete_related_store_records_exist'    => 'Related store exist, delete those first.',
     
 /* Success */
     'success_data_added_successfully'               => 'Data has been added successfully.',

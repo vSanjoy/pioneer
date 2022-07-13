@@ -1,5 +1,5 @@
 @php
-$distributionAreaId = $distributorId = $storeId = $beatId = $name1Id = '';
+$distributionAreaId = $distributorId = $storeId = $beatId = $name1Id = $gradeId = '';
 $hideStatus = 'style="display: none;"';
 $showStatus = 'style="display: block;"';
 if (isset($_GET['distribution_area_id']) && $_GET['distribution_area_id'] != '') { $distributionAreaId = $_GET['distribution_area_id']; }
@@ -7,8 +7,9 @@ if (isset($_GET['distributor_id']) && $_GET['distributor_id'] != '') { $distribu
 if (isset($_GET['beat_id']) && $_GET['beat_id'] != '') { $beatId = $_GET['beat_id']; }
 if (isset($_GET['store_id']) && $_GET['store_id'] != '') { $storeId = $_GET['store_id']; }
 if (isset($_GET['name_1_id']) && $_GET['name_1_id'] != '') { $name1Id = $_GET['name_1_id']; }
+if (isset($_GET['grade_id']) && $_GET['grade_id'] != '') { $gradeId = $_GET['grade_id']; }
 
-if ( (isset($_GET['distribution_area_id']) && $_GET['distribution_area_id'] != '') || (isset($_GET['distributor_id']) && $_GET['distributor_id'] != '') || (isset($_GET['beat_id']) && $_GET['beat_id'] != '') || (isset($_GET['store_id']) && $_GET['store_id'] != '') || (isset($_GET['name_1_id']) && $_GET['name_1_id'] != '') ) {
+if ( (isset($_GET['distribution_area_id']) && $_GET['distribution_area_id'] != '') || (isset($_GET['distributor_id']) && $_GET['distributor_id'] != '') || (isset($_GET['beat_id']) && $_GET['beat_id'] != '') || (isset($_GET['store_id']) && $_GET['store_id'] != '') || (isset($_GET['name_1_id']) && $_GET['name_1_id'] != '') || (isset($_GET['grade_id']) && $_GET['grade_id'] != '') ) {
 	$showStatus = 'style="display: block;"';
 	$hideStatus = 'style="display: none;"';
 }
@@ -65,7 +66,7 @@ if ( (isset($_GET['distribution_area_id']) && $_GET['distribution_area_id'] != '
 										<option value="">--@lang('custom_admin.label_select')--</option>
 									@if ($beats)
 										@foreach ($beats as $itemBeat)
-										<option value="{{ $itemBeat->id }}" @if ($beatId == $itemBeat->id)selected @endif>{!! $itemBeat->beat_name.' ('.$itemBeat->store_name.')' !!}</option>
+										<option value="{{ $itemBeat->id }}" @if ($beatId == $itemBeat->id)selected @endif>{!! $itemBeat->title !!}</option>
 										@endforeach
 									@endif
 									</select>
@@ -104,6 +105,23 @@ if ( (isset($_GET['distribution_area_id']) && $_GET['distribution_area_id'] != '
 								</div>
 							</div>
 							{{-- End :: Name 1 --}}
+							{{-- Start :: Grade --}}
+							<div class="col-md-4">
+								<div class="form-group">
+									<label class="text-dark font-bold">Grade</label>
+									<select name="grade_id" id="grade_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+										<option value="">--@lang('custom_admin.label_select')--</option>
+									@if ($grades)
+										@foreach ($grades as $itemGrade)
+										<option value="{{ $itemGrade->id }}" @if ($gradeId == $itemGrade->id)selected @endif>{!! $itemGrade->title !!}</option>
+										@endforeach
+									@endif
+									</select>
+								</div>
+							</div>
+							{{-- End :: Grade --}}
+						</div>
+						<div class="row">
 							<div class="col-md-4">
 								<div class="form-group">
 									<label class="text-dark font-bold">&nbsp;</label><br />

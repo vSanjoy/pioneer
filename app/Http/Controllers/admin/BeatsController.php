@@ -3,8 +3,8 @@
 # Company Name      :
 # Author            :
 # Created Date      :
-# Page/Class name   : ProductsController
-# Purpose           : Product Management
+# Page/Class name   : BeatsController
+# Purpose           : Beat Management
 /*****************************************************/
 
 namespace App\Http\Controllers\admin;
@@ -14,41 +14,43 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 use App\Traits\GeneralMethods;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\Grade;
+use App\Models\Beat;
+use App\Models\Store;
 use DataTables;
 
-class ProductsController extends Controller
+class BeatsController extends Controller
 {
     use GeneralMethods;
-    public $controllerName  = 'Products';
+    public $controllerName  = 'Beats';
     public $management;
-    public $modelName       = 'Product';
+    public $modelName       = 'Beat';
     public $breadcrumb;
     public $routePrefix     = 'admin';
-    public $pageRoute       = 'product';
-    public $listUrl         = 'product.list';
-    public $listRequestUrl  = 'product.ajax-list-request';
-    public $addUrl          = 'product.add';
-    public $editUrl         = 'product.edit';
-    public $statusUrl       = 'product.change-status';
-    public $deleteUrl       = 'product.delete';
-    public $viewFolderPath  = 'admin.product';
-    public $model           = 'Product';
+    public $pageRoute       = 'beat';
+    public $listUrl         = 'beat.list';
+    public $listRequestUrl  = 'beat.ajax-list-request';
+    public $addUrl          = 'beat.add';
+    public $editUrl         = 'beat.edit';
+    public $statusUrl       = 'beat.change-status';
+    public $deleteUrl       = 'beat.delete';
+    public $viewFolderPath  = 'admin.beat';
+    public $model           = 'Beat';
 
     /*
         * Function Name : __construct
         * Purpose       : It sets some public variables for being accessed throughout this
         *                   controller and its related view pages
+        * Author        :
+        * Created Date  :
+        * Modified date :
         * Input Params  : Void
         * Return Value  : Mixed
     */
-    public function __construct() {
+    public function __construct($data = null) {
         parent::__construct();
 
-        $this->management  = trans('custom_admin.label_menu_product');
-        $this->model       = new Product();
+        $this->management   = trans('custom_admin.label_menu_beat');
+        $this->model        = new Beat();
 
         // Assign breadcrumb
         $this->assignBreadcrumb();
@@ -60,13 +62,16 @@ class ProductsController extends Controller
     /*
         * Function name : list
         * Purpose       : This function is for the listing and searching
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
         * Input Params  : Request $request
         * Return Value  : Returns to the list page
     */
     public function list(Request $request) {
         $data = [
-            'pageTitle'     => trans('custom_admin.label_product_list'),
-            'panelTitle'    => trans('custom_admin.label_product_list'),
+            'pageTitle'     => trans('custom_admin.label_beat_list'),
+            'panelTitle'    => trans('custom_admin.label_beat_list'),
             'pageType'      => 'LISTPAGE'
         ];
 
@@ -77,9 +82,8 @@ class ProductsController extends Controller
             if ($restrictions['is_super_admin']) {
                 $data['isAllow'] = true;
             }
-            $data['allowedRoutes'] = $restrictions['allow_routes'];
+            $data['allowedRoutes']  = $restrictions['allow_routes'];
             // End :: Manage restriction
-            $data['categories'] = Category::where(['status' => '1'])->whereNull(['deleted_at'])->select('id', 'title')->orderBy('sort', 'ASC')->get();
 
             return view($this->viewFolderPath.'.list', $data);
         } catch (Exception $e) {
@@ -94,22 +98,22 @@ class ProductsController extends Controller
     /*
         * Function name : ajaxListRequest
         * Purpose       : This function is for the reutrn ajax data
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
         * Input Params  : Request $request
-        * Return Value  : Returns sub admin data
+        * Return Value  : Returns category data
     */
     public function ajaxListRequest(Request $request) {
-        $data['pageTitle'] = trans('custom_admin.label_product_list');
-        $data['panelTitle']= trans('custom_admin.label_product_list');
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_beat_list'),
+            'panelTitle'    => trans('custom_admin.label_beat_list')
+        ];
 
         try {
             if ($request->ajax()) {
-                $categoryId = $request->category_id ?? '';
-                if ($categoryId == '') {
-                    $data = $this->model->whereNull('deleted_at')->get();
-                } else {
-                    $data = $this->model->where(['category_id' => $categoryId])->whereNull('deleted_at')->get();    // Based on category search
-                }
-                
+                $data = $this->model->orderBy('id', 'desc')->get();
+
                 // Start :: Manage restriction
                 $isAllow = false;
                 $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
@@ -121,29 +125,8 @@ class ProductsController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
-                        ->addColumn('category', function ($row) {
-                            if ($row->categoryDetails !== NULL) {
-                                return $row->categoryDetails->title;
-                            } else {
-                                return 'N/A';
-                            }
-                        })
-                        ->addColumn('rate_per_pcs', function ($row) {
-                            return formatToTwoDecimalPlaces($row->rate_per_pcs);
-                        })
-                        ->addColumn('mrp', function ($row) {
-                            if ($row->mrp !== NULL) {
-                                return formatToTwoDecimalPlaces($row->mrp);
-                            } else {
-                                return 'N/A';
-                            }
-                        })
-                        ->addColumn('retailer_price', function ($row) {
-                            if ($row->retailer_price !== NULL) {
-                                return formatToTwoDecimalPlaces($row->retailer_price);
-                            } else {
-                                return 'N/A';
-                            }
+                        ->addColumn('title', function ($row) {
+                            return $row->title;
                         })
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
@@ -169,14 +152,14 @@ class ProductsController extends Controller
                             if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
                                 $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
 
-                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
+                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
                             }
                             if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
                                 $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
-                            }                            
+                            }
                             return $btn;
                         })
-                        ->rawColumns(['category','status','action'])
+                        ->rawColumns(['status','action'])
                         ->make(true);
             }
             return view($this->viewFolderPath.'.list');
@@ -191,35 +174,28 @@ class ProductsController extends Controller
 
     /*
         * Function name : add
-        * Purpose       : This function is to add sub admin
+        * Purpose       : This function is to add category
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
         * Input Params  : Request $request
         * Return Value  : 
     */
     public function add(Request $request, $id = null) {
         $data = [
-            'pageTitle'     => trans('custom_admin.label_add_product'),
-            'panelTitle'    => trans('custom_admin.label_add_product'),
+            'pageTitle'     => trans('custom_admin.label_add_beat'),
+            'panelTitle'    => trans('custom_admin.label_add_beat'),
             'pageType'      => 'CREATEPAGE'
         ];
 
         try {
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
-                    'category_id'   => 'required',
-                    'title'         => 'required|unique:'.($this->model)->getTable().',title,NULL,id,deleted_at,NULL',
-                    'rate_per_pcs'  => 'required|regex:'.config('global.VALID_AMOUNT_REGEX'),
-                    'mrp'           => 'nullable|regex:'.config('global.VALID_AMOUNT_REGEX'),
-                    'retailer_price'=> 'required|regex:'.config('global.VALID_AMOUNT_REGEX'),
+                    'title' => 'required|unique:'.($this->model)->getTable().',title,NULL,id,deleted_at,NULL',
                 );
                 $validationMessages = array(
-                    'category_id.required'      => trans('custom_admin.error_category'),
-                    'title.required'            => trans('custom_admin.error_title'),
-                    'title.unique'              => trans('custom_admin.error_unique_product_title'),
-                    'rate_per_pcs.required'     => trans('custom_admin.error_rate_per_pcs'),
-                    'rate_per_pcs.regex'        => trans('custom_admin.error_valid_amount'),
-                    'mrp.regex'                 => trans('custom_admin.error_valid_amount'),
-                    'retailer_price.required'   => trans('custom_admin.error_retailer_price'),
-                    'retailer_price.regex'      => trans('custom_admin.error_valid_amount'),
+                    'title.required'=> trans('custom_admin.error_title'),
+                    'title.unique'  => trans('custom_admin.error_unique_beat_title'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -227,34 +203,21 @@ class ProductsController extends Controller
                     $this->generateToastMessage('error', $validationFailedMessages, false);
                     return redirect()->back()->withInput();
                 } else {
-                    $saveData                   = [];
-                    $saveData['category_id']    = $request->category_id ?? null;
-                    $saveData['grade_id']       = $request->grade_id ?? null;
-                    $saveData['title']          = $request->title ?? null;
-                    $saveData['slug']           = generateUniqueSlug($this->model, trim($request->title,' '));
-                    $saveData['rate_per_pcs']   = $request->rate_per_pcs ?? 0;
-                    $saveData['mrp']            = $request->mrp ?? null;
-                    $saveData['retailer_price'] = $request->retailer_price ?? 0;
-                    $saveData['pack_size']      = $request->pack_size ?? null;
-                    $saveData['sort']           = generateSortNumber($this->model);
+                    $saveData           = [];
+                    $saveData['title']  = $request->title ?? null;
+                    $saveData['slug']   = generateUniqueSlug($this->model, trim($request->title,' '));
+                    $saveData['sort']   = generateSortNumber($this->model);
                     $save = $this->model->create($saveData);
-
+                    
                     if ($save) {
                         $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
                         return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                     } else {
-                        $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
+                        $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_adding'), false);
                         return redirect()->back()->withInput();
                     }
                 }
             }
-
-            $data['categories'] = Category::where(['status' => '1'])
-                                            ->select('id','title')
-                                            ->get();
-            $data['grades']     = Grade::where(['status' => '1'])
-                                            ->select('id','title')
-                                            ->get();
             return view($this->viewFolderPath.'.add', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -267,26 +230,23 @@ class ProductsController extends Controller
 
     /*
         * Function name : edit
-        * Purpose       : This function is to update form
+        * Purpose       : This function is to edit category
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
         * Input Params  : Request $request
-        * Return Value  : Returns sub admin data
+        * Return Value  : Returns category data
     */
     public function edit(Request $request, $id = null) {
         $data = [
-            'pageTitle'     => trans('custom_admin.label_edit_product'),
-            'panelTitle'    => trans('custom_admin.label_edit_product'),
+            'pageTitle'     => trans('custom_admin.label_edit_beat'),
+            'panelTitle'    => trans('custom_admin.label_edit_beat'),
             'pageType'      => 'EDITPAGE'
         ];
 
         try {
             $data['id']         = $id;
-            $data['productId']  = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['categories'] = Category::where(['status' => '1'])
-                                            ->select('id','title')
-                                            ->get();
-            $data['grades']     = Grade::where(['status' => '1'])
-                                            ->select('id','title')
-                                            ->get();
+            $data['categoryId'] = $id = customEncryptionDecryption($id, 'decrypt');
             $data['details']    = $details = $this->model->where(['id' => $id])->first();
             
             if ($request->isMethod('POST')) {
@@ -295,21 +255,11 @@ class ProductsController extends Controller
                     return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                 }
                 $validationCondition = array(
-                    'category_id'   => 'required',
-                    'title'         => 'required|unique:'.($this->model)->getTable().',title,'.$id.',id,deleted_at,NULL',
-                    'rate_per_pcs'  => 'required|regex:'.config('global.VALID_AMOUNT_REGEX'),
-                    'mrp'           => 'nullable|regex:'.config('global.VALID_AMOUNT_REGEX'),
-                    'retailer_price'=> 'required|regex:'.config('global.VALID_AMOUNT_REGEX'),
+                    'title' => 'required|unique:'.($this->model)->getTable().',title,'.$id.',id,deleted_at,NULL',
                 );
                 $validationMessages = array(
-                    'category_id.required'      => trans('custom_admin.error_category'),
-                    'title.required'            => trans('custom_admin.error_title'),
-                    'title.unique'              => trans('custom_admin.error_unique_product_title'),
-                    'rate_per_pcs.required'     => trans('custom_admin.error_rate_per_pcs'),
-                    'rate_per_pcs.regex'        => trans('custom_admin.error_valid_amount'),
-                    'mrp.regex'                 => trans('custom_admin.error_valid_amount'),
-                    'retailer_price.required'   => trans('custom_admin.error_retailer_price'),
-                    'retailer_price.regex'      => trans('custom_admin.error_valid_amount'),
+                    'title.required'=> trans('custom_admin.error_title'),
+                    'title.unique'  => trans('custom_admin.error_unique_beat_title'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -317,15 +267,9 @@ class ProductsController extends Controller
                     $this->generateToastMessage('error', $validationFailedMessages, false);
                     return redirect()->back()->withInput();
                 } else {
-                    $updateData                     = [];
-                    $updateData['category_id']      = $request->category_id ?? null;
-                    $updateData['grade_id']         = $request->grade_id ?? null;
-                    $updateData['title']            = $request->title ?? null;
-                    $updateData['slug']             = generateUniqueSlug($this->model, trim($request->title,' '), $data['id']);
-                    $updateData['rate_per_pcs']     = $request->rate_per_pcs ?? 0;
-                    $updateData['mrp']              = $request->mrp ?? null;
-                    $updateData['retailer_price']   = $request->retailer_price ?? 0;
-                    $updateData['pack_size']        = $request->pack_size ?? null;
+                    $updateData             = [];
+                    $updateData['title']    = $request->title ?? null;
+                    $updateData['slug']     = generateUniqueSlug($this->model, trim($request->title,' '), $data['id']);
                     $update = $details->update($updateData);
 
                     if ($update) {
@@ -338,7 +282,6 @@ class ProductsController extends Controller
                     }
                 }
             }
-
             return view($this->viewFolderPath.'.edit', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -352,6 +295,9 @@ class ProductsController extends Controller
     /*
         * Function name : status
         * Purpose       : This function is to status
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
         * Input Params  : Request $request, $id = null
         * Return Value  : Returns json
     */
@@ -366,14 +312,21 @@ class ProductsController extends Controller
                 if ($id != null) {
                     $details = $this->model->where('id', $id)->first();
                     if ($details != null) {
-                        if ($details->status == 1) {
-                            $details->status = '0';
-                            $details->save();
-                            
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_status_updated_successfully');
-                            $type       = 'success';        
-                        } else if ($details->status == 0) {
+                        if ($details->status == '1') {
+                            $isRelatedStoreExist   = Store::where(['beat_id' => $id, 'status' => '1'])->count();
+                            if ($isRelatedStoreExist) {
+                                $title      = trans('custom_admin.message_warning');
+                                $message    = trans('custom_admin.message_inactive_related_product_records_exist');
+                                $type       = 'warning';
+                            } else {
+                                $details->status = '0';
+                                $details->save();
+                                
+                                $title      = trans('custom_admin.message_success');
+                                $message    = trans('custom_admin.success_status_updated_successfully');
+                                $type       = 'success';
+                            }
+                        } else if ($details->status == '0') {
                             $details->status = '1';
                             $details->save();
         
@@ -397,6 +350,9 @@ class ProductsController extends Controller
     /*
         * Function name : delete
         * Purpose       : This function is to delete record
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
         * Input Params  : Request $request, $id = null
         * Return Value  : Returns json
     */
@@ -411,13 +367,20 @@ class ProductsController extends Controller
                 if ($id != null) {
                     $details = $this->model->where('id', $id)->first();
                     if ($details != null) {
-                        $delete = $details->delete();
-                        if ($delete) {
-                            $title      = trans('custom_admin.message_success');
-                            $message    = trans('custom_admin.success_data_deleted_successfully');
-                            $type       = 'success';
+                        $isRelatedStoreExist  = Store::where(['beat_id' => $id])->count();
+                        if ($isRelatedStoreExist) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_delete_related_store_records_exist');
+                            $type       = 'warning';
                         } else {
-                            $message    = trans('custom_admin.error_took_place_while_deleting');
+                            $delete = $details->delete();
+                            if ($delete) {
+                                $title      = trans('custom_admin.message_success');
+                                $message    = trans('custom_admin.success_data_deleted_successfully');
+                                $type       = 'success';
+                            } else {
+                                $message    = trans('custom_admin.error_took_place_while_deleting');
+                            }
                         }
                     } else {
                         $message = trans('custom_admin.error_invalid');
@@ -435,6 +398,9 @@ class ProductsController extends Controller
     /*
         * Function name : bulkActions
         * Purpose       : This function is to delete record, active/inactive
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
         * Input Params  : Request $request
         * Return Value  : Returns json
     */
@@ -445,8 +411,10 @@ class ProductsController extends Controller
 
         try {
             if ($request->ajax()) {
-                $selectedIds    = $request->selectedIds;
-                $actionType     = $request->actionType;
+                $selectedIds        = $request->selectedIds;
+                $actionType         = $request->actionType;
+                $blockStatusCount   = $blockDeleteCount = 0;
+
                 if (count($selectedIds) > 0) {
                     if ($actionType ==  'active') {
                         $this->model->whereIn('id', $selectedIds)->update(['status' => '1']);
@@ -454,18 +422,44 @@ class ProductsController extends Controller
                         $title      = trans('custom_admin.message_success');
                         $message    = trans('custom_admin.success_status_updated_successfully');
                         $type       = 'success';
-                    } elseif ($actionType ==  'inactive') {
-                        $this->model->whereIn('id', $selectedIds)->update(['status' => '0']);
-
-                        $title      = trans('custom_admin.message_success');
-                        $message    = trans('custom_admin.success_status_updated_successfully');
-                        $type       = 'success';
-                    } else {
-                        $this->model->whereIn('id', $selectedIds)->delete();
-
-                        $title      = trans('custom_admin.message_success');
-                        $message    = trans('custom_admin.success_data_deleted_successfully');
-                        $type       = 'success';
+                    } else if ($actionType == 'inactive') {
+                        foreach ($selectedIds as $key => $id) {
+                            $isRelatedStoreExist = Store::where('beat_id', $id)->count();
+                            if ($isRelatedStoreExist) {
+                                $blockStatusCount++;
+                            } else {
+                                $this->model->where('id', $id)->update(['status' => '0']);
+                                $message    = trans('custom_admin.success_status_updated_successfully');
+                            }
+                        }
+                        
+                        if ($blockStatusCount) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_inactive_related_product_records_exist');
+                            $type       = 'warning';
+                        } else {
+                            $title      = trans('custom_admin.message_success');
+                            $type       = 'success';
+                        }
+                    } else if ($actionType == 'delete') {
+                        foreach ($selectedIds as $key => $id) {
+                            $isRelatedStoreExist = Store::where('beat_id', $id)->count();
+                            if ($isRelatedStoreExist) {
+                                $blockDeleteCount++;
+                            } else {
+                                $this->model->where('id', $id)->delete();
+                                $message    = trans('custom_admin.success_data_deleted_successfully');
+                            }
+                        }
+                        
+                        if ($blockDeleteCount) {
+                            $title      = trans('custom_admin.message_warning');
+                            $message    = trans('custom_admin.message_delete_related_product_records_exist');
+                            $type       = 'warning';
+                        } else {
+                            $title      = trans('custom_admin.message_success');
+                            $type       = 'success';
+                        }
                     }
                 } else {
                     $message = trans('custom_admin.error_invalid');
@@ -478,4 +472,5 @@ class ProductsController extends Controller
         }
         return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
     }
+
 }

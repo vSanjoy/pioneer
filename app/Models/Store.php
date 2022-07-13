@@ -32,4 +32,30 @@ class Store extends Model
 		return $this->belongsTo('App\Models\DistributionArea', 'distribution_area_id');
 	}
 
+    /*
+        * Function name : beatDetails
+        * Purpose       : To get beat
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : 
+        * Return Value  : 
+    */
+	public function beatDetails() {
+		return $this->belongsTo('App\Models\Beat', 'beat_id');
+	}
+
+    /*
+        * Function name : gradeDetails
+        * Purpose       : To get grade
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : 
+        * Return Value  : 
+    */
+	public function gradeDetails() {
+		return $this->belongsTo('App\Models\Grade', 'grade_id');
+	}
+
 }

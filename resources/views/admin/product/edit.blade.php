@@ -42,6 +42,29 @@
 							</div>
 							<div class="row mt-1">
 								<div class="col-md-6">
+									<div class="form-group" id="grade-div">
+										<label class="text-dark font-bold">@lang('custom_admin.label_grade_name')</label>
+										<select name="grade_id" id="grade_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+											<option value="">--@lang('custom_admin.label_select')--</option>
+										@foreach ($grades as $item)
+											<option value="{{ $item->id }}" @if ($item->id == $details->grade_id)selected @endif>{!! $item->title !!}</option>
+										@endforeach
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="text-dark font-bold">@lang('custom_admin.label_pack_size')</label>
+										{{ Form::text('pack_size', $details->pack_size ?? null, [
+																		'id' => 'pack_size',
+																		'placeholder' => '',
+																		'class' => 'form-control',
+																	]) }}
+									</div>
+								</div>
+							</div>
+							<div class="row mt-1">
+								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_rate_per_pcs')<span class="red_star">*</span></label>
 										{{ Form::text('rate_per_pcs', $details->rate_per_pcs ? formatToTwoDecimalPlaces($details->rate_per_pcs) : null, [
@@ -60,6 +83,19 @@
 																	'placeholder' => '',
 																	'class' => 'form-control',
 																]) }}
+									</div>
+								</div>
+							</div>
+							<div class="row mt-1">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="text-dark font-bold">@lang('custom_admin.label_retailer_price')<span class="red_star">*</span></label>
+										{{ Form::text('retailer_price', $details->retailer_price ? formatToTwoDecimalPlaces($details->retailer_price) : null, [
+																		'id' => 'retailer_price',
+																		'placeholder' => '',
+																		'class' => 'form-control',
+																		'required' => true,
+																	]) }}
 									</div>
 								</div>
 							</div>

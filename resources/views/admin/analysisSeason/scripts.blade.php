@@ -287,10 +287,11 @@ function getStoreList() {
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'name_1', name: 'name_1'},
 				{data: 'phone_no_1', name: 'phone_no_1'},
-				{data: 'beat_name', name: 'beat_name'},
+				{data: 'beat_id', name: 'beat_id'},
 				// {data: 'distribution_area_id', name: 'distribution_area_id'},
 				{data: 'email', name: 'email'},
 				{data: 'store_name', name: 'store_name'},
+				{data: 'grade_id', name: 'grade_id'},
 				{data: 'progress_status', name: 'progress_status', orderable: false, searchable: false},
 			@if ($isAllow || in_array($viewUrl, $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},

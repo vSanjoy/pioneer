@@ -56,6 +56,7 @@
 									<th>@lang('custom_admin.label_distribution_area')</th>
 									<th>@lang('custom_admin.label_store_email')</th>
 									<th>@lang('custom_admin.label_store_name')</th>
+									<th>@lang('custom_admin.label_grade_name')</th>
 									<th>@lang('custom_admin.label_sale_size_category')</th>
 									<th>@lang('custom_admin.label_integrity')</th>
 									{{-- <th class="modifiedColumn">@lang('custom_admin.label_modified')</th> --}}

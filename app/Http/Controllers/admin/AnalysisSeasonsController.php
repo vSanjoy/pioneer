@@ -549,6 +549,13 @@ class AnalysisSeasonsController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes, $analysisSeasonId, $distributionAreaId, $distributorId, $storeId)
                         ->addIndexColumn()
+                        ->addColumn('beat_id', function ($row) {
+                            if ($row->beatDetails !== NULL) {
+                                return $row->beatDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
                         ->addColumn('distribution_area_id', function ($row) {
                             if ($row->distributionAreaDetails !== NULL) {
                                 return $row->distributionAreaDetails->title;
@@ -563,6 +570,13 @@ class AnalysisSeasonsController extends Controller
                                 return 'Large';
                             } else {
                                 return 'Small';
+                            }
+                        })
+                        ->addColumn('grade_id', function ($row) {
+                            if ($row->gradeDetails !== NULL) {
+                                return $row->gradeDetails->title;
+                            } else {
+                                return 'N/A';
                             }
                         })
                         ->addColumn('created_at', function ($row) {

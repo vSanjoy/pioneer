@@ -20,6 +20,7 @@
 									{{-- <th>@lang('custom_admin.label_distribution_area')</th> --}}
 									<th>@lang('custom_admin.label_store_email')</th>
 									<th>@lang('custom_admin.label_store_name')</th>
+									<th>@lang('custom_admin.label_grade_name')</th>
 									<th>@lang('custom_admin.label_status')</th>
 									<th class="actions">@lang('custom_admin.label_action')</th>
 								</tr>
