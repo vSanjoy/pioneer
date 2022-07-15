@@ -90,6 +90,32 @@ $getSiteSettings = getSiteSettings();
 				</li>
 			@endif
 
+			<!-- Seller Management Start -->
+			@php
+			$sellerRoutes = ['seller.list','seller.add','seller.edit','seller.sort'];
+			@endphp
+			@if ( ($isSuperAdmin) || in_array('seller.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $sellerRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $sellerRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="users" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_seller')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $sellerRoutes))in @endif">
+						<li class="sidebar-item">
+							<a href="{{ route('admin.seller.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
+							</a>
+						</li>
+						@if ( ($isSuperAdmin) || (in_array('seller.add', $getAllRoles)) )
+						<li class="sidebar-item">
+							<a href="{{ route('admin.seller.add') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_add')</span>
+							</a>
+						</li>
+						@endif
+					</ul>
+				</li>
+			@endif
+
 			<!-- Beat Management Start -->
 			@php
 			$beatRoutes = ['beat.list','beat.add','beat.edit','beat.sort'];
@@ -261,6 +287,25 @@ $getSiteSettings = getSiteSettings();
 							</a>
 						</li>
 						@endif
+					</ul>
+				</li>
+			@endif
+
+			<!-- Seller Analysis Management Start -->
+			@php
+			$sellerAnalysesRoutes = ['sellerAnalyses.distribution-area-list','sellerAnalyses.beat-list','sellerAnalyses.store-list'];
+			@endphp
+			@if ( ($isSuperAdmin) || in_array('sellerAnalyses.distribution-area-list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $sellerAnalysesRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $sellerAnalysesRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="life-buoy" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_analysis')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $sellerAnalysesRoutes))in @endif">
+						<li class="sidebar-item">
+							<a href="{{ route('admin.sellerAnalyses.distribution-area-list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
+							</a>
+						</li>
 					</ul>
 				</li>
 			@endif

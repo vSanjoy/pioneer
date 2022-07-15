@@ -102,7 +102,7 @@ class RoleAssignmentsController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = $this->model->where('id','<>','1')->where(['type' => 'D'])->whereNull('deleted_at');
+                $data = $this->model->where('id','<>','1')->orWhere(['type' => 'D', 'type' => 'S'])->whereNull('deleted_at');
                 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -119,7 +119,9 @@ class RoleAssignmentsController extends Controller
                             $roles = '';
                             if ($row->userRoles && $row->userRoles->count()) {
                                 foreach ($row->userRoles as $role) {
-                                    $roles .= '<span class="badge badge-pill badge-warning" style="padding-top: 6px;">'.$role->name.'</span>';
+                                    $badgeClass = '';
+                                    if ($role->id == 2)$badgeClass = 'badge badge-pill badge-warning'; else if ($role->id == 3)$badgeClass = 'badge badge-pill badge-dark';
+                                    $roles .= '<span class="'.$badgeClass.'" style="padding-top: 6px;">'.$role->name.'</span>';
                                 }
                             } else {
                                 $roles = 'NA';
@@ -203,7 +205,8 @@ class RoleAssignmentsController extends Controller
             }
 
             $data['userList'] = User::where('id', '<>', '1')
-                                    ->where(['type' => 'D', 'status' => '1'])
+                                    ->where(['status' => '1'])
+                                    ->orWhere(['type' => 'D', 'type' => 'S'])
                                     ->whereNull('deleted_at')
                                     ->select('id','full_name','username','email')
                                     ->get();
@@ -240,7 +243,8 @@ class RoleAssignmentsController extends Controller
             $data['id']         = $id;
             $data['subAdminId'] = $id = customEncryptionDecryption($id, 'decrypt');
             $data['userList']   = User::where('id', '<>', '1')
-                                        ->where(['type' => 'D', 'status' => '1'])
+                                        ->where(['status' => '1'])
+                                        ->orWhere(['type' => 'D', 'type' => 'S'])
                                         ->whereNull('deleted_at')
                                         ->select('id','full_name','username','email')
                                         ->get();

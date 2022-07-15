@@ -31,8 +31,6 @@ class AdminMiddleware
             // If "$roleIds" not exist then it should be super admin
             if (count($roleIds) > 0) {
                 $wholeRouteName = explode('admin.',\Route::currentRouteName());
-                // print_r($wholeRouteName);
-                // echo $currentRouteName =  \Route::currentRouteName(); die;
                 $currentRouteName =  $wholeRouteName[1];
 
                 // Getting data matched from role_pages (where all route listed) with current route

@@ -27,7 +27,7 @@
 	<!-- End Bread crumb and right sidebar toggle -->
 	<!-- ============================================================== -->
 	<!-- ============================================================== -->
-	<!-- Start Second Cards -->
+	<!-- Start First Cards -->
 	<!-- ============================================================== -->
 	<div class="card-group mb-5">
 		<div class="card border-right">
@@ -45,9 +45,60 @@
 		</div>
 	</div>
 	<!-- ============================================================== -->
+	<!-- End First Cards -->
+	<!-- ============================================================== -->
+	<!-- ============================================================== -->
+
+	@if(Auth::guard('admin')->user()->type == 'D' || Auth::guard('admin')->user()->type == 'S')
+	<!-- ============================================================== -->
+	<!-- Start Second Cards -->
+	<!-- ============================================================== -->
+	<div class="card-group">
+		<div class="card border-right mr-3">
+			<div class="card-body">
+				<div class="row">
+					@if(Auth::guard('admin')->user()->type == 'S')
+					<!-- Column -->
+					<div class="col-md-6 col-lg-6 col-xlg-3">
+						<div class="card card-hover">
+							<div class="p-2 bg-primary text-center">
+								<h2 class="font-light text-white">
+									<a href="{{ route('admin.sellerAnalyses.distribution-area-list') }}" class="text-white">
+										<i data-feather="life-buoy" class="feather-icon"></i>
+									</a>
+								</h2>
+								<h2 class="font-light text-white">
+									<a href="{{ route('admin.sellerAnalyses.distribution-area-list') }}" class="text-white">Analysis</a>
+								</h2>
+							</div>
+						</div>
+					</div>
+					@endif
+					<!-- Column -->
+					<div class="col-md-6 col-lg-6 col-xlg-3">
+						<div class="card card-hover">
+							<div class="p-2 bg-success text-center">
+								<h2 class="font-light text-white">
+									<a href="" class="text-white">
+										<i data-feather="shopping-bag" class="feather-icon"></i>
+									</a>
+								</h2>
+								<h2 class="font-light text-white">
+									<a href="" class="text-white">Order</a>
+								</h2>
+							</div>
+						</div>
+					</div>
+					<!-- Column -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
 	<!-- End Second Cards -->
 	<!-- ============================================================== -->
 	<!-- ============================================================== -->
+	@endif
 	
 	<!-- ============================================================== -->
 	<!-- Start Sales Charts Section -->

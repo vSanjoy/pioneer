@@ -8,9 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/admin/favicon.png') }}"/>
     <title>{!! env('APP_NAME', 'Pioneer Analysis Software') !!} :: @if($title){{$title}} @else {{ getAppName() }} @endif</title>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}" />
+
     <!-- Custom CSS -->
     <link href="{{ asset('css/admin/dist/style.css') }}" rel="stylesheet">
     <!-- Font Awesome -->

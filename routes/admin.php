@@ -58,6 +58,18 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::post('/bulk-actions', 'DistributorsController@bulkActions')->name('bulk-actions');
             });
 
+            Route::group(['prefix' => 'seller', 'as' => 'seller.'], function () {
+                Route::get('/list', 'SellersController@list')->name('list');
+                Route::post('/ajax-list-request', 'SellersController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/add', 'SellersController@add')->name('add');
+                Route::post('/add-submit', 'SellersController@add')->name('add-submit');
+                Route::get('/edit/{id}', 'SellersController@edit')->name('edit');
+                Route::post('/edit-submit/{id}', 'SellersController@edit')->name('edit-submit');
+                Route::get('/status/{id}', 'SellersController@status')->name('change-status');
+                Route::get('/delete/{id}', 'SellersController@delete')->name('delete');
+                Route::post('/bulk-actions', 'SellersController@bulkActions')->name('bulk-actions');
+            });
+
             Route::group(['prefix' => 'beat', 'as' => 'beat.'], function () {
                 Route::get('/list', 'BeatsController@list')->name('list');
                 Route::post('/ajax-list-request', 'BeatsController@ajaxListRequest')->name('ajax-list-request');
@@ -182,6 +194,35 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/analysis/{analysisSeasonId}/{distributionAreaId}/{distributorId}/{storeId}', 'AnalysisSeasonsController@analysisUpdate')->name('analysis');
                 Route::post('/analysis-update/{analysisSeasonId}/{distributionAreaId}/{distributorId}/{storeId}', 'AnalysisSeasonsController@analysisUpdate')->name('analysis-update');
             });
+
+            Route::group(['prefix' => 'sellerAnalyses', 'as' => 'sellerAnalyses.'], function () {
+                // Distribution Area
+                Route::get('/distribution-area-list', 'SellerAnalysesController@distributionAreaList')->name('distribution-area-list');
+                Route::post('/ajax-distribution-area-list-request', 'SellerAnalysesController@ajaxDistributionAreaListRequest')->name('ajax-distribution-area-list-request');
+
+                // Beat
+                Route::get('/beat-list/{distributionAreaId}', 'SellerAnalysesController@beatList')->name('beat-list');
+                Route::post('/ajax-beat-list-request/{distributionAreaId}', 'SellerAnalysesController@ajaxBeatListRequest')->name('ajax-beat-list-request');
+
+                // Store
+                Route::get('/store-list/{distributionAreaId}/{beatId}', 'SellerAnalysesController@storeList')->name('store-list');
+                Route::post('/ajax-store-list-request/{distributionAreaId}/{beatId}', 'SellerAnalysesController@ajaxStoreListRequest')->name('ajax-store-list-request');
+
+                // Category
+                Route::get('/category-list/{distributionAreaId}/{beatId}/{storeId}', 'SellerAnalysesController@categoryList')->name('category-list');
+                Route::post('/ajax-category-list-request/{distributionAreaId}/{beatId}/{storeId}', 'SellerAnalysesController@ajaxCategoryListRequest')->name('ajax-category-list-request');
+
+                // Product
+                Route::get('/product-list/{distributionAreaId}/{beatId}/{storeId}/{categoryId}', 'SellerAnalysesController@productList')->name('product-list');
+                Route::post('/ajax-product-list-request/{distributionAreaId}/{beatId}/{storeId}/{categoryId}', 'SellerAnalysesController@ajaxProductListRequest')->name('ajax-product-list-request');
+
+            });
+
+            // Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
+            //     Route::get('/', 'OrdersController@list')->name('list');
+            //     Route::post('ajax-list-request', 'OrdersController@ajaxListRequest')->name('ajax-list-request');
+            //     Route::get('/view/{id}', 'OrdersController@view')->name('view');
+            // });
             
         });
 

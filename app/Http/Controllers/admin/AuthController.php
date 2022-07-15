@@ -122,7 +122,7 @@ class AuthController extends Controller
                                         $user->save();
                                         return redirect()->route($this->routePrefix.'.dashboard');
                                     }
-                                } else if (Auth::guard('admin')->user()->type == 'D' || Auth::guard('admin')->user()->type == 'A') {
+                                } else if (Auth::guard('admin')->user()->type == 'D' || Auth::guard('admin')->user()->type == 'A' || Auth::guard('admin')->user()->type == 'S') {
                                     $user  = Auth::guard('admin')->user();
                                     $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
                                     $user->save();

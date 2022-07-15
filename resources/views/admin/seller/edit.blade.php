@@ -2,11 +2,6 @@
 
 @section('content')
 
-	@php
-	$selectedRoles = old('role');
-	if ($selectedRoles == null) $selectedRoles = [];
-	@endphp
-
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
@@ -16,38 +11,15 @@
 						'method'=> 'POST',
 						'class' => '',
 						'route' => [$routePrefix.'.'.$editUrl.'-submit', $id],
-						'name'  => 'updateDistributorForm',
-						'id'    => 'updateDistributorForm',
+						'name'  => 'updateSellerForm',
+						'id'    => 'updateSellerForm',
 						'files' => true,
 						'novalidate' => true ]) }}
 						<div class="form-body mt-4-5">
-							<div class="row mt-1">
-								<div class="col-md-12">
-									<div class="form-group" id="distribution-area-div">
-										<label class="text-dark font-bold">@lang('custom_admin.label_distribution_area')<span class="red_star">*</span></label>
-										<select name="distribution_area_id" id="distribution_area_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" required>
-											<option value="">--@lang('custom_admin.label_select')--</option>
-										@foreach ($distributionAreas as $item)
-											<option value="{{ $item->id }}" @if ($details->distribution_area_id == $item->id)selected @endif>{!! $item->title !!}</option>
-										@endforeach
-										</select>
-									</div>
-								</div>
-							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_job_title_1')<span class="red_star">*</span></label>
-										{{ Form::text('job_title_1', $details->job_title_1 ?? null, [
-                                                                'id' => 'job_title_1',
-                                                                'class' => 'form-control',
-                                                                'placeholder' => '',
-                                                                'required' => 'required' ]) }}
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_name') 1<span class="red_star">*</span></label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_name')<span class="red_star">*</span></label>
 										{{ Form::text('full_name', $details->full_name ?? null, [
                                                                 'id' => 'full_name',
                                                                 'class' => 'form-control',
@@ -55,41 +27,9 @@
                                                                 'required' => 'required' ]) }}
 									</div>
 								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_job_title_2')</label>
-										{{ Form::text('job_title_2', $details->userDetails->job_title_2 ?? null, [
-                                                                'id' => 'job_title_2',
-                                                                'class' => 'form-control',
-                                                                'placeholder' => '' ]) }}
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_name') 2</label>
-										{{ Form::text('full_name_2', $details->userDetails->full_name_2 ?? null, [
-                                                                'id' => 'full_name_2',
-                                                                'class' => 'form-control',
-                                                                'placeholder' => '' ]) }}
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_company')<span class="red_star">*</span></label>
-										{{ Form::text('company', $details->company ?? null, [
-                                                                'id' => 'company',
-                                                                'class' => 'form-control',
-                                                                'placeholder' => '',
-																'required' => true ]) }}
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_phone') 1</label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_phone')</label>
 										{{ Form::text('phone_no', $details->phone_no ?? null, [
                                                                 'id' => 'phone_no',
                                                                 'class' => 'form-control',
@@ -97,16 +37,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_phone') 2</label>
-										{{ Form::text('phone_no_2', $details->userDetails->phone_no_2 ?? null, [
-                                                                'id' => 'phone_no_2',
-                                                                'class' => 'form-control',
-                                                                'placeholder' => '' ]) }}
-									</div>
-								</div>
+							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_whatsapp_no')</label>
@@ -116,8 +47,6 @@
                                                                 'placeholder' => '' ]) }}
 									</div>
 								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_street')</label>
@@ -128,6 +57,8 @@
 																		'rows' => 2 ]) }}
 									</div>
 								</div>
+							</div>
+							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_city')</label>
@@ -137,8 +68,6 @@
 																'placeholder' => '' ]) }}
 									</div>
 								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_district_region')</label>
@@ -148,6 +77,8 @@
 																	'placeholder' => '' ]) }}
 									</div>
 								</div>
+							</div>
+							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_state_province')</label>
@@ -157,8 +88,6 @@
 																'placeholder' => '' ]) }}
 									</div>
 								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_zip_postal_code')</label>
@@ -169,7 +98,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="row">
+							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-dark font-bold">@lang('custom_admin.label_username')<span class="red_star">*</span></label>
@@ -191,18 +120,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_notes')</label>
-										{{ Form::textarea('notes', $details->userDetails->notes ?? null, [
-																		'id' => 'notes',
-																		'placeholder' => '',
-																		'class' => 'form-control',
-																		'rows' => 3
-																	]) }}
-									</div>
-								</div>
+							<div class="row mt-1">
 								<div class="col-md-6">
 									<div class="row">
 										<div class="col-md-8">
@@ -230,6 +148,20 @@
 											@endif
 											</div>
 										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row mt-1" id="all_distribution_area_div">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="text-dark font-bold">Distribution Area<span class="red_star">*</span></label>
+										<select multiple class="selectpicker form-control" id="distribution_area_ids" name="distribution_area_ids[]" data-container="body" data-live-search="true" title="--@lang('custom_admin.label_select')--" data-hide-disabled="true" data-actions-box="true" data-virtual-scroll="false" required>
+									@if (count($distributionAreas))
+										@foreach ($distributionAreas as $keyDistributionArea => $valDistributionArea)
+											<option value="{{ $valDistributionArea->id }}" @if (in_array($valDistributionArea->id, $selectedDistributionAreaIds))selected @endif>{!! $valDistributionArea->title !!}</option>
+										@endforeach
+									@endif
+										</select>
 									</div>
 								</div>
 							</div>

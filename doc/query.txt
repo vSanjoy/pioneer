@@ -54,3 +54,7 @@ ALTER TABLE `up_analysis_seasons`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 ALTER TABLE `up_stores` ADD `progress_status` ENUM('IP','CP') NOT NULL DEFAULT 'IP' COMMENT 'IP=>In-Progress, CP=>Complete' AFTER `status`;
+
+
+-------------------------------------------
+ALTER TABLE `up_users` CHANGE `type` `type` ENUM('SA','A','U','D','S') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'U' COMMENT 'SA=>Super Admin, A=>Sub Admin, U=>User, D=>Distributor, S=>Seller';

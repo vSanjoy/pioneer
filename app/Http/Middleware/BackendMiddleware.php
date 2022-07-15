@@ -28,7 +28,7 @@ class BackendMiddleware
                 if (\Auth::guard('admin')->user()->type == 'SA') {
                     return $next($request);
                 } else {
-                    if (\Auth::guard('admin')->user()->type == 'A' || \Auth::guard('admin')->user()->type == 'D') {
+                    if (\Auth::guard('admin')->user()->type == 'A' || \Auth::guard('admin')->user()->type == 'D' || \Auth::guard('admin')->user()->type == 'S') {
                         $roleIds = [];
                         $userRoles = \Auth::guard('admin')->user()->userRoles;
                         if ($userRoles) {
@@ -40,14 +40,11 @@ class BackendMiddleware
                         // If "$roleIds" not exist then it should be super admin
                         if (count($roleIds) > 0) {
                             $wholeRouteName = explode('admin.',\Route::currentRouteName());
-                            // print_r($wholeRouteName);
-                            // echo $currentRouteName =  \Route::currentRouteName(); die;
                             $currentRouteName =  $wholeRouteName[1];
 
                             // Getting data matched from role_pages (where all route listed) with current route
                             $currentPage = RolePage::where('routeName', $currentRouteName)->first();
-                            // dd($currentPage);
-
+                            
                             if ($currentPage) {
                                 // checking permission given or not for that route (or current page)
                                 $rolePermission = RolePermission::where([

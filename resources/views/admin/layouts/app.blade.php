@@ -30,7 +30,7 @@
     @endif
     <!-- Tooltip -->
     <link href="{{ asset('css/admin/plugins/tooltip/microtip.min.css') }}" rel="stylesheet">
-    @if (strpos(Route::currentRouteName(), '.list') !== false || strpos(Route::currentRouteName(), '.details-list' ) !== false || strpos(Route::currentRouteName(), '.distribution-area-list' ) !== false || strpos(Route::currentRouteName(), '.distributor-list' ) !== false || strpos(Route::currentRouteName(), '.store-list' ) !== false)
+    @if (strpos(Route::currentRouteName(), '.list') !== false || strpos(Route::currentRouteName(), '.details-list' ) !== false || strpos(Route::currentRouteName(), '.distribution-area-list' ) !== false || strpos(Route::currentRouteName(), '.distributor-list' ) !== false || strpos(Route::currentRouteName(), '.store-list' ) !== false || strpos(Route::currentRouteName(), '.beat-list' ) !== false)
     <!-- DataTables -->
     <link href="{{ asset('css/admin/plugins/datatables.net-bs4/dataTables.bootstrap4.css') }}" rel="stylesheet">
     <link href="{{ asset('css/admin/plugins/datatables-responsive/responsive.bootstrap4.min.css') }}" rel="stylesheet">
@@ -96,11 +96,14 @@
             <!-- ============================================================== -->
             <!-- Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
-            @if (strpos(Route::currentRouteName(), 'analysisSeason.distribution-area-list') === false && strpos(Route::currentRouteName(), 'analysisSeason.distributor-list') === false && strpos(Route::currentRouteName(), 'analysisSeason.store-list') === false && strpos(Route::currentRouteName(), 'analysisSeason.analysis') === false)
-            @include('admin.includes.breadcrumb')
-            @elseif (strpos(Route::currentRouteName(), 'analysisSeason.distribution-area-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.distributor-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.store-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.analysis') == true)
-            @include('admin.includes.analysis_breadcrumb')
+            @if (strpos(Route::currentRouteName(), 'analysisSeason.distribution-area-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.distributor-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.store-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.analysis') == true)
+                @include('admin.includes.analysis_breadcrumb')
+            @elseif (strpos(Route::currentRouteName(), 'sellerAnalyses.distribution-area-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.beat-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.store-list') == true )
+                @include('admin.includes.seller_analysis_breadcrumb')
+            @else
+                @include('admin.includes.breadcrumb')
             @endif
+
             <!-- ============================================================== -->
             <!-- End Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
@@ -220,7 +223,7 @@
     </script>
     @endif
 
-    @if (strpos(Route::currentRouteName(), '.list') !== false || strpos(Route::currentRouteName(), '.details-list') !== false || strpos(Route::currentRouteName(), '.distribution-area-list') !== false || strpos(Route::currentRouteName(), '.distributor-list') !== false || strpos(Route::currentRouteName(), '.store-list') !== false)
+    @if (strpos(Route::currentRouteName(), '.list') !== false || strpos(Route::currentRouteName(), '.details-list') !== false || strpos(Route::currentRouteName(), '.distribution-area-list') !== false || strpos(Route::currentRouteName(), '.distributor-list') !== false || strpos(Route::currentRouteName(), '.store-list') !== false || strpos(Route::currentRouteName(), '.beat-list') !== false)
     <!-- DataTables -->
     <script src="{{ asset('js/admin/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/admin/dist/pages/datatable/datatable-basic.init.js') }}"></script>

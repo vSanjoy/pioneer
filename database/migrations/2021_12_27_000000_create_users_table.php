@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
             $table->integer('role_id')->nullable();
             $table->string('remember_token')->nullable();
             $table->string('auth_token')->nullable();
-            $table->enum('type', ['SA','A','U','D'])->default('U')->comment('SA=>Super Admin, A=>Sub Admin, U=>User, D=>Distributor');
+            $table->enum('type', ['SA','A','U','D','S'])->default('U')->comment('SA=>Super Admin, A=>Sub Admin, U=>User, D=>Distributor, S=>Seller');
             $table->enum('agree', ['N','Y'])->default('Y')->comment('N=>No, Y=>Yes');
             $table->enum('status', ['0','1'])->default('1')->comment('0=>Inactive, 1=>Active');
             $table->integer('lastlogintime')->nullable();

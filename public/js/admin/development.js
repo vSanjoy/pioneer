@@ -467,7 +467,7 @@ $(document).ready(function() {
         },
         messages: {
             distributor_id: {
-                required: "Please select distributor."
+                required: "Please select distributor/seller."
             },
             'role[]': {
                 required: "Please select role.",
@@ -517,7 +517,7 @@ $(document).ready(function() {
         },
         messages: {
             distributor_id: {
-                required: "Please select distributor."
+                required: "Please select distributor/seller."
             },
             'role[]': {
                 required: "Please select role.",
@@ -980,6 +980,168 @@ $(document).ready(function() {
         }
     });
     // End :: Distributor Form //
+
+    // Start :: Seller Form //
+    $("#createSellerForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            full_name: {
+                required: true
+            },
+            username: {
+                required: true,
+                valid_alphanumeric_without_space_special_characters: true,
+            },
+            email: {
+                required: true,
+                valid_email: true
+            },
+            password: {
+                required: true,
+                valid_password: true,
+            },
+            confirm_password: {
+                required: true,
+                valid_password: true,
+                equalTo: "#password"
+            },
+            'distribution_area_ids[]': {
+                required: true,
+            },
+        },
+        messages: {
+            full_name: {
+                required: "Please enter name."
+            },
+            username: {
+                required: "Please enter username.",
+                valid_alphanumeric_without_space_special_characters: "Please enter username (alphanumeric without space and special characters).",
+            },
+            email: {
+                required: "Please enter email.",
+                valid_email: "Please enter valid email.",
+            },
+            password: {
+                required: "Please enter new password.",
+                valid_password: "Min. 8, alphanumeric and special character."
+            },
+            confirm_password: {
+                required: "Please enter confirm password",
+                valid_password: "Min. 8, alphanumeric and special character.",
+                equalTo: "Password should be same as new password.",
+            },
+            'distribution_area_ids[]': {
+                required: "Please select distribution area.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+
+    $("#updateSellerForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            full_name: {
+                required: true
+            },
+            username: {
+                required: true,
+                valid_alphanumeric_without_space_special_characters: true,
+            },
+            email: {
+                required: true,
+                valid_email: true
+            },
+            password: {
+                required: true,
+                valid_password: true,
+            },
+            confirm_password: {
+                required: true,
+                valid_password: true,
+                equalTo: "#password"
+            },
+            'distribution_area_ids[]': {
+                required: true,
+            },
+        },
+        messages: {
+            full_name: {
+                required: "Please enter name."
+            },
+            username: {
+                required: "Please enter username.",
+                valid_alphanumeric_without_space_special_characters: "Please enter username (alphanumeric without space and special characters).",
+            },
+            email: {
+                required: "Please enter email.",
+                valid_email: "Please enter valid email.",
+            },
+            password: {
+                required: "Please enter new password.",
+                valid_password: "Min. 8, alphanumeric and special character."
+            },
+            confirm_password: {
+                required: "Please enter confirm password",
+                valid_password: "Min. 8, alphanumeric and special character.",
+                equalTo: "Password should be same as new password.",
+            },
+            'distribution_area_ids[]': {
+                required: "Please select distribution area.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Seller Form //
 
     // Start :: Beat Form //
     $("#createBeatForm").validate({

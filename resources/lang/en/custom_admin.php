@@ -237,6 +237,12 @@ return [
     'label_analysis_season'                         => 'Analysis Season',
     'label_add_analysis_season'                     => 'Add Analysis Season',
     'label_edit_analysis_season'                    => 'Edit Analysis Season',
+    'label_menu_seller'                             => 'Seller',
+    'label_seller_management'                       => 'Seller Management',
+    'label_seller_list'                             => 'Seller List',
+    'label_seller'                                  => 'Seller',
+    'label_add_seller'                              => 'Add Seller',
+    'label_edit_seller'                             => 'Edit Seller',
     'label_subject'                                 => 'Subject',
     'label_location'                                => 'Location',
     'label_reset_password_link'                     => 'Reset Password Link',
@@ -368,6 +374,7 @@ return [
     'label_grade_name'                              => 'Grade',
     'label_retailer_price'                          => 'Retailer Price',
     'label_pack_size'                               => 'Pack Size',
+    'label_menu_analysis'                           => 'Analysis',
 
     
 /* Buttons */

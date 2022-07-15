@@ -165,5 +165,18 @@ class User extends Authenticatable
     public function distributionAreaDetails() {
         return $this->belongsTo('App\Models\DistributionArea', 'distribution_area_id');
     }
+
+    /*
+        * Function name : userDistributionAreaDetails
+        * Purpose       : To get all seller related distribution areas
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : 
+        * Return Value  : 
+    */
+    public function userDistributionAreaDetails() {
+        return $this->hasMany('App\Models\UserDistributionArea', 'user_id',);
+    }
     
 }

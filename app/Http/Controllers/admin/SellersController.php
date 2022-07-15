@@ -3,7 +3,7 @@
 # Company Name      :
 # Author            :
 # Created Date      :
-# Page/Class name   : DistributorsController
+# Page/Class name   : SellersController
 # Purpose           : Distributor Management
 /*****************************************************/
 
@@ -16,26 +16,27 @@ use Carbon\Carbon;
 use App\Traits\GeneralMethods;
 use App\Models\User;
 use App\Models\UserDetail;
-use App\Models\DistributionArea;
 use App\Models\UserRole;
+use App\Models\UserDistributionArea;
+use App\Models\DistributionArea;
 use DataTables;
 
-class DistributorsController extends Controller
+class SellersController extends Controller
 {
     use GeneralMethods;
-    public $controllerName  = 'Distributors';
+    public $controllerName  = 'Sellers';
     public $management;
-    public $modelName       = 'Distributor';
+    public $modelName       = 'User';
     public $breadcrumb;
     public $routePrefix     = 'admin';
-    public $pageRoute       = 'distributor';
-    public $listUrl         = 'distributor.list';
-    public $listRequestUrl  = 'distributor.ajax-list-request';
-    public $addUrl          = 'distributor.add';
-    public $editUrl         = 'distributor.edit';
-    public $statusUrl       = 'distributor.change-status';
-    public $deleteUrl       = 'distributor.delete';
-    public $viewFolderPath  = 'admin.distributor';
+    public $pageRoute       = 'seller';
+    public $listUrl         = 'seller.list';
+    public $listRequestUrl  = 'seller.ajax-list-request';
+    public $addUrl          = 'seller.add';
+    public $editUrl         = 'seller.edit';
+    public $statusUrl       = 'seller.change-status';
+    public $deleteUrl       = 'seller.delete';
+    public $viewFolderPath  = 'admin.seller';
     public $model           = 'User';
 
     /*
@@ -48,7 +49,7 @@ class DistributorsController extends Controller
     public function __construct() {
         parent::__construct();
 
-        $this->management  = trans('custom_admin.label_menu_distributor');
+        $this->management  = trans('custom_admin.label_menu_seller');
         $this->model       = new User();
 
         // Assign breadcrumb
@@ -66,8 +67,8 @@ class DistributorsController extends Controller
     */
     public function list(Request $request) {
         $data = [
-            'pageTitle'     => trans('custom_admin.label_distributor_list'),
-            'panelTitle'    => trans('custom_admin.label_distributor_list'),
+            'pageTitle'     => trans('custom_admin.label_seller_list'),
+            'panelTitle'    => trans('custom_admin.label_seller_list'),
             'pageType'      => 'LISTPAGE'
         ];
 
@@ -98,12 +99,12 @@ class DistributorsController extends Controller
         * Return Value  : Returns sub admin data
     */
     public function ajaxListRequest(Request $request) {
-        $data['pageTitle'] = trans('custom_admin.label_distributor_list');
-        $data['panelTitle']= trans('custom_admin.label_distributor_list');
+        $data['pageTitle'] = trans('custom_admin.label_seller_list');
+        $data['panelTitle']= trans('custom_admin.label_seller_list');
 
         try {
             if ($request->ajax()) {
-                $data = $this->model->where(['type' => 'D'])->whereNull('deleted_at');
+                $data = $this->model->where(['type' => 'S'])->whereNull('deleted_at');
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -125,6 +126,13 @@ class DistributorsController extends Controller
                                 }
                             }
                             return $image;
+                        })
+                        ->addColumn('phone_no', function ($row) {
+                            if ($row->phone_no !== NULL) {
+                                return $row->phone_no;
+                            } else {
+                                return 'N/A';
+                            }
                         })
                         ->addColumn('whatsapp_no', function ($row) {
                             return $row->userDetails->whatsapp_no;
@@ -188,37 +196,31 @@ class DistributorsController extends Controller
     */
     public function add(Request $request, $id = null) {
         $data = [
-            'pageTitle'     => trans('custom_admin.label_add_distributor'),
-            'panelTitle'    => trans('custom_admin.label_add_distributor'),
+            'pageTitle'     => trans('custom_admin.label_add_seller'),
+            'panelTitle'    => trans('custom_admin.label_add_seller'),
             'pageType'      => 'CREATEPAGE'
         ];
 
         try {
+            $data['distributionAreas'] = DistributionArea::where(['status' => '1'])->whereNull('deleted_at')->orderBy('title', 'ASC')->get();
+
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
-                    'distribution_area_id'  => 'required',
-                    'job_title_1'           => 'required',
                     'full_name'             => 'required',
-                    'company'               => 'required',
                     'username'              => 'required|unique:'.($this->model)->getTable().',username,NULL,id,deleted_at,NULL|regex:'.config('global.VALID_ALPHANUMERIC_WITHOUT_SPACE_SPECIAL_CHARACTERS'),
                     'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
-                    // 'phone_no'              => 'required',
                     'password'              => 'required|regex:'.config('global.PASSWORD_REGEX'),
                     'confirm_password'      => 'required|regex:'.config('global.PASSWORD_REGEX').'|same:password',
                     'profile_pic'           => 'mimes:'.config('global.IMAGE_FILE_TYPES').'|max:'.config('global.IMAGE_MAX_UPLOAD_SIZE'),
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => trans('custom_admin.error_select_distribution_area'),
-                    'job_title_1.required'          => trans('custom_admin.error_job_title_1'),
-                    'full_name.required'            => trans('custom_admin.error_name_1'),
-                    'company.required'              => trans('custom_admin.error_company'),
+                    'full_name.required'            => trans('custom_admin.error_name'),
                     'username.required'             => trans('custom_admin.error_username'),
                     'username.unique'               => trans('custom_admin.error_username_unique'),
                     'username.regex'                => trans('custom_admin.error_valid_alphanumeric_without_space_special_characters'),
                     'email.required'                => trans('custom_admin.error_email'),
                     'email.regex'                   => trans('custom_admin.error_valid_email'),
                     'email.unique'                  => trans('custom_admin.error_email_unique'),
-                    // 'phone_no.required'             => trans('custom_admin.error_enter_phone_no'),
                     'password.required'             => trans('custom_admin.error_enter_password'),
                     'password.regex'                => trans('custom_admin.error_enter_password_regex'),
                     'confirm_password.required'     => trans('custom_admin.error_enter_confirm_password'),
@@ -239,7 +241,7 @@ class DistributorsController extends Controller
                     $profilePic         = $request->file('profile_pic');
                     $uploadedImage      = '';
                     if ($profilePic != '') {
-                        $uploadedImage  = singleImageUpload($this->modelName, $profilePic, 'distributor', $this->pageRoute, true); // If thumb true, mention size in global.php
+                        $uploadedImage  = singleImageUpload($this->modelName, $profilePic, 'seller', $this->pageRoute, true); // If thumb true, mention size in global.php
                     }
 
                     if ($request->full_name == trim($request->full_name) && strpos($request->full_name, ' ') !== false) {
@@ -251,40 +253,46 @@ class DistributorsController extends Controller
                         $details->first_name        = $request->full_name ?? null;
                     }
                     
-                    $details->job_title_1           = $request->job_title_1 ?? null;
                     $details->full_name             = $request->full_name ?? null;
                     $details->email                 = $request->email ?? null;
-                    $details->company               = $request->company ?? null;
                     $details->phone_no              = $request->phone_no ?? null;
                     $details->username              = $request->username ?? null;
-                    $details->distribution_area_id  = $request->distribution_area_id ?? null;
                     $details->profile_pic           = $uploadedImage;
                     $details->password              = $password;
-                    $details->type                  = 'D';
+                    $details->type                  = 'S';
 
                     if ($details->save()) {
                         // Start :: Inserting data to user_details table
                         $userDetailData                    = new UserDetail;
                         $userDetailData->user_id           = $details->id;
-                        $userDetailData->job_title_2       = $request->job_title_2 ?? null;
-                        $userDetailData->full_name_2       = $request->full_name_2 ?? null;
-                        $userDetailData->phone_no_2        = $request->phone_no_2 ?? null;
                         $userDetailData->whatsapp_no       = $request->whatsapp_no ?? null;
                         $userDetailData->street            = $request->street ?? null;
                         $userDetailData->city              = $request->city ?? null;
                         $userDetailData->district_region   = $request->district_region ?? null;
                         $userDetailData->state_province    = $request->state_province ?? null;
                         $userDetailData->zip               = $request->zip ?? null;
-                        $userDetailData->notes             = $request->notes ?? null;
                         $userDetailData->save();
                         // End :: Inserting data to user_details table
 
                         // Start :: Inserting data to user_roles table
                         $userRoleData           = new UserRole;
                         $userRoleData->user_id  = $details->id;
-                        $userRoleData->role_id  = 2;    // Role id (2 => Distributor Role) from roles table
+                        $userRoleData->role_id  = 3;    // Role id (3 => Seller Role) from roles table
                         $userRoleData->save();
                         // End :: Inserting data to user_roles table
+
+                        // Start :: Inserting user_distribution_areas table
+                        if (isset($request->distribution_area_ids) && count($request->distribution_area_ids)) {
+                            $assignmentIds = [];
+                            foreach ($request->distribution_area_ids as $key => $item) {                    
+                                $assignmentIds[$key]['user_id']             = $details->id;
+                                $assignmentIds[$key]['distribution_area_id']= $item;
+                            }
+                            if (count($assignmentIds)) {
+                                UserDistributionArea::insert($assignmentIds);
+                            }
+                        }
+                        // End :: Inserting user_distribution_areas table
 
                         $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
                         return redirect()->route($this->routePrefix.'.'.$this->listUrl);
@@ -298,9 +306,6 @@ class DistributorsController extends Controller
                 }
             }
 
-            $data['distributionAreas'] = DistributionArea::where(['status' => '1'])
-                                                        ->select('id','title')
-                                                        ->get();
             return view($this->viewFolderPath.'.add', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -319,18 +324,16 @@ class DistributorsController extends Controller
     */
     public function edit(Request $request, $id = null) {
         $data = [
-            'pageTitle'     => trans('custom_admin.label_edit_distributor'),
-            'panelTitle'    => trans('custom_admin.label_edit_distributor'),
+            'pageTitle'     => trans('custom_admin.label_edit_seller'),
+            'panelTitle'    => trans('custom_admin.label_edit_seller'),
             'pageType'      => 'EDITPAGE'
         ];
 
         try {
             $data['id']                 = $id;
-            $data['distributorId']      = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])
-                                                            ->select('id','title')
-                                                            ->get();
+            $data['sellerId']           = $id = customEncryptionDecryption($id, 'decrypt');
             $data['details']            = $details = $this->model->where(['id' => $id])->first();
+            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->whereNull('deleted_at')->orderBy('title', 'ASC')->get();
             
             if ($request->isMethod('POST')) {
                 if ($id == null) {
@@ -338,28 +341,20 @@ class DistributorsController extends Controller
                     return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                 }
                 $validationCondition = array(
-                    'distribution_area_id'  => 'required',
-                    'job_title_1'           => 'required',
                     'full_name'             => 'required',
-                    'company'               => 'required',
                     'username'              => 'required|unique:'.($this->model)->getTable().',username,'.$id.',id,deleted_at,NULL|regex:'.config('global.VALID_ALPHANUMERIC_WITHOUT_SPACE_SPECIAL_CHARACTERS'),
                     'email'                 => 'required|regex:'.config('global.EMAIL_REGEX'),
-                    // 'phone_no'              => 'required',
                     'profile_pic'           => 'mimes:'.config('global.IMAGE_FILE_TYPES').'|max:'.config('global.IMAGE_MAX_UPLOAD_SIZE'),
                 );
                 $validationMessages = array(
-                    'distribution_area_id.required' => trans('custom_admin.error_select_distribution_area'),
-                    'job_title_1.required'          => trans('custom_admin.error_job_title_1'),
-                    'full_name.required'            => trans('custom_admin.error_name_1'),
-                    'company.required'              => trans('custom_admin.error_company'),
-                    'username.required'             => trans('custom_admin.error_username'),
-                    'username.unique'               => trans('custom_admin.error_username_unique'),
-                    'username.regex'                => trans('custom_admin.error_valid_alphanumeric_without_space_special_characters'),
-                    'email.required'                => trans('custom_admin.error_email'),
-                    'email.regex'                   => trans('custom_admin.error_valid_email'),
-                    'email.unique'                  => trans('custom_admin.error_email_unique'),
-                    // 'phone_no.required'             => trans('custom_admin.error_enter_phone_no'),
-                    'profile_pic.mimes'             => trans('custom_admin.error_image_mimes'),
+                    'full_name.required'    => trans('custom_admin.error_name'),
+                    'username.required'     => trans('custom_admin.error_username'),
+                    'username.unique'       => trans('custom_admin.error_username_unique'),
+                    'username.regex'        => trans('custom_admin.error_valid_alphanumeric_without_space_special_characters'),
+                    'email.required'        => trans('custom_admin.error_email'),
+                    'email.regex'           => trans('custom_admin.error_valid_email'),
+                    'email.unique'          => trans('custom_admin.error_email_unique'),
+                    'profile_pic.mimes'     => trans('custom_admin.error_image_mimes'),
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -369,7 +364,7 @@ class DistributorsController extends Controller
                 } else {
                     $updateData     = [];
                     $validationFlag = false;
-                    // Unique Email validation for User type "Distributor"
+                    // Unique Email validation for User type "Seller"
                     $userEmailExistCheck = $this->model->where('id', '<>', $id)
                                                 ->where(['email' => $request->email])
                                                 ->count();
@@ -401,30 +396,37 @@ class DistributorsController extends Controller
                             $updateData['first_name']       = $request->full_name ?? null;
                         }
                         
-                        $updateData['job_title_1']          = $request->job_title_1 ?? null;
                         $updateData['full_name']            = $request->full_name ?? null;
                         $updateData['email']                = $request->email ?? null;
-                        $updateData['company']              = $request->company ?? null;
                         $updateData['username']             = $request->username ?? null;
                         $updateData['phone_no']             = $request->phone_no ?? null;
-                        $updateData['distribution_area_id'] = $request->distribution_area_id ?? null;
                         $update = $this->model->where(['id' => $id])->update($updateData);
                         
                         if ($update) {
                             // Start :: update data to user_details table
                             UserDetail::where(['user_id' => $id])->update([
-                                'job_title_2'   => $request->job_title_2 ?? null,
-                                'full_name_2'   => $request->full_name_2 ?? null,
-                                'phone_no_2'    => $request->phone_no_2 ?? null,
                                 'whatsapp_no'   => $request->whatsapp_no ?? null,
                                 'street'        => $request->street ?? null,
                                 'city'          => $request->city ?? null,
                                 'district_region'=> $request->district_region ?? null,
                                 'state_province'=> $request->state_province ?? null,
-                                'zip'           => $request->zip ?? null,
-                                'notes'         => $request->notes ?? null
+                                'zip'           => $request->zip ?? null
                             ]);
                             // End :: update data to user_details table
+
+                            // Start :: Inserting user_distribution_areas table
+                            UserDistributionArea::where('user_id', $id)->delete();
+                            if (isset($request->distribution_area_ids) && count($request->distribution_area_ids)) {
+                                $assignmentIds = [];
+                                foreach ($request->distribution_area_ids as $key => $item) {                    
+                                    $assignmentIds[$key]['user_id']             = $details->id;
+                                    $assignmentIds[$key]['distribution_area_id']= $item;
+                                }
+                                if (count($assignmentIds)) {
+                                    UserDistributionArea::insert($assignmentIds);
+                                }
+                            }
+                            // End :: Inserting user_distribution_areas table
 
                             $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
                             $this->windowCloseOnSuccess();
@@ -442,6 +444,14 @@ class DistributorsController extends Controller
                     }
                 }
             }
+
+            $selectedDistributionAreaIds = [];
+            if ($details->userDistributionAreaDetails) {
+                foreach ($details->userDistributionAreaDetails as $item) {
+                    $selectedDistributionAreaIds[] = $item->distribution_area_id;
+                }
+            }
+            $data['selectedDistributionAreaIds'] = $selectedDistributionAreaIds;
 
             return view($this->viewFolderPath.'.edit', $data);
         } catch (Exception $e) {

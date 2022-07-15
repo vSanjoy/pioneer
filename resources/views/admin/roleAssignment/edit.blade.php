@@ -24,7 +24,7 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_distributor')<span class="red_star">*</span></label>
+										<label class="text-dark font-bold">@lang('custom_admin.label_distributor')/@lang('custom_admin.label_seller')<span class="red_star">*</span></label>
 										<select name="distributor_id" id="distributor_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true" disabled>
 											<option value="">--@lang('custom_admin.label_select')--</option>
 										@foreach ($userList as $user)
