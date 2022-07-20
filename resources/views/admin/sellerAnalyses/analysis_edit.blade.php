@@ -2,48 +2,28 @@
 
 @section('content')
 
-{{ Form::open([
-	'method'=> 'POST',
-	'class' => '',
-	'route' => [$routePrefix.'.analysisSeason.analysis-update', $analysisSeasonId, $distributionAreaId, $distributorId, $storeId],
-	'name'  => 'updateAnalysisForm',
-	'id'    => 'updateAnalysisForm',
-	'files' => true,
-	'novalidate' => true ]) }}
+	{{ Form::open([
+			'method'=> 'POST',
+			'class' => '',
+			'route' => [$routePrefix.'.analysisSeason.analysis-update', $distributionAreaId, $beatId, $storeId, $categoryId, $productId],
+			'name'  => 'updateSellerAnalysesForm',
+			'id'    => 'updateSellerAnalysesForm',
+			'files' => true,
+			'novalidate' => true ]) }}
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>
-					<h3>{!! $analysisSeason->title.' ('.$analysisSeason->year.')' !!} - {!! $distributionArea->title !!} - {!! $distributor->full_name.' ('.$distributor->company.')' !!} - {!! $store->name_1.' ('.$store->store_name.')' !!}</h3>
-					@php $analysisDate = null; if (isset($details->analysis_date)) { $analysisDate = changeDateFormat($details->analysis_date, 'm/d/Y'); } @endphp
-
+					<h3>{!! $distributionArea->title !!} - {!! $beat->title !!} - {!! $store->name_1.' ('.$store->store_name.')' !!} - {!! $category->title !!}</h3>
 					<div class="form-body mt-4-5">
 						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label class="text-dark font-bold">@lang('custom_admin.label_analysis_date')<span class="red_star">*</span></label>
-									{{ Form::text('analysis_date', $analysisDate, [
-															'id' => 'analysis_date',
-															'class' => 'form-control date',
-															'placeholder' => '',
-															'required' => true ]) }}
-								</div>
-							</div>
+							
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-12">
-			<div class="card">
-				<div class="card-body">
-					<div class="form-actions">
+					<div class="form-actions mt-4">
 						<div class="float-left">
-							<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="{{ route($routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, $distributorId]) }}">
+							<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="{{ route($routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId, $productId]) }}">
 								<i class="far fa-arrow-alt-circle-left"></i> @lang('custom_admin.btn_cancel')
 							</a>
 						</div>
@@ -53,12 +33,13 @@
 							</button>
 						</div>
 					</div>
+
 				</div>
 			</div>
 		</div>
 	</div>
 
-@if ($categories->count())
+{{-- @if ($categories->count())
 	@foreach ($categories as $category)
 		@php $categoryId = $category->id; @endphp
 		@if ($category->products->count())
@@ -121,29 +102,9 @@
 		</div>
 		@endif
 	@endforeach
-@endif
+@endif --}}
 
-	<div class="row">
-		<div class="col-12">
-			<div class="card">
-				<div class="card-body">
-					<div class="form-actions">
-						<div class="float-left">
-							<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="{{ route($routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, $distributorId]) }}">
-								<i class="far fa-arrow-alt-circle-left"></i> @lang('custom_admin.btn_cancel')
-							</a>
-						</div>
-						<div class="float-right">
-							<button type="submit" id="btn-processing" class="btn btn-primary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3">
-								<i class="far fa-save" aria-hidden="true"></i> @lang('custom_admin.btn_update')
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-{{ Form::close() }}
+	{{ Form::close() }}
 
 @endsection
 

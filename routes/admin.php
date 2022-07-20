@@ -216,6 +216,10 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/product-list/{distributionAreaId}/{beatId}/{storeId}/{categoryId}', 'SellerAnalysesController@productList')->name('product-list');
                 Route::post('/ajax-product-list-request/{distributionAreaId}/{beatId}/{storeId}/{categoryId}', 'SellerAnalysesController@ajaxProductListRequest')->name('ajax-product-list-request');
 
+                // Analysis
+                Route::get('/analysis/{distributionAreaId}/{beatId}/{storeId}/{categoryId}/{productId}', 'SellerAnalysesController@analysisUpdate')->name('analysis');
+                Route::post('/analysis-update/{distributionAreaId}/{beatId}/{storeId}/{categoryId}/{productId}', 'SellerAnalysesController@analysisUpdate')->name('analysis-update');
+
             });
 
             // Route::group(['prefix' => 'order', 'as' => 'order.'], function () {

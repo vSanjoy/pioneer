@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2022 at 03:00 PM
+-- Generation Time: Jul 20, 2022 at 02:34 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -33,6 +33,7 @@ CREATE TABLE `up_analyses` (
   `distribution_area_id` int(11) DEFAULT NULL COMMENT 'Id from distribution_areas table',
   `distributor_id` int(11) DEFAULT NULL COMMENT 'Id from users table',
   `store_id` int(11) DEFAULT NULL COMMENT 'Id from stores table',
+  `beat_id` int(11) DEFAULT NULL COMMENT 'beat_id foreign key from stores table',
   `analysis_date` timestamp NULL DEFAULT NULL,
   `status` enum('0','1','2') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active, 2=>Blocked',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -44,11 +45,8 @@ CREATE TABLE `up_analyses` (
 -- Dumping data for table `up_analyses`
 --
 
-INSERT INTO `up_analyses` (`id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `store_id`, `analysis_date`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 1, 3, 1, '2022-06-26 18:30:00', '1', '2022-06-27 01:03:41', '2022-06-27 02:38:30', NULL),
-(2, 2, 3, 5, 2, '2022-06-27 18:30:00', '1', '2022-06-27 04:34:28', '2022-06-28 03:46:28', NULL),
-(3, 2, 1, 3, 1, '2022-06-27 18:30:00', '1', '2022-06-27 05:43:11', '2022-06-27 05:43:11', NULL),
-(4, 2, 3, 4, 2, '2022-06-26 18:30:00', '1', '2022-06-27 06:53:20', '2022-06-27 06:54:33', NULL);
+INSERT INTO `up_analyses` (`id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `store_id`, `beat_id`, `analysis_date`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 3, 5, 4, 2, '2022-07-17 18:30:00', '1', '2022-07-20 02:33:28', '2022-07-20 02:33:28', NULL);
 
 -- --------------------------------------------------------
 
@@ -73,45 +71,7 @@ CREATE TABLE `up_analyses_details` (
 --
 
 INSERT INTO `up_analyses_details` (`id`, `analyses_id`, `category_id`, `product_id`, `target_monthly_sales`, `type_of_analysis`, `action`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, '11', '2', '3', '2022-06-27 06:33:41', '2022-06-27 02:38:30'),
-(2, 1, 1, 3, '4', '5', '6', '2022-06-27 06:33:41', '2022-06-27 02:38:30'),
-(3, 1, 2, 4, '7', NULL, NULL, '2022-06-27 06:33:41', '2022-06-27 02:38:30'),
-(4, 1, 2, 5, NULL, '8', NULL, '2022-06-27 06:33:41', '2022-06-27 02:38:30'),
-(5, 1, 3, 7, '10', '11', '12', '2022-06-27 06:33:41', '2022-06-27 02:38:30'),
-(6, 1, 3, 11, '1000', 'Test analysis', 'Test analysis action', '2022-06-27 08:08:30', NULL),
-(7, 2, 1, 1, '5000', '5000 type of analysis', '5000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:28'),
-(8, 2, 1, 2, '4000', '4000 type of analysis', '4000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:28'),
-(9, 2, 1, 3, '3000', '3000 type of analysis', '3000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:28'),
-(10, 2, 2, 4, '2000', '2000 type of analysis', '2000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:28'),
-(11, 2, 2, 5, '1000', '1000 type of analysis', '1000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:28'),
-(12, 2, 3, 6, '10000', '10000 type of analysis', '10000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(13, 2, 3, 7, '9000', '9000 type of analysis', '9000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(14, 2, 3, 8, '8000', '8000 type of analysis', '8000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(15, 2, 3, 9, '7000', '7000 type of analysis', '7000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(16, 2, 3, 10, '6000', '6000 type of analysis', '6000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(17, 2, 3, 11, '5000', '5000 type of analysis', '5000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(18, 2, 3, 12, '4000', '4000 type of analysis', '4000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(19, 2, 3, 13, '3000', '3000 type of analysis', '3000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(20, 2, 3, 14, '2000', '2000 type of analysis', '2000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(21, 2, 4, 15, '1000', '1000 type of analysis', '1000 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(22, 2, 4, 16, '500', '500 type of analysis', '500 analytic action', '2022-06-27 10:04:28', '2022-06-28 03:46:29'),
-(23, 2, 5, 17, '7000', '7000 type of analysis', '7000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(24, 2, 5, 18, '6000', '6000 type of analysis', '6000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(25, 2, 5, 19, '5000', '5000 type of analysis', '5000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(26, 2, 5, 20, '4000', '4000 type of analysis', '4000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(27, 2, 5, 21, '3000', '3000 type of analysis', '3000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(28, 2, 5, 22, '2000', '2000 type of analysis', '2000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(29, 2, 5, 23, '1000', '1000 type of analysis', '1000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(30, 2, 6, 24, '2000', '2000 type of analysis', '2000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(31, 2, 6, 25, '1000', '1000 type of analysis', '1000 analytic action', '2022-06-27 10:06:30', '2022-06-28 03:46:29'),
-(32, 2, 7, 26, '12000', '12000 type of analysis', '12000 analytic action', '2022-06-27 10:07:39', '2022-06-28 03:46:29'),
-(33, 3, 1, 2, '1', '2', '3', '2022-06-27 11:13:11', NULL),
-(34, 4, 1, 1, '22', '2', '2', '2022-06-27 12:23:20', '2022-06-27 06:54:33'),
-(35, 4, 1, 2, '200', '2', '2', '2022-06-27 12:23:20', '2022-06-27 06:54:33'),
-(36, 4, 1, 3, '2', '2', '2', '2022-06-27 12:23:20', '2022-06-27 06:54:33'),
-(37, 4, 2, 4, '5', '5', '5', '2022-06-27 12:24:33', NULL),
-(38, 4, 2, 5, '5', '5', '5', '2022-06-27 12:24:33', NULL),
-(39, 4, 3, 6, '5', '5', '5', '2022-06-27 12:24:33', NULL);
+(1, 1, 1, 1, '1000', 'Test 1', 'Test 2', '2022-07-20 08:03:28', NULL);
 
 -- --------------------------------------------------------
 
@@ -719,11 +679,11 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1657886347, 'Y', '2022-05-06 07:39:45', '2022-07-15 06:29:07', NULL),
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1658315251, 'Y', '2022-05-06 07:39:45', '2022-07-20 05:37:31', NULL),
 (3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1655357183, 'N', '2022-05-09 06:16:32', '2022-06-15 23:56:23', NULL),
 (4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1653979441, 'N', '2022-05-26 05:32:09', '2022-06-28 04:21:35', NULL),
 (5, 'My Job Title', NULL, NULL, 'My', 'Job', 'My Job Title New', 'dev', 'dev@yopmail.com', 'Vishi Prem Workz', NULL, '$2y$10$Ks26Ofv37EMqNgZZ7lr61OCZfUqMxTe27S2SGgoovbEJ7pyZpW.3m', '', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-06-27 04:20:38', '2022-06-28 04:00:02', NULL),
-(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1657870492, 'N', '2022-07-14 00:43:42', '2022-07-15 02:42:57', NULL),
+(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1658299363, 'N', '2022-07-14 00:43:42', '2022-07-20 01:12:43', NULL),
 (7, NULL, NULL, NULL, 'Soubhik', 'Paul', 'Soubhik Paul', 'soubhikpaul', 'soubhikpaul@yopmail.com', NULL, NULL, '$2y$10$0PWEImztEZMoA0AvRgdV5untgyY.V4Qt7xoQ28FCwvcpPAWKGPdXq', 'seller_1657785389.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1657886407, 'N', '2022-07-14 02:26:29', '2022-07-15 06:30:07', NULL);
 
 -- --------------------------------------------------------
@@ -965,13 +925,13 @@ ALTER TABLE `up_website_settings`
 -- AUTO_INCREMENT for table `up_analyses`
 --
 ALTER TABLE `up_analyses`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `up_analyses_details`
 --
 ALTER TABLE `up_analyses_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `up_analysis_seasons`

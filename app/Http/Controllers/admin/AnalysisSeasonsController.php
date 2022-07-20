@@ -730,7 +730,7 @@ class AnalysisSeasonsController extends Controller
             $data['analysisSeason']     = $this->model->where(['id' => $decryptAnalysisSeasonId])->first();
             $data['distributionArea']   = DistributionArea::where(['id' => $decryptDistributionAreaId])->first();
             $data['distributor']        = User::where(['id' => $decryptDistributorId])->first();
-            $data['store']              = Store::where(['id' => $decryptStoreId])->first();
+            $data['store']              = $storeDetails = Store::where(['id' => $decryptStoreId])->first();
             $data['categories']         = Category::orderBy('title', 'ASC')->get();
             
             if ($request->isMethod('POST')) {
@@ -752,6 +752,7 @@ class AnalysisSeasonsController extends Controller
                         $saveData['distribution_area_id']   = $decryptDistributionAreaId;
                         $saveData['distributor_id']         = $decryptDistributorId;
                         $saveData['store_id']               = $decryptStoreId;
+                        $saveData['beat_id']                = $storeDetails->beat_id ?? null;
                         $saveData['analysis_date']          = date('Y-m-d', strtotime($request->analysis_date)) ?? null;
                         $save = Analyses::create($saveData);
 

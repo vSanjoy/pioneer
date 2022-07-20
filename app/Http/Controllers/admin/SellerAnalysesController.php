@@ -21,6 +21,7 @@ use App\Models\Store;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Beat;
+use App\Models\Analyses;
 use DataTables;
 
 class SellerAnalysesController extends Controller
@@ -260,6 +261,7 @@ class SellerAnalysesController extends Controller
             $data['distributionAreaId'] = $distributionAreaId;
             $data['beatId']             = $beatId;
             $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
+            $data['beat']               = Beat::where(['id' => customEncryptionDecryption($beatId, 'decrypt')])->first();
             
             // Start :: Manage restriction
             $data['isAllow'] = false;
@@ -343,9 +345,9 @@ class SellerAnalysesController extends Controller
                             return date('d-m-Y', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId) {
-                            // $btn = '<a href="'.route($this->routePrefix.'.sellerAnalyses.category-list', [$distributionAreaId, $beatId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'" target="_blank"><i class="far fa-file-alt"></i>';
+                            $btn = '<a href="'.route($this->routePrefix.'.sellerAnalyses.category-list', [$distributionAreaId, $beatId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_category').'"><i class="far fa-file-alt"></i>';
 
-                            return '';
+                            return $btn;
                         })
                         ->rawColumns(['distribution_area_id','sale_size_category','action'])
                         ->make(true);
@@ -361,52 +363,213 @@ class SellerAnalysesController extends Controller
         }
     }
 
+    /******************************************************** Category ********************************************************/
+
     /*
-        * Function name : status
-        * Purpose       : This function is to status
-        * Author        :
-        * Created Date  :
-        * Modified date :
-        * Input Params  : Request $request, $id = null
-        * Return Value  : Returns json
+        * Function name : categoryList
+        * Purpose       : This function is for the category list
+        * Input Params  : Request $request
+        * Return Value  : Returns to the category list page
     */
-    public function status(Request $request, $id = null) {
-        $title      = trans('custom_admin.message_error');
-        $message    = trans('custom_admin.error_something_went_wrong');
-        $type       = 'error';
+    public function categoryList(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null) {
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_category_list'),
+            'panelTitle'    => trans('custom_admin.label_category_list'),
+            'pageType'      => 'LISTPAGE'
+        ];
+
+        try {
+            $data['distributionAreaId'] = $distributionAreaId;
+            $data['beatId']             = $beatId;
+            $data['storeId']            = $storeId;
+            $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
+            $data['beat']               = Beat::where(['id' => customEncryptionDecryption($beatId, 'decrypt')])->first();
+            $data['store']              = Store::where(['id' => customEncryptionDecryption($storeId, 'decrypt')])->first();
+            
+            // Start :: Manage restriction
+            $data['isAllow'] = false;
+            $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
+            if ($restrictions['is_super_admin']) {
+                $data['isAllow'] = true;
+            }
+            $data['allowedRoutes'] = $restrictions['allow_routes'];
+            // End :: Manage restriction
+
+            return view($this->viewFolderPath.'.category_list', $data);
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.dashboard');
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.dashboard');
+        }
+    }
+
+    /*
+        * Function name : ajaxCategoryListRequest
+        * Purpose       : This function is for the reutrn ajax data
+        * Input Params  : Request $request
+        * Return Value  : Returns data
+    */
+    public function ajaxCategoryListRequest(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null) {
+        $data['pageTitle'] = trans('custom_admin.label_category_list');
+        $data['panelTitle']= trans('custom_admin.label_category_list');
 
         try {
             if ($request->ajax()) {
-                $id         = customEncryptionDecryption($id, 'decrypt');
-                $actionType = $request->actionType ?? null;
+                $data = Category::where(['status' => '1'])->whereNull('deleted_at');
 
-                if ($id != null && $actionType != null) {
-                    $details = Store::where('id', $id)->first();
-                    if ($details != null) {
-                        if ($actionType == 'IP') {
-                            $details->progress_status = 'IP';
-                        } else if ($actionType == 'CP') {
-                            $details->progress_status = 'CP';
-                        }
-                        $details->save();
-                            
-                        $title      = trans('custom_admin.message_success');
-                        $message    = trans('custom_admin.success_status_updated_successfully');
-                        $type       = 'success';
-                    } else {
-                        $message = trans('custom_admin.error_invalid');
-                    }
+                // Start :: Manage restriction
+                $isAllow = false;
+                $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
+                if ($restrictions['is_super_admin']) {
+                    $isAllow = true;
                 }
+                $allowedRoutes  = $restrictions['allow_routes'];
+                // End :: Manage restriction
+
+                return Datatables::of($data, $isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId)
+                        ->addIndexColumn()
+                        ->addColumn('created_at', function ($row) {
+                            return date('d-m-Y', strtotime($row->created_at));
+                        })
+                        ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId) {
+                            $btn = '<a href="'.route($this->routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_product').'"><i class="far fa-snowflake"></i>';
+
+                            return $btn;
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
             }
+
+            return view($this->viewFolderPath.'.category_list');
         } catch (Exception $e) {
-            $message = $e->getMessage();
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return '';
         } catch (\Throwable $e) {
-            $message = $e->getMessage();
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return '';
         }
-        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
     }
-    
-    
+
+    /******************************************************** Product ********************************************************/
+
+    /*
+        * Function name : productList
+        * Purpose       : This function is for the product list
+        * Input Params  : Request $request
+        * Return Value  : Returns to the product list page
+    */
+    public function productList(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $categoryId = null) {
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_product_list'),
+            'panelTitle'    => trans('custom_admin.label_product_list'),
+            'pageType'      => 'LISTPAGE'
+        ];
+
+        try {
+            $data['distributionAreaId'] = $distributionAreaId;
+            $data['beatId']             = $beatId;
+            $data['storeId']            = $storeId;
+            $data['categoryId']         = $categoryId;
+            $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
+            $data['beat']               = Beat::where(['id' => customEncryptionDecryption($beatId, 'decrypt')])->first();
+            $data['store']              = Store::where(['id' => customEncryptionDecryption($storeId, 'decrypt')])->first();
+            $data['category']           = Category::where(['id' => customEncryptionDecryption($categoryId, 'decrypt')])->first();
+            
+            // Start :: Manage restriction
+            $data['isAllow'] = false;
+            $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
+            if ($restrictions['is_super_admin']) {
+                $data['isAllow'] = true;
+            }
+            $data['allowedRoutes'] = $restrictions['allow_routes'];
+            // End :: Manage restriction
+
+            return view($this->viewFolderPath.'.product_list', $data);
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.dashboard');
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.dashboard');
+        }
+    }
+
+    /*
+        * Function name : ajaxProductListRequest
+        * Purpose       : This function is for the reutrn ajax data
+        * Input Params  : Request $request
+        * Return Value  : Returns data
+    */
+    public function ajaxProductListRequest(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $categoryId = null) {
+        $data['pageTitle'] = trans('custom_admin.label_product_list');
+        $data['panelTitle']= trans('custom_admin.label_product_list');
+
+        try {
+            if ($request->ajax()) {
+                $data = Product::where([
+                                    'category_id' => customEncryptionDecryption($categoryId, 'decrypt'),
+                                    'status' => '1'
+                                    ])->whereNull('deleted_at');
+
+                // Start :: Manage restriction
+                $isAllow = false;
+                $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
+                if ($restrictions['is_super_admin']) {
+                    $isAllow = true;
+                }
+                $allowedRoutes  = $restrictions['allow_routes'];
+                // End :: Manage restriction
+
+                return Datatables::of($data, $isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId, $categoryId)
+                        ->addIndexColumn()
+                        ->addColumn('category', function ($row) {
+                            if ($row->categoryDetails !== NULL) {
+                                return $row->categoryDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('rate_per_pcs', function ($row) {
+                            return formatToTwoDecimalPlaces($row->rate_per_pcs);
+                        })
+                        ->addColumn('mrp', function ($row) {
+                            if ($row->mrp !== NULL) {
+                                return formatToTwoDecimalPlaces($row->mrp);
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('retailer_price', function ($row) {
+                            if ($row->retailer_price !== NULL) {
+                                return formatToTwoDecimalPlaces($row->retailer_price);
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('created_at', function ($row) {
+                            return date('d-m-Y', strtotime($row->created_at));
+                        })
+                        ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId, $categoryId) {
+                            $btn = '<a href="'.route($this->routePrefix.'.sellerAnalyses.analysis', [$distributionAreaId, $beatId, $storeId, $categoryId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'"><i class="fas fa-chart-bar ml_minus_1" aria-hidden="true"></i>';
+
+                            return $btn;
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
+            }
+
+            return view($this->viewFolderPath.'.product_list');
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return '';
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return '';
+        }
+    }
+
     /******************************************************** Analysis ********************************************************/
     /*
         * Function name : analysisUpdate
@@ -414,7 +577,7 @@ class SellerAnalysesController extends Controller
         * Input Params  : Request $request
         * Return Value  : Returns sub admin data
     */
-    public function analysisUpdate(Request $request, $analysisSeasonId = null, $distributionAreaId = null, $distributorId = null, $storeId = null) {
+    public function analysisUpdate(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $categoryId = null, $productId = null) {
         $data = [
             'pageTitle'     => trans('custom_admin.label_analysis'),
             'panelTitle'    => trans('custom_admin.label_analysis'),
@@ -422,47 +585,34 @@ class SellerAnalysesController extends Controller
         ];
 
         try {
+            // dd(customEncryptionDecryption($categoryId, 'decrypt'), customEncryptionDecryption($productId, 'decrypt'));
             $data['id']             = 0;
             $data['analysisValues'] = $analysisValues = [];
-            $data['details']        = $details = Analyses::where([
-                                                            'analysis_season_id' => customEncryptionDecryption($analysisSeasonId, 'decrypt'),
+            $data['details']        = $details = Analyses::whereYear('analysis_date', Carbon::now()->format('Y'))
+                                                        ->where([
                                                             'distribution_area_id' => customEncryptionDecryption($distributionAreaId, 'decrypt'),
-                                                            'distributor_id' => customEncryptionDecryption($distributorId, 'decrypt'),
-                                                            'store_id' => customEncryptionDecryption($storeId, 'decrypt')
-                                                        ])->first();
-            if ($details) {
-                $data['id']     = $details->id;
-
-                foreach ($details->analysesDetails as $item) {
-                    $categoryId = $item->category_id;
-                    $productId  = $item->product_id;
-
-                    $analysisValues[$categoryId][$productId]['analyses_details_id'] = $item->id;
-                    $analysisValues[$categoryId][$productId]['target_monthly_sales']= $item->target_monthly_sales;
-                    $analysisValues[$categoryId][$productId]['type_of_analysis']    = $item->type_of_analysis;
-                    $analysisValues[$categoryId][$productId]['action']              = $item->action;
-                }
-
-                if (count($analysisValues)) {
-                    $data['analysisValues'] = $analysisValues;
-                }
-            }
-                                            
-            $data['analysisSeasonId']   = $analysisSeasonId;
+                                                            'store_id' => customEncryptionDecryption($storeId, 'decrypt'),
+                                                            'beat_id' => customEncryptionDecryption($beatId, 'decrypt')
+                                                        ])
+                                                        ->with('analysesDetails')
+                                                        ->whereHas('analysesDetails', function ($query) use($categoryId, $productId) {
+                                                            $query->where([
+                                                                'category_id' => customEncryptionDecryption($categoryId, 'decrypt'),
+                                                                'product_id' => customEncryptionDecryption($productId, 'decrypt')
+                                                            ]);
+                                                        })
+                                                        ->first();
+            // dd($details);
             $data['distributionAreaId'] = $distributionAreaId;
-            $data['distributorId']      = $distributorId;
+            $data['beatId']             = $beatId;
             $data['storeId']            = $storeId;
+            $data['categoryId']         = $categoryId;
+            $data['productId']          = $productId;            
             
-            $decryptAnalysisSeasonId    = customEncryptionDecryption($analysisSeasonId, 'decrypt');
-            $decryptDistributionAreaId  = customEncryptionDecryption($distributionAreaId, 'decrypt');
-            $decryptDistributorId       = customEncryptionDecryption($distributorId, 'decrypt');
-            $decryptStoreId             = customEncryptionDecryption($storeId, 'decrypt');
-
-            $data['analysisSeason']     = $this->model->where(['id' => $decryptAnalysisSeasonId])->first();
-            $data['distributionArea']   = DistributionArea::where(['id' => $decryptDistributionAreaId])->first();
-            $data['distributor']        = User::where(['id' => $decryptDistributorId])->first();
-            $data['store']              = Store::where(['id' => $decryptStoreId])->first();
-            $data['categories']         = Category::orderBy('title', 'ASC')->get();
+            $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
+            $data['beat']               = Beat::where(['id' => customEncryptionDecryption($beatId, 'decrypt')])->first();
+            $data['store']              = Store::where(['id' => customEncryptionDecryption($storeId, 'decrypt')])->first();
+            $data['category']           = Category::where(['id' => customEncryptionDecryption($categoryId, 'decrypt')])->first();
             
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
@@ -569,10 +719,10 @@ class SellerAnalysesController extends Controller
             return view($this->viewFolderPath.'.analysis_edit', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-            return redirect()->route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, $distributorId]);
+            return redirect()->route($this->routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId]);
         } catch (\Throwable $e) {
             $this->generateToastMessage('error', $e->getMessage(), false);
-            return redirect()->route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, $distributorId]);
+            return redirect()->route($this->routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId]);
         }
     }
 

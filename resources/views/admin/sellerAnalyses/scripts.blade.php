@@ -10,28 +10,14 @@ $(document).ready(function() {
 
 	@if (Route::currentRouteName() == $routePrefix.'.sellerAnalyses.store-list')
 	getStoreList();
+	@endif
 
-	// Store Status section
-	$(document).on('click', '.store-status', function() {
-		var id 			= $(this).data('id');
-		var actionType 	= $(this).data('action-type');
-		listStoreStatusActionsWithFilter('{{ $pageRoute }}', 'status', id, actionType);
-	});
+	@if (Route::currentRouteName() == $routePrefix.'.sellerAnalyses.category-list')
+	getCategoryList();
 	@endif
 	
-	@if (Route::currentRouteName() == $routePrefix.'.sellerAnalyses.analysis')
-	// Filter
-	$(document).on('click', '.toggleCategoryhBox', function() {
-		var catId = $(this).data('catid');
-		if ($('#showFilterStatus_'+catId).is(':visible')) {
-			$('#plus_'+catId).show();
-			$('#minus_'+catId).hide();	
-		} else {
-			$('#minus_'+catId).show();
-			$('#plus_'+catId).hide();
-		}
-		$('#showFilterStatus_'+catId).toggle(400);
-	});
+	@if (Route::currentRouteName() == $routePrefix.'.sellerAnalyses.product-list')
+	getProductList();
 	@endif
 });
 
@@ -214,6 +200,143 @@ function getStoreList() {
 				{data: 'store_name', name: 'store_name'},
 				{data: 'grade_id', name: 'grade_id'},
 			@if ($isAllow || in_array('sellerAnalyses.category-list', $allowedRoutes))
+				{data: 'action', name: 'action', orderable: false, searchable: false},
+			@endif
+			],
+			columnDefs: [
+				{
+				targets: [ 0 ],
+				visible: false,
+				searchable: false,
+				},
+			],
+			order: [
+				[0, 'desc']
+			],
+			pageLength: 25,
+			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
+			fnDrawCallback: function(settings) {
+				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
+					$('#list-table_paginate').hide();
+				} else {
+					$('#list-table_paginate').show();
+				}
+			},
+	});
+	// Prevent alert box from datatable & console error message
+	$.fn.dataTable.ext.errMode = 'none';	
+	$('#list-table').on('error.dt', function (e, settings, techNote, message) {
+		$('#dataTableLoading').hide();
+		toastr.error(message, "@lang('custom_admin.message_error')");
+	});
+}
+@endif
+
+@if (Route::currentRouteName() == $routePrefix.'.sellerAnalyses.category-list')
+function getCategoryList() {
+	var getCategoryListDataUrl = "{{route($routePrefix.'.sellerAnalyses.ajax-category-list-request', [$distributionAreaId, $beatId, $storeId])}}";
+	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
+			destroy: true,
+			autoWidth: false,
+			responsive: false,
+			processing: true,
+			language: {
+				processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
+				search: "_INPUT_",
+				searchPlaceholder: '{{ trans("custom_admin.btn_search") }}',
+				emptyTable: '{{ trans("custom_admin.message_no_records_found") }}',
+				zeroRecords: '{{ trans("custom_admin.message_no_records_found") }}',
+				paginate: {
+					first: '{{trans("custom_admin.label_first")}}',
+					previous: '{{trans("custom_admin.label_previous")}}',
+					next: '{{trans("custom_admin.label_next")}}',
+					last: '{{trans("custom_admin.label_last")}}',
+				}
+			},
+			serverSide: true,
+			ajax: {
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: getCategoryListDataUrl,
+				type: 'POST',
+				data: function(data) {},
+			},
+			columns: [
+				{data: 'id', name: 'id'},
+				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+				{data: 'title', name: 'title'},
+			@if ($isAllow || in_array('sellerAnalyses.product-list', $allowedRoutes))
+				{data: 'action', name: 'action', orderable: false, searchable: false},
+			@endif
+			],
+			columnDefs: [
+				{
+				targets: [ 0 ],
+				visible: false,
+				searchable: false,
+				},
+			],
+			order: [
+				[0, 'desc']
+			],
+			pageLength: 25,
+			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
+			fnDrawCallback: function(settings) {
+				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
+					$('#list-table_paginate').hide();
+				} else {
+					$('#list-table_paginate').show();
+				}
+			},
+	});
+	// Prevent alert box from datatable & console error message
+	$.fn.dataTable.ext.errMode = 'none';	
+	$('#list-table').on('error.dt', function (e, settings, techNote, message) {
+		$('#dataTableLoading').hide();
+		toastr.error(message, "@lang('custom_admin.message_error')");
+	});
+}
+@endif
+
+@if (Route::currentRouteName() == $routePrefix.'.sellerAnalyses.product-list')
+function getProductList() {
+	var getProductListDataUrl = "{{route($routePrefix.'.sellerAnalyses.ajax-product-list-request', [$distributionAreaId, $beatId, $storeId, $categoryId])}}";
+	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
+			destroy: true,
+			autoWidth: false,
+			responsive: false,
+			processing: true,
+			language: {
+				processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
+				search: "_INPUT_",
+				searchPlaceholder: '{{ trans("custom_admin.btn_search") }}',
+				emptyTable: '{{ trans("custom_admin.message_no_records_found") }}',
+				zeroRecords: '{{ trans("custom_admin.message_no_records_found") }}',
+				paginate: {
+					first: '{{trans("custom_admin.label_first")}}',
+					previous: '{{trans("custom_admin.label_previous")}}',
+					next: '{{trans("custom_admin.label_next")}}',
+					last: '{{trans("custom_admin.label_last")}}',
+				}
+			},
+			serverSide: true,
+			ajax: {
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: getProductListDataUrl,
+				type: 'POST',
+				data: function(data) {},
+			},
+			columns: [
+				{data: 'id', name: 'id'},
+				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+				{data: 'title', name: 'title'},
+				{data: 'rate_per_pcs', name: 'rate_per_pcs', orderable: false, searchable: false},
+				{data: 'mrp', name: 'mrp', orderable: false, searchable: false},
+				{data: 'retailer_price', name: 'retailer_price', orderable: false, searchable: false},
+			@if ($isAllow || in_array('sellerAnalyses.product-list', $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],

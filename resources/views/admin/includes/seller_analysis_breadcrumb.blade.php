@@ -7,23 +7,34 @@
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.dashboard') }}" class="">@lang('custom_admin.label_dashboard')</a></li>
 
                         {{-- Distribution area --}}
-                        @if (isset($distributionAreaId) && !isset($beatId) && !isset($storeId))
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')2222</a></li>
-                        @elseif (isset($distributionAreaId) && isset($beatId) && !isset($storeId))
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')444</a></li>
+                        @if (isset($distributionAreaId) && !isset($beatId) && !isset($storeId) && !isset($categoryId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($beatId) && !isset($storeId) && !isset($categoryId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && !isset($categoryId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($categoryId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
                         @endif
 
                         {{-- Beat --}}
                         @if (isset($distributionAreaId) && isset($beatId))
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.beat-list', [$distributionAreaId]) }}" class="">@lang('custom_admin.label_beat_list') 3333</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.beat-list', [$distributionAreaId]) }}" class="">@lang('custom_admin.label_beat_list')</a></li>
                         @endif
 
                         {{-- Store --}}
-                        {{-- @if (isset($distributionAreaId) && isset($beatId) && !isset($storeId))
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.store-list', [$distributionAreaId, $beatId]) }}" class="">@lang('custom_admin.label_store_list') 444</a></li>
-                        @endif --}}
+                        @if (isset($distributionAreaId) && isset($beatId) && isset($storeId) && !isset($categoryId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.store-list', [$distributionAreaId, $beatId]) }}" class="">@lang('custom_admin.label_store_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($categoryId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.store-list', [$distributionAreaId, $beatId]) }}" class="">@lang('custom_admin.label_store_list')</a></li>
+                        @endif
+
+                        {{-- Category --}}
+                        @if (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($categoryId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId]) }}" class="">@lang('custom_admin.label_category_list')</a></li>
+                        @endif
                         
-                        <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }} 101010</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }}</li>
                     </ol>
                 </nav>
             </div>
