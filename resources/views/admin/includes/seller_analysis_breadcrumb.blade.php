@@ -7,13 +7,15 @@
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.dashboard') }}" class="">@lang('custom_admin.label_dashboard')</a></li>
 
                         {{-- Distribution area --}}
-                        @if (isset($distributionAreaId) && !isset($beatId) && !isset($storeId) && !isset($categoryId))
+                        @if (isset($distributionAreaId) && !isset($beatId) && !isset($storeId) && !isset($categoryId) && !isset($productId))
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
-                        @elseif (isset($distributionAreaId) && isset($beatId) && !isset($storeId) && !isset($categoryId))
+                        @elseif (isset($distributionAreaId) && isset($beatId) && !isset($storeId) && !isset($categoryId) && !isset($productId))
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
-                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && !isset($categoryId))
+                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && !isset($categoryId) && !isset($productId))
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
-                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($categoryId))
+                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($categoryId) && !isset($productId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($categoryId) && isset($productId))
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>
                         @endif
 
@@ -30,8 +32,13 @@
                         @endif
 
                         {{-- Category --}}
-                        @if (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($categoryId))
+                        @if (isset($categoryId))
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId]) }}" class="">@lang('custom_admin.label_category_list')</a></li>
+                        @endif
+
+                        {{-- Product --}}
+                        @if (isset($productId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId]) }}" class="">@lang('custom_admin.label_product_list')</a></li>
                         @endif
                         
                         <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }}</li>

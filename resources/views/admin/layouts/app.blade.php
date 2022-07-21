@@ -98,7 +98,7 @@
             <!-- ============================================================== -->
             @if (strpos(Route::currentRouteName(), 'analysisSeason.distribution-area-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.distributor-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.store-list') == true || strpos(Route::currentRouteName(), 'analysisSeason.analysis') == true)
                 @include('admin.includes.analysis_breadcrumb')
-            @elseif (strpos(Route::currentRouteName(), 'sellerAnalyses.distribution-area-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.beat-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.store-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.category-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.product-list') == true )
+            @elseif (strpos(Route::currentRouteName(), 'sellerAnalyses.distribution-area-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.beat-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.store-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.category-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.product-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.analysis') == true)
                 @include('admin.includes.seller_analysis_breadcrumb')
             @else
                 @include('admin.includes.breadcrumb')

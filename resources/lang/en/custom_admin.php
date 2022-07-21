@@ -599,6 +599,7 @@ return [
     'message_delete_related_distributor_or_store_records_exist'=> 'Related distributor or store exist, delete those first.',
     'message_inactive_related_store_records_exist'  => 'Related store exist, inactive those first.',
     'message_delete_related_store_records_exist'    => 'Related store exist, delete those first.',
+    'message_no_analysis_found'                     => 'No analysis record found.',
     
 /* Success */
     'success_data_added_successfully'               => 'Data has been added successfully.',

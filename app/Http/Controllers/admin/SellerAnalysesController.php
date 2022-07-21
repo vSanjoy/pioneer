@@ -613,6 +613,7 @@ class SellerAnalysesController extends Controller
             $data['beat']               = Beat::where(['id' => customEncryptionDecryption($beatId, 'decrypt')])->first();
             $data['store']              = Store::where(['id' => customEncryptionDecryption($storeId, 'decrypt')])->first();
             $data['category']           = Category::where(['id' => customEncryptionDecryption($categoryId, 'decrypt')])->first();
+            $data['product']            = Product::where(['id' => customEncryptionDecryption($productId, 'decrypt')])->first();
             
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
