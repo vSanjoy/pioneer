@@ -4,8 +4,6 @@
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb m-0 p-0">
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.dashboard') }}" class="">@lang('custom_admin.label_dashboard')</a></li>
-
                         {{-- Distribution area --}}
                         @if (isset($distributionAreaId) && !isset($beatId) && !isset($storeId) && !isset($categoryId) && !isset($productId))
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.sellerAnalyses.distribution-area-list') }}" class="">@lang('custom_admin.label_distribution_area_list')</a></li>

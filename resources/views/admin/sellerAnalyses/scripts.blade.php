@@ -56,9 +56,10 @@ function getDistributionAreaList() {
 				{data: 'id', name: 'id'},
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'title', name: 'title'},
+				{data: 'title_link', name: 'title_link'},
 				// {data: 'created_at', name: 'created_at', orderable: false, searchable: false},
 			@if ($isAllow || in_array('sellerAnalyses.beat-list', $allowedRoutes))
-				{data: 'action', name: 'action', orderable: false, searchable: false},
+				// {data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],
 			columnDefs: [
@@ -66,6 +67,11 @@ function getDistributionAreaList() {
 				targets: [ 0 ],
 				visible: false,
 				searchable: false,
+				},
+				{
+				targets: [ 2 ],
+				visible: false,
+				searchable: true,
 				},
 			],
 			order: [
@@ -125,9 +131,9 @@ function getBeatList() {
 				{data: 'id', name: 'id'},
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'title', name: 'title'},
-				// {data: 'created_at', name: 'created_at', orderable: false, searchable: false},
+				{data: 'title_link', name: 'title_link'},
 			@if ($isAllow || in_array('sellerAnalyses.store-list', $allowedRoutes))
-				{data: 'action', name: 'action', orderable: false, searchable: false},
+				// {data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],
 			columnDefs: [
@@ -135,6 +141,11 @@ function getBeatList() {
 				targets: [ 0 ],
 				visible: false,
 				searchable: false,
+				},
+				{
+				targets: [ 2 ],
+				visible: false,
+				searchable: true,
 				},
 			],
 			order: [
@@ -192,15 +203,12 @@ function getStoreList() {
 			columns: [
 				{data: 'id', name: 'id'},
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-				{data: 'name_1', name: 'name_1'},
-				{data: 'phone_no_1', name: 'phone_no_1'},
-				{data: 'beat_id', name: 'beat_id'},
-				// {data: 'distribution_area_id', name: 'distribution_area_id'},
-				{data: 'email', name: 'email'},
 				{data: 'store_name', name: 'store_name'},
-				{data: 'grade_id', name: 'grade_id'},
+				{data: 'store_name_link', name: 'store_name_link'},
+				{data: 'name_1', name: 'name_1'},
+				{data: 'sale_size_category', name: 'sale_size_category'},
 			@if ($isAllow || in_array('sellerAnalyses.category-list', $allowedRoutes))
-				{data: 'action', name: 'action', orderable: false, searchable: false},
+				// {data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],
 			columnDefs: [
@@ -209,11 +217,16 @@ function getStoreList() {
 				visible: false,
 				searchable: false,
 				},
+				{
+				targets: [ 2 ],
+				visible: false,
+				searchable: true,
+				},
 			],
 			order: [
 				[0, 'desc']
 			],
-			pageLength: 25,
+			pageLength: 50,
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
 			fnDrawCallback: function(settings) {
 				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
@@ -266,8 +279,9 @@ function getCategoryList() {
 				{data: 'id', name: 'id'},
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'title', name: 'title'},
+				{data: 'title_link', name: 'title_link'},
 			@if ($isAllow || in_array('sellerAnalyses.product-list', $allowedRoutes))
-				{data: 'action', name: 'action', orderable: false, searchable: false},
+				// {data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],
 			columnDefs: [
@@ -276,11 +290,16 @@ function getCategoryList() {
 				visible: false,
 				searchable: false,
 				},
+				{
+				targets: [ 2 ],
+				visible: false,
+				searchable: true,
+				},
 			],
 			order: [
 				[0, 'desc']
 			],
-			pageLength: 25,
+			pageLength: 50,
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
 			fnDrawCallback: function(settings) {
 				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
@@ -333,11 +352,10 @@ function getProductList() {
 				{data: 'id', name: 'id'},
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'title', name: 'title'},
-				{data: 'rate_per_pcs', name: 'rate_per_pcs', orderable: false, searchable: false},
-				{data: 'mrp', name: 'mrp', orderable: false, searchable: false},
-				{data: 'retailer_price', name: 'retailer_price', orderable: false, searchable: false},
+				{data: 'title_link', name: 'title_link'},
+				{data: 'grade_id', name: 'grade_id', orderable: false, searchable: false},
 			@if ($isAllow || in_array('sellerAnalyses.product-list', $allowedRoutes))
-				{data: 'action', name: 'action', orderable: false, searchable: false},
+				// {data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],
 			columnDefs: [
@@ -346,11 +364,16 @@ function getProductList() {
 				visible: false,
 				searchable: false,
 				},
+				{
+				targets: [ 2 ],
+				visible: false,
+				searchable: true,
+				},
 			],
 			order: [
 				[0, 'desc']
 			],
-			pageLength: 25,
+			pageLength: 50,
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
 			fnDrawCallback: function(settings) {
 				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {

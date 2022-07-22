@@ -16,6 +16,7 @@ return [
     'VALID_AMOUNT_REGEX'                => '/^[0-9]\d*(\.\d+)?$/',                  // Amount regex
     'VALID_AMOUNT_REGEX_EXCEPT_ZERO'    => '/^[1-9]\d*(\.\d+)?$/',                  // Amount regex
     'VALID_ALPHA_NUMERIC'               => '/^[a-zA-Z0-9]+$/',                      // Alpha numeric regex
+    'VALID_NUMERIC'                     => '/^[0-9]+$/',                            // Numeric regex
     'VALID_ALPHANUMERIC_WITHOUT_SPACE_SPECIAL_CHARACTERS'=> '/^[a-zA-Z0-9_]+$/',    // Alphanumeric without space special characters
     'MAX_UPLOAD_IMAGE_SIZE'             => '5242880',                               // 1048576 => 1 mb, maximum upload size, used in javascript
     'IMAGE_MAX_UPLOAD_SIZE'             => 5120,                                    // Image upload max size (5mb) used in php

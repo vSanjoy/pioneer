@@ -293,7 +293,7 @@ $getSiteSettings = getSiteSettings();
 
 			<!-- Seller Analysis Management Start -->
 			@php
-			$sellerAnalysesRoutes = ['sellerAnalyses.distribution-area-list','sellerAnalyses.beat-list','sellerAnalyses.store-list','sellerAnalyses.category-list','sellerAnalyses.product-list'];
+			$sellerAnalysesRoutes = ['sellerAnalyses.distribution-area-list','sellerAnalyses.beat-list','sellerAnalyses.store-list','sellerAnalyses.category-list','sellerAnalyses.product-list','sellerAnalyses.analysis'];
 			@endphp
 			@if ( ($isSuperAdmin) || in_array('sellerAnalyses.distribution-area-list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $sellerAnalysesRoutes))selected @endif">

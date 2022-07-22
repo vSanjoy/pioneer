@@ -1,48 +1,47 @@
 <?php
 /*
-    * Class name    : Product
+    * Class name    : Order
     * Purpose       : Table declaration
-    * Author        : 
-    * Created Date  : 
-    * Modified date : 
+    * Author        :
+    * Created Date  :
+    * Modified date :
 */
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
+class Order extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $guarded = ['id'];    // The field name inside the array is not mass-assignable
 
     /*
-        * Function name : categoryDetails
-        * Purpose       : To get category
+        * Function name : storeDetails
+        * Purpose       : To get store
         * Author        :
         * Created Date  :
         * Modified Date : 
         * Input Params  : 
         * Return Value  : 
     */
-	public function categoryDetails() {
-		return $this->belongsTo('App\Models\Category', 'category_id');
+	public function storeDetails() {
+		return $this->belongsTo('App\Models\Store', 'store_id');
 	}
 
     /*
-        * Function name : gradeDetails
-        * Purpose       : To get grade
+        * Function name : productDetails
+        * Purpose       : To get product
         * Author        :
         * Created Date  :
         * Modified Date : 
         * Input Params  : 
         * Return Value  : 
     */
-	public function gradeDetails() {
-		return $this->belongsTo('App\Models\Grade', 'grade_id');
+	public function productDetails() {
+		return $this->belongsTo('App\Models\Product', 'product_id');
 	}
-
+    
 }

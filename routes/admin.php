@@ -219,14 +219,17 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 // Analysis
                 Route::get('/analysis/{distributionAreaId}/{beatId}/{storeId}/{categoryId}/{productId}', 'SellerAnalysesController@analysisUpdate')->name('analysis');
                 Route::post('/analysis-update/{distributionAreaId}/{beatId}/{storeId}/{categoryId}/{productId}', 'SellerAnalysesController@analysisUpdate')->name('analysis-update');
-
             });
 
-            // Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
-            //     Route::get('/', 'OrdersController@list')->name('list');
-            //     Route::post('ajax-list-request', 'OrdersController@ajaxListRequest')->name('ajax-list-request');
-            //     Route::get('/view/{id}', 'OrdersController@view')->name('view');
-            // });
+            Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
+                Route::get('/', 'OrdersController@list')->name('list');
+                Route::post('ajax-list-request', 'OrdersController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/edit/{id}', 'OrdersController@edit')->name('edit');
+                Route::any('/edit-submit/{id}', 'OrdersController@edit')->name('edit-submit');
+                // Route::get('/status/{id}', 'OrdersController@status')->name('change-status');
+                Route::get('/delete/{id}', 'OrdersController@delete')->name('delete');
+                Route::post('/bulk-actions', 'OrdersController@bulkActions')->name('bulk-actions');
+            });
             
         });
 

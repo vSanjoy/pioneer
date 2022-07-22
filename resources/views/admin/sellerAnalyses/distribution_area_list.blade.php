@@ -14,8 +14,7 @@
 									<th class="zeroColumn table-th-display-none"></th>
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
 									<th>@lang('custom_admin.label_title')</th>
-									{{-- <th>@lang('custom_admin.label_date')</th> --}}
-									<th class="actions">@lang('custom_admin.label_action')</th>
+									<th>@lang('custom_admin.label_area_name')</th>
 								</tr>
 							</thead>							
 						</table>

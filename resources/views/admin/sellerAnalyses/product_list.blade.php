@@ -14,11 +14,9 @@
 								<tr>
 									<th class="zeroColumn table-th-display-none"></th>
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
+									<th>@lang('custom_admin.label_title')</th>
 									<th>@lang('custom_admin.label_product_name')</th>
-									<th>@lang('custom_admin.label_rate_per_pcs')</th>
-									<th>@lang('custom_admin.label_mrp')</th>
-									<th>@lang('custom_admin.label_retailer_price')</th>
-									<th class="actions">@lang('custom_admin.label_action')</th>
+									<th>@lang('custom_admin.label_grade_name')</th>
 								</tr>
 							</thead>							
 						</table>

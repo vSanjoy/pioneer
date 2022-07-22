@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2022 at 02:34 PM
+-- Generation Time: Jul 22, 2022 at 02:54 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -46,7 +46,7 @@ CREATE TABLE `up_analyses` (
 --
 
 INSERT INTO `up_analyses` (`id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `store_id`, `beat_id`, `analysis_date`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 3, 5, 4, 2, '2022-07-17 18:30:00', '1', '2022-07-20 02:33:28', '2022-07-20 02:33:28', NULL);
+(1, 1, 3, 5, 4, 2, '2022-07-17 18:30:00', '1', '2022-07-20 02:33:28', '2022-07-22 00:13:16', NULL);
 
 -- --------------------------------------------------------
 
@@ -71,7 +71,7 @@ CREATE TABLE `up_analyses_details` (
 --
 
 INSERT INTO `up_analyses_details` (`id`, `analyses_id`, `category_id`, `product_id`, `target_monthly_sales`, `type_of_analysis`, `action`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, '1000', 'Test 1', 'Test 2', '2022-07-20 08:03:28', NULL);
+(1, 1, 1, 1, '1000', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '2022-07-20 08:03:28', '2022-07-22 00:13:16');
 
 -- --------------------------------------------------------
 
@@ -318,7 +318,42 @@ INSERT INTO `up_migrations` (`id`, `migration`, `batch`) VALUES
 (17, '2022_06_24_100134_create_analyses_details_table', 10),
 (18, '2022_07_11_045625_create_beats_table', 11),
 (19, '2022_07_13_073334_create_grades_table', 12),
-(20, '2022_07_14_073113_create_user_distribution_areas_table', 13);
+(20, '2022_07_14_073113_create_user_distribution_areas_table', 13),
+(21, '2022_07_19_061036_create_orders_table', 14);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `up_orders`
+--
+
+CREATE TABLE `up_orders` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `seller_id` int(11) DEFAULT NULL COMMENT 'Id from users table',
+  `analysis_season_id` int(11) DEFAULT NULL COMMENT 'Id from analysis_seasons table',
+  `distribution_area_id` int(11) DEFAULT NULL COMMENT 'Id from distribution_areas table',
+  `distributor_id` int(11) DEFAULT NULL COMMENT 'Id from users table',
+  `beat_id` int(11) DEFAULT NULL COMMENT 'beat_id foreign key from stores table',
+  `store_id` int(11) DEFAULT NULL COMMENT 'Id from stores table',
+  `analysis_date` timestamp NULL DEFAULT NULL,
+  `analyses_id` int(11) DEFAULT NULL COMMENT 'Id from analyses table',
+  `category_id` int(11) DEFAULT NULL COMMENT 'Id from analyses_details table',
+  `product_id` int(11) DEFAULT NULL COMMENT 'Id from analyses_details table',
+  `qty` int(11) DEFAULT NULL,
+  `why` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `result` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `up_orders`
+--
+
+INSERT INTO `up_orders` (`id`, `seller_id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `beat_id`, `store_id`, `analysis_date`, `analyses_id`, `category_id`, `product_id`, `qty`, `why`, `result`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(2, 6, 1, 3, 5, 2, 4, '2022-07-17 18:30:00', 1, 1, 1, 2, 'Why 1', 'Result 1', '1', '2022-07-22 04:59:27', '2022-07-22 04:59:27', NULL);
 
 -- --------------------------------------------------------
 
@@ -348,7 +383,7 @@ CREATE TABLE `up_products` (
 --
 
 INSERT INTO `up_products` (`id`, `category_id`, `grade_id`, `title`, `slug`, `rate_per_pcs`, `mrp`, `retailer_price`, `pack_size`, `sort`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 3, 'Pioneer 100 Page A4', 'pioneer-100-page-a4', 27.00, 40.00, 30.00, NULL, 0, '1', '2022-05-17 04:24:55', '2022-07-13 06:11:21', NULL),
+(1, 1, 3, 'Pioneer 100 Page A4', 'pioneer-100-page-a4', 27.00, 40.00, 30.00, '6', 0, '1', '2022-05-17 04:24:55', '2022-07-22 00:14:58', NULL),
 (2, 1, 1, 'Pioneer 144 Page A4', 'pioneer-144-page-a4', 36.00, 58.00, 40.00, NULL, 1, '1', '2022-05-17 05:01:00', '2022-07-13 06:11:13', NULL),
 (3, 1, 2, 'Pioneer 200 Page A4', 'pioneer-200-page-a4', 45.00, 75.00, 50.00, NULL, 2, '1', '2022-05-17 05:01:13', '2022-07-13 06:10:48', NULL),
 (4, 2, NULL, 'G.B. 28 Page Drawing', 'gb-28-page-drawing', 8.00, NULL, 10.00, NULL, 3, '1', '2022-05-17 05:02:06', '2022-07-13 06:09:55', NULL),
@@ -453,7 +488,7 @@ CREATE TABLE `up_roles` (
 INSERT INTO `up_roles` (`id`, `name`, `slug`, `is_admin`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Super Admin', 'super-admin', '1', '1', '2022-05-06 07:39:45', '2022-06-24 08:27:38', NULL),
 (2, 'Distributor', 'distributor-1', '1', '1', '2022-05-25 23:52:00', '2022-07-13 23:54:08', NULL),
-(3, 'Seller', 'seller', '1', '1', '2022-07-13 23:51:50', '2022-07-15 01:31:49', NULL);
+(3, 'Seller', 'seller', '1', '1', '2022-07-13 23:51:50', '2022-07-22 04:59:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -537,7 +572,11 @@ INSERT INTO `up_role_pages` (`id`, `routeName`) VALUES
 (67, 'sellerAnalyses.beat-list'),
 (68, 'sellerAnalyses.store-list'),
 (69, 'sellerAnalyses.category-list'),
-(70, 'sellerAnalyses.product-list');
+(70, 'sellerAnalyses.product-list'),
+(71, 'sellerAnalyses.analysis'),
+(72, 'order.list'),
+(73, 'order.edit'),
+(74, 'order.delete');
 
 -- --------------------------------------------------------
 
@@ -565,7 +604,11 @@ INSERT INTO `up_role_permissions` (`role_id`, `page_id`) VALUES
 (3, 67),
 (3, 68),
 (3, 69),
-(3, 70);
+(3, 70),
+(3, 71),
+(3, 72),
+(3, 73),
+(3, 74);
 
 -- --------------------------------------------------------
 
@@ -679,11 +722,11 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1658315251, 'Y', '2022-05-06 07:39:45', '2022-07-20 05:37:31', NULL),
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1658482881, 'Y', '2022-05-06 07:39:45', '2022-07-22 04:11:21', NULL),
 (3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1655357183, 'N', '2022-05-09 06:16:32', '2022-06-15 23:56:23', NULL),
 (4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1653979441, 'N', '2022-05-26 05:32:09', '2022-06-28 04:21:35', NULL),
 (5, 'My Job Title', NULL, NULL, 'My', 'Job', 'My Job Title New', 'dev', 'dev@yopmail.com', 'Vishi Prem Workz', NULL, '$2y$10$Ks26Ofv37EMqNgZZ7lr61OCZfUqMxTe27S2SGgoovbEJ7pyZpW.3m', '', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-06-27 04:20:38', '2022-06-28 04:00:02', NULL),
-(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1658299363, 'N', '2022-07-14 00:43:42', '2022-07-20 01:12:43', NULL),
+(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1658477504, 'N', '2022-07-14 00:43:42', '2022-07-22 02:41:44', NULL),
 (7, NULL, NULL, NULL, 'Soubhik', 'Paul', 'Soubhik Paul', 'soubhikpaul', 'soubhikpaul@yopmail.com', NULL, NULL, '$2y$10$0PWEImztEZMoA0AvRgdV5untgyY.V4Qt7xoQ28FCwvcpPAWKGPdXq', 'seller_1657785389.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1657886407, 'N', '2022-07-14 02:26:29', '2022-07-15 06:30:07', NULL);
 
 -- --------------------------------------------------------
@@ -870,6 +913,12 @@ ALTER TABLE `up_migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `up_orders`
+--
+ALTER TABLE `up_orders`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `up_products`
 --
 ALTER TABLE `up_products`
@@ -979,7 +1028,13 @@ ALTER TABLE `up_grades`
 -- AUTO_INCREMENT for table `up_migrations`
 --
 ALTER TABLE `up_migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `up_orders`
+--
+ALTER TABLE `up_orders`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `up_products`
@@ -997,7 +1052,7 @@ ALTER TABLE `up_roles`
 -- AUTO_INCREMENT for table `up_role_pages`
 --
 ALTER TABLE `up_role_pages`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `up_seasons`

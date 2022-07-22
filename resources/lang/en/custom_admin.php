@@ -375,6 +375,16 @@ return [
     'label_retailer_price'                          => 'Retailer Price',
     'label_pack_size'                               => 'Pack Size',
     'label_menu_analysis'                           => 'Analysis',
+    'label_area_name'                               => 'Area Name',
+    'label_person_name'                             => 'Person Name',
+    'label_category_name'                           => 'Category Name',
+    'label_order_qty'                               => 'Order QTY',
+    'label_menu_order'                              => 'Order',
+    'label_order_management'                        => 'Order Management',
+    'label_order_list'                              => 'Order List',
+    'label_order'                                   => 'Order',
+    'label_add_order'                               => 'Add Order',
+    'label_edit_order'                              => 'Edit Order',
 
     
 /* Buttons */
@@ -539,6 +549,8 @@ return [
     'error_enter_email_or_username'                 => 'Please enter email or username.',
     'error_please_provide_credential'               => 'Please provide credentials (email or username).',
     'error_retailer_price'                          => 'Please enter retailer price.',
+    'error_enter_valid_number'                      => 'Please enter valid number.',
+    'error_qty'                                     => 'Please enter order quantity.',
     
 
 /* Messages */

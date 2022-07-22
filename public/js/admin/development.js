@@ -2062,7 +2062,7 @@ $(document).ready(function() {
     });
     // End :: Analysis Season Form //
 
-    // Start :: Analysis Form //
+    // Start :: Area Analysis Form //
     $("#updateAnalysisForm").validate({
         ignore: ":hidden",
         debug: false,
@@ -2102,7 +2102,63 @@ $(document).ready(function() {
             form.submit();
         }
     });
-    // End :: Analysis Form //
+    // End :: Area Analysis Form //
+
+    // Start :: Seller Analysis Form //
+    $("#updateSellerAnalysesForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            qty: {
+                required: true,
+                valid_positive_number: true
+            },
+            why: {
+                required: true
+            },
+            result: {
+                required: true
+            }
+        },
+        messages: {
+            qty: {
+                required: "Please enter order quantity.",
+                valid_positive_number:  "Please enter number.",
+            },
+            why: {
+                required: "Please enter why.",
+            },
+            result: {
+                required: "Please enter result.",
+            }
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Seller Analysis Form //
 
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //

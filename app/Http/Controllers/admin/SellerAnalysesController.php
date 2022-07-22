@@ -22,6 +22,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Beat;
 use App\Models\Analyses;
+use App\Models\Order;
 use DataTables;
 
 class SellerAnalysesController extends Controller
@@ -131,8 +132,10 @@ class SellerAnalysesController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
-                        ->addColumn('title', function ($row) {
-                            return $row->title;
+                        ->addColumn('title_link', function ($row) {
+                            $title = '<a href="'.route($this->routePrefix.'.sellerAnalyses.beat-list', [customEncryptionDecryption($row->id)]).'">'.$row->title.'</a>';
+
+                            return $title;
                         })
                         ->addColumn('created_at', function ($row) {
                             return date('d-m-Y', strtotime($row->created_at));
@@ -142,7 +145,7 @@ class SellerAnalysesController extends Controller
 
                             return $btn;
                         })
-                        ->rawColumns(['status','action'])
+                        ->rawColumns(['title_link'])
                         ->make(true);
             }
 
@@ -220,6 +223,11 @@ class SellerAnalysesController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes, $distributionAreaId)
                         ->addIndexColumn()
+                        ->addColumn('title_link', function ($row) use ($distributionAreaId) {
+                            $title = '<a href="'.route($this->routePrefix.'.sellerAnalyses.store-list', [$distributionAreaId, customEncryptionDecryption($row->id)]).'">'.$row->title.'</a>';
+
+                            return $title;
+                        })
                         ->addColumn('created_at', function ($row) {
                             return date('d-m-Y', strtotime($row->created_at));
                         })
@@ -228,7 +236,7 @@ class SellerAnalysesController extends Controller
 
                             return $btn;
                         })
-                        ->rawColumns(['status','action'])
+                        ->rawColumns(['title_link'])
                         ->make(true);
             }
 
@@ -311,6 +319,11 @@ class SellerAnalysesController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId)
                         ->addIndexColumn()
+                        ->addColumn('store_name_link', function ($row) use ($distributionAreaId, $beatId, $storeId) {
+                            $storeName = '<a href="'.route($this->routePrefix.'.sellerAnalyses.category-list', [$distributionAreaId, $beatId, customEncryptionDecryption($row->id)]).'">'.$row->store_name.'</a>';
+
+                            return $storeName;
+                        })
                         ->addColumn('beat_id', function ($row) {
                             if ($row->beatDetails !== NULL) {
                                 return $row->beatDetails->title;
@@ -341,6 +354,15 @@ class SellerAnalysesController extends Controller
                                 return 'N/A';
                             }
                         })
+                        ->addColumn('sale_size_category', function ($row) {
+                            if ($row->sale_size_category == 'M') {
+                                return 'Medium';
+                            } else if ($row->sale_size_category == 'L') {
+                                return 'Large';
+                            } else {
+                                return 'Small';
+                            }
+                        })
                         ->addColumn('created_at', function ($row) {
                             return date('d-m-Y', strtotime($row->created_at));
                         })
@@ -349,7 +371,7 @@ class SellerAnalysesController extends Controller
 
                             return $btn;
                         })
-                        ->rawColumns(['distribution_area_id','sale_size_category','action'])
+                        ->rawColumns(['store_name_link','distribution_area_id','sale_size_category','action'])
                         ->make(true);
             }
 
@@ -430,6 +452,11 @@ class SellerAnalysesController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId)
                         ->addIndexColumn()
+                        ->addColumn('title_link', function ($row) use ($distributionAreaId, $beatId, $storeId) {
+                            $title = '<a href="'.route($this->routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, customEncryptionDecryption($row->id)]).'">'.$row->title.'</a>';
+
+                            return $title;
+                        })
                         ->addColumn('created_at', function ($row) {
                             return date('d-m-Y', strtotime($row->created_at));
                         })
@@ -438,7 +465,7 @@ class SellerAnalysesController extends Controller
 
                             return $btn;
                         })
-                        ->rawColumns(['action'])
+                        ->rawColumns(['title_link','action'])
                         ->make(true);
             }
 
@@ -524,6 +551,11 @@ class SellerAnalysesController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId, $categoryId)
                         ->addIndexColumn()
+                        ->addColumn('title_link', function ($row) use ($distributionAreaId, $beatId, $storeId, $categoryId) {
+                            $title = '<a href="'.route($this->routePrefix.'.sellerAnalyses.analysis', [$distributionAreaId, $beatId, $storeId, $categoryId, customEncryptionDecryption($row->id)]).'" target="_blank">'.$row->title.'</a>';
+
+                            return $title;
+                        })
                         ->addColumn('category', function ($row) {
                             if ($row->categoryDetails !== NULL) {
                                 return $row->categoryDetails->title;
@@ -548,15 +580,22 @@ class SellerAnalysesController extends Controller
                                 return 'N/A';
                             }
                         })
+                        ->addColumn('grade_id', function ($row) {
+                            if ($row->gradeDetails !== NULL) {
+                                return $row->gradeDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
                         ->addColumn('created_at', function ($row) {
                             return date('d-m-Y', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId, $categoryId) {
-                            $btn = '<a href="'.route($this->routePrefix.'.sellerAnalyses.analysis', [$distributionAreaId, $beatId, $storeId, $categoryId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'"><i class="fas fa-chart-bar ml_minus_1" aria-hidden="true"></i>';
+                            $btn = '<a href="'.route($this->routePrefix.'.sellerAnalyses.analysis', [$distributionAreaId, $beatId, $storeId, $categoryId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'" target="_blank"><i class="fas fa-chart-bar ml_minus_1" aria-hidden="true"></i>';
 
                             return $btn;
                         })
-                        ->rawColumns(['action'])
+                        ->rawColumns(['title_link','action'])
                         ->make(true);
             }
 
@@ -585,7 +624,6 @@ class SellerAnalysesController extends Controller
         ];
 
         try {
-            // dd(customEncryptionDecryption($categoryId, 'decrypt'), customEncryptionDecryption($productId, 'decrypt'));
             $data['id']             = 0;
             $data['analysisValues'] = $analysisValues = [];
             $data['details']        = $details = Analyses::whereYear('analysis_date', Carbon::now()->format('Y'))
@@ -602,25 +640,35 @@ class SellerAnalysesController extends Controller
                                                             ]);
                                                         })
                                                         ->first();
-            // dd($details);
             $data['distributionAreaId'] = $distributionAreaId;
             $data['beatId']             = $beatId;
             $data['storeId']            = $storeId;
             $data['categoryId']         = $categoryId;
-            $data['productId']          = $productId;            
+            $data['productId']          = $productId;
             
-            $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
-            $data['beat']               = Beat::where(['id' => customEncryptionDecryption($beatId, 'decrypt')])->first();
-            $data['store']              = Store::where(['id' => customEncryptionDecryption($storeId, 'decrypt')])->first();
-            $data['category']           = Category::where(['id' => customEncryptionDecryption($categoryId, 'decrypt')])->first();
-            $data['product']            = Product::where(['id' => customEncryptionDecryption($productId, 'decrypt')])->first();
+            $decryptDistributionAreaId  = customEncryptionDecryption($distributionAreaId, 'decrypt');
+            $decryptBeatId              = customEncryptionDecryption($beatId, 'decrypt');
+            $decryptStoreId             = customEncryptionDecryption($storeId, 'decrypt');
+            $decryptCategoryId          = customEncryptionDecryption($categoryId, 'decrypt');
+            $decryptProductId           = customEncryptionDecryption($productId, 'decrypt');
+            
+            $data['distributionArea']   = DistributionArea::where(['id' => $decryptDistributionAreaId])->first();
+            $data['beat']               = Beat::where(['id' => $decryptBeatId])->first();
+            $data['store']              = Store::where(['id' => $decryptStoreId])->first();
+            $data['category']           = Category::where(['id' => $decryptCategoryId])->first();
+            $data['product']            = Product::where(['id' => $decryptProductId])->first();
             
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
-                    'analysis_date' => 'required',
+                    'qty'   => 'required|regex:'.config('global.VALID_NUMERIC'),
+                    'why'   => 'required',
+                    'result'=> 'required',
                 );
                 $validationMessages = array(
-                    'analysis_date.required'    => trans('custom_admin.error_analysis_date'),
+                    'qty.required'      => trans('custom_admin.error_qty'),
+                    'qty.regex'         => trans('custom_admin.error_enter_valid_number'),
+                    'why.required'      => trans('custom_admin.error_why'),
+                    'result.required'   => trans('custom_admin.error_result')
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -628,92 +676,31 @@ class SellerAnalysesController extends Controller
                     $this->generateToastMessage('error', $validationFailedMessages, false);
                     return redirect()->back()->withInput();
                 } else {
-                    if ($details == null) { // Insert first time
-                        $saveData                           = [];
-                        $saveData['analysis_season_id']     = $decryptAnalysisSeasonId;
-                        $saveData['distribution_area_id']   = $decryptDistributionAreaId;
-                        $saveData['distributor_id']         = $decryptDistributorId;
-                        $saveData['store_id']               = $decryptStoreId;
-                        $saveData['analysis_date']          = date('Y-m-d', strtotime($request->analysis_date)) ?? null;
-                        $save = Analyses::create($saveData);
+                    $saveData                           = [];
+                    $saveData['seller_id']              = Auth::guard('admin')->user()->id ?? null;
+                    $saveData['analysis_season_id']     = $details->analysis_season_id ?? null;
+                    $saveData['distribution_area_id']   = $decryptDistributionAreaId;
+                    $saveData['distributor_id']         = $details->distributor_id ?? null;
+                    $saveData['beat_id']                = $decryptBeatId;
+                    $saveData['store_id']               = $decryptStoreId;
+                    $saveData['analysis_date']          = $details->analysis_date ?? null;
+                    $saveData['analyses_id']            = $details->id ?? null;
+                    $saveData['category_id']            = $decryptCategoryId ?? null;
+                    $saveData['product_id']             = $decryptProductId ?? null;
+                    $saveData['qty']                    = $request->qty ?? null;
+                    $saveData['why']                    = $request->why ?? null;
+                    $saveData['result']                 = $request->result ?? null;
+                    $save = Order::create($saveData);
 
-                        if ($save) {
-                            $i = 0; $analysesArray = [];
-                            if (isset($request->analyses) && count($request->analyses)) {
-                                foreach ($request->analyses as $itemAnalyses) {
-                                    if (isset($itemAnalyses['products']) && count($itemAnalyses['products'])) {
-                                        foreach ($itemAnalyses['products'] as $item) {
-                                            if ($item['target_monthly_sales'] != null || $item['type_of_analysis'] != null || $item['action'] != null) {
-                                                $analysesArray[$i]['analyses_id']            = $save->id;
-                                                $analysesArray[$i]['category_id']            = $item['category_id'];
-                                                $analysesArray[$i]['product_id']             = $item['id'];
-                                                $analysesArray[$i]['target_monthly_sales']   = $item['target_monthly_sales'];
-                                                $analysesArray[$i]['type_of_analysis']       = $item['type_of_analysis'];
-                                                $analysesArray[$i]['action']                 = $item['action'];
-
-                                                $i++;
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                if (count($analysesArray)) {
-                                    AnalysesDetail::insert($analysesArray);
-                                }
-                            }
-
-                            $this->generateToastMessage('success', trans('custom_admin.success_data_added_successfully'), false);
-                            return redirect()->route($this->routePrefix.'.analysisSeason.analysis', [$analysisSeasonId, $distributionAreaId, $distributorId, $storeId]);
-                        } else {
-                            $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_adding'), false);
-                            return redirect()->back()->withInput();
-                        }
-                    } else {                // Update
-                        $details->analysis_date = date('Y-m-d', strtotime($request->analysis_date)) ?? null;
-                        $update = $details->update();
-                        if ($update) {
-                            $i = 0; $analysesArray = [];
-                            if (isset($request->analyses) && count($request->analyses)) {
-                                foreach ($request->analyses as $itemAnalyses) {
-                                    if (isset($itemAnalyses['products']) && count($itemAnalyses['products'])) {
-                                        foreach ($itemAnalyses['products'] as $item) {
-                                            if (($item['target_monthly_sales'] != null || $item['type_of_analysis'] != null || $item['action'] != null) && $item['analyses_details_id'] == null) {
-                                                $analysesArray[$i]['analyses_id']            = $details->id;
-                                                $analysesArray[$i]['category_id']            = $item['category_id'];
-                                                $analysesArray[$i]['product_id']             = $item['id'];
-                                                $analysesArray[$i]['target_monthly_sales']   = $item['target_monthly_sales'];
-                                                $analysesArray[$i]['type_of_analysis']       = $item['type_of_analysis'];
-                                                $analysesArray[$i]['action']                 = $item['action'];
-
-                                                $i++;
-                                            } else if ($item['analyses_details_id'] != null) {
-                                                AnalysesDetail::where([
-                                                                    'id'                    => $item['analyses_details_id'],
-                                                                    'analyses_id'           => $details->id,
-                                                                    'category_id'           => $item['category_id'],
-                                                                    'product_id'            => $item['id'],
-                                                                ])->update([
-                                                                    'target_monthly_sales'  => $item['target_monthly_sales'],
-                                                                    'type_of_analysis'      => $item['type_of_analysis'],
-                                                                    'action'                => $item['action']
-                                                                ]);
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                if (count($analysesArray)) {
-                                    AnalysesDetail::insert($analysesArray);
-                                }
-                            }
-
-                            $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
-                            return redirect()->route($this->routePrefix.'.analysisSeason.analysis', [$analysisSeasonId, $distributionAreaId, $distributorId, $storeId]);
-                        } else {
-                            $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
-                            return redirect()->back()->withInput();
-                        }
+                    if ($save) {
+                        $this->generateToastMessage('success', trans('custom_admin.success_data_added_successfully'), false);
+                        $this->windowCloseOnSuccess();
+                        // return redirect()->route($this->routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId]);
+                    } else {
+                        $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_adding'), false);
+                        return redirect()->back()->withInput();
                     }
+                    
                 }
             }
 

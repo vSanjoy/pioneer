@@ -100,7 +100,7 @@
 											{{ Form::textarea('analyses['.$categoryId.'][products]['.$productId.'][type_of_analysis]', $analysisValues[$categoryId][$productId]['type_of_analysis'] ?? null, [
 																	'class' => 'form-control',
 																	'placeholder' => trans('custom_admin.label_type_of_analysis'),
-																	'rows' => 2 ]) }}
+																	'rows' => 3 ]) }}
 										</div>
 									</div>
 									<div class="col-md-5">
@@ -108,7 +108,7 @@
 											{{ Form::textarea('analyses['.$categoryId.'][products]['.$productId.'][action]', $analysisValues[$categoryId][$productId]['action'] ?? null, [
 																	'class' => 'form-control',
 																	'placeholder' => trans('custom_admin.label_analysis_action'),
-																	'rows' => 2 ]) }}
+																	'rows' => 3 ]) }}
 										</div>
 									</div>
 								</div>
