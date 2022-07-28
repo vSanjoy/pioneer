@@ -385,6 +385,7 @@ return [
     'label_order'                                   => 'Order',
     'label_add_order'                               => 'Add Order',
     'label_edit_order'                              => 'Edit Order',
+    'label_view_order'                              => 'View Order',
 
     
 /* Buttons */
@@ -403,9 +404,10 @@ return [
     'btn_search'                                    => 'Search',
     'btn_searching'                                 => 'Searching',
     'btn_reset'                                     => 'Reset',
-    'btn_resetting'                                  => 'Resetting',
+    'btn_resetting'                                 => 'Resetting',
     'btn_reload_gallery'                            => 'Reload Gallery',
     'btn_reloading_gallery'                         => 'Reloading Gallery',
+    'btn_close'                                     => 'Close',
     
 /* Errors */
     'error_enter_email'                             => 'Please enter email.',

@@ -365,7 +365,10 @@ class AnalysisSeasonsController extends Controller
                             return date('d-m-Y', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $analysisSeasonId) {
-                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.distributor-list', [$analysisSeasonId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_distributor').'"><i class="fa fa-user ml_minus_1"></i></a>';
+                            $btn = '';
+                            if ($isAllow || in_array('analysisSeason.distributor-list', $allowedRoutes)) {
+                                $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.distributor-list', [$analysisSeasonId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_distributor').'"><i class="fa fa-user ml_minus_1"></i></a>';
+                            }
 
                             return $btn;
                         })
@@ -463,7 +466,10 @@ class AnalysisSeasonsController extends Controller
                             return date('d-m-Y', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $analysisSeasonId, $distributionAreaId) {
-                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_store').'"><i class="fa fa-university ml_minus_1" aria-hidden="true"></i></a>';
+                            $btn = '';
+                            if ($isAllow || in_array('analysisSeason.store-list', $allowedRoutes)) {
+                                $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.store-list', [$analysisSeasonId, $distributionAreaId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_store').'"><i class="fa fa-university ml_minus_1" aria-hidden="true"></i></a>';
+                            }
 
                             return $btn;
                         })
@@ -612,7 +618,10 @@ class AnalysisSeasonsController extends Controller
                             return $storeProgressStatuses;
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $analysisSeasonId, $distributionAreaId, $distributorId) {
-                            $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.analysis', [$analysisSeasonId, $distributionAreaId, $distributorId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'" target="_blank"><i class="fas fa-chart-bar ml_minus_1" aria-hidden="true"></i>';
+                            $btn = '';
+                            if ($isAllow || in_array('analysisSeason.analysis', $allowedRoutes)) {
+                                $btn = '<a href="'.route($this->routePrefix.'.analysisSeason.analysis', [$analysisSeasonId, $distributionAreaId, $distributorId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_analysis').'" target="_blank"><i class="fas fa-chart-bar ml_minus_1" aria-hidden="true"></i>';
+                            }
 
                             return $btn;
                         })

@@ -49,15 +49,14 @@
 	<!-- ============================================================== -->
 	<!-- ============================================================== -->
 
-	@if(Auth::guard('admin')->user()->type == 'D' || Auth::guard('admin')->user()->type == 'S')
+	@if(Auth::guard('admin')->user()->type == 'S')
 	<!-- ============================================================== -->
 	<!-- Start Second Cards -->
 	<!-- ============================================================== -->
 	<div class="card-group">
 		<div class="card border-right mr-3">
 			<div class="card-body">
-				<div class="row">
-					@if(Auth::guard('admin')->user()->type == 'S')
+				<div class="row justify-content-center">
 					<!-- Column -->
 					<div class="col-md-6 col-lg-6 col-xlg-3">
 						<div class="card card-hover">
@@ -68,23 +67,26 @@
 									</a>
 								</h2>
 								<h2 class="font-light text-white">
-									<a href="{{ route('admin.sellerAnalyses.distribution-area-list') }}" class="text-white">Analysis</a>
+									<a href="{{ route('admin.sellerAnalyses.distribution-area-list') }}" class="text-white">
+										@lang('custom_admin.label_analysis')
+									</a>
 								</h2>
 							</div>
 						</div>
 					</div>
-					@endif
 					<!-- Column -->
 					<div class="col-md-6 col-lg-6 col-xlg-3">
 						<div class="card card-hover">
 							<div class="p-2 bg-success text-center">
 								<h2 class="font-light text-white">
-									<a href="" class="text-white">
+									<a href="{{ route('admin.order.list') }}" class="text-white">
 										<i data-feather="shopping-bag" class="feather-icon"></i>
 									</a>
 								</h2>
 								<h2 class="font-light text-white">
-									<a href="" class="text-white">Order</a>
+									<a href="{{ route('admin.order.list') }}" class="text-white">
+										@lang('custom_admin.label_order')
+									</a>
 								</h2>
 							</div>
 						</div>
@@ -99,87 +101,58 @@
 	<!-- ============================================================== -->
 	<!-- ============================================================== -->
 	@endif
-	
+
+	@if(Auth::guard('admin')->user()->type == 'D')
 	<!-- ============================================================== -->
-	<!-- Start Sales Charts Section -->
+	<!-- Start Second Cards -->
 	<!-- ============================================================== -->
-	{{-- <div class="row d-flex justify-container-center">
-		<div class="col-lg-12">
-			<div class="card">
-				<div class="card-body">
-					<h3 class="card-title mb-4">@lang('custom_admin.label_contacts_for_this_year')</h3>
-					<canvas id="myChart" height="100"></canvas>
+	<div class="card-group">
+		<div class="card border-right mr-3">
+			<div class="card-body">
+				<div class="row justify-content-center">
+					<!-- Column -->
+					<div class="col-md-6 col-lg-6 col-xlg-3">
+						<div class="card card-hover">
+							<div class="p-2 bg-primary text-center">
+								<h2 class="font-light text-white">
+									<a href="{{ route('admin.analysisSeason.list') }}" class="text-white">
+										<i data-feather="life-buoy" class="feather-icon"></i>
+									</a>
+								</h2>
+								<h2 class="font-light text-white">
+									<a href="{{ route('admin.analysisSeason.list') }}" class="text-white">
+										@lang('custom_admin.label_analysis_season')
+									</a>
+								</h2>
+							</div>
+						</div>
+					</div>
+					<!-- Column -->
+					<div class="col-md-6 col-lg-6 col-xlg-3">
+						<div class="card card-hover">
+							<div class="p-2 bg-success text-center">
+								<h2 class="font-light text-white">
+									<a href="{{ route('admin.order.list') }}" class="text-white">
+										<i data-feather="shopping-bag" class="feather-icon"></i>
+									</a>
+								</h2>
+								<h2 class="font-light text-white">
+									<a href="{{ route('admin.order.list') }}" class="text-white">
+										@lang('custom_admin.label_order')
+									</a>
+								</h2>
+							</div>
+						</div>
+					</div>
+					<!-- Column -->
 				</div>
 			</div>
 		</div>
-	</div> --}}
+	</div>
 	<!-- ============================================================== -->
-	<!-- End Sales Charts Section -->
+	<!-- End Second Cards -->
 	<!-- ============================================================== -->
+	<!-- ============================================================== -->
+	@endif
 
 @endsection
-
-{{-- @php
-$contactMonths = '';
-foreach ($months as $month) {
-	if (array_key_exists($month, $contactGraph)) {
-		$contactMonths .= $contactGraph[$month].',';
-	} else {
-		$contactMonths .= '0,';
-	}
-}
-@endphp
-
-@push('scripts')
-<script>
-	var ctx = document.getElementById('myChart');
-	var myChart = new Chart(ctx, {
-		type: 'bar',
-		data: {
-			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-			datasets: [{
-				label: '{!! $totalContact !!} of Contacts',
-				data: [
-					{!! $contactMonths !!}
-					],
-				backgroundColor: [
-					'rgba(255, 99, 132, 0.5)',
-					'rgba(54, 162, 235, 0.5)',
-					'rgba(255, 206, 86, 0.5)',
-					'rgba(75, 192, 192, 0.5)',
-					'rgba(153, 102, 255, 0.5)',
-					'rgba(255, 159, 64, 0.5)',
-					'rgba(71, 204, 129, 0.5)',
-					'rgba(199, 199, 52, 0.5)',
-					'rgba(217, 67, 26, 0.5)',
-					'rgba(75, 192, 192, 0.5)',
-					'rgba(230, 11, 121, 0.5)',
-					'rgba(10, 245, 194, 0.5)',
-				],
-				borderColor: [
-					'rgba(255, 99, 132, 1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)',
-					'rgba(71, 204, 129, 1)',
-					'rgba(199, 199, 52, 1)',
-					'rgba(217, 67, 26, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(230, 11, 121, 1)',
-					'rgba(10, 245, 194, 1)',
-				],
-				borderWidth: 1
-			}]
-		},
-		options: {
-			scales: {
-				y: {
-					beginAtZero: true
-				}
-			}
-		}
-	});
-	</script>
-@endpush --}}

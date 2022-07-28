@@ -21,7 +21,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="text-dark font-bold"><strong>@lang('custom_admin.label_product_name')</strong></label>
+								<label class="text-dark font-bold"><strong>@lang('custom_admin.label_product_name')</strong>:</label>
 							</div>
 						</div>
 						<div class="col-md-9">
@@ -33,7 +33,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="text-dark font-bold">@lang('custom_admin.label_target_monthly_sales') (@lang('custom_admin.label_rs'))</label>
+								<label class="text-dark font-bold">@lang('custom_admin.label_target_monthly_sales') (@lang('custom_admin.label_rs')):</label>
 							</div>
 						</div>
 						<div class="col-md-9">
@@ -45,7 +45,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="text-dark font-bold">@lang('custom_admin.label_type_of_analysis')</label>
+								<label class="text-dark font-bold">@lang('custom_admin.label_type_of_analysis'):</label>
 							</div>
 						</div>
 						<div class="col-md-9">
@@ -57,7 +57,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="text-dark font-bold">@lang('custom_admin.label_analysis_action')</label>
+								<label class="text-dark font-bold">@lang('custom_admin.label_analysis_action'):</label>
 							</div>
 						</div>
 						<div class="col-md-9">
@@ -69,7 +69,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="text-dark font-bold">@lang('custom_admin.label_pack_size')</label>
+								<label class="text-dark font-bold">@lang('custom_admin.label_pack_size'):</label>
 							</div>
 						</div>
 						<div class="col-md-9">
@@ -81,7 +81,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="text-dark font-bold">@lang('custom_admin.label_retailer_price')</label>
+								<label class="text-dark font-bold">@lang('custom_admin.label_retailer_price'):</label>
 							</div>
 						</div>
 						<div class="col-md-9">
@@ -93,7 +93,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="text-dark font-bold">@lang('custom_admin.label_mrp')</label>
+								<label class="text-dark font-bold">@lang('custom_admin.label_mrp'):</label>
 							</div>
 						</div>
 						<div class="col-md-9">
@@ -159,8 +159,11 @@
 						</div>
 						<div class="form-actions mt-4">
 							<div class="float-left">
-								<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="{{ route($routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId]) }}">
+								{{-- <a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="{{ route($routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId]) }}">
 									<i class="far fa-arrow-alt-circle-left"></i> @lang('custom_admin.btn_cancel')
+								</a> --}}
+								<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3 mb-hide" href="javascript: void(0);" onclick="window.close();">
+									<i class="far fa-times-circle"></i> @lang('custom_admin.btn_close')
 								</a>
 							</div>
 							<div class="float-right">
@@ -186,10 +189,10 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-actions mt-4">
+					<div class="form-actions mt-4 mb-hide">
 						<div class="float-left">
-							<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="{{ route($routePrefix.'.sellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId]) }}">
-								<i class="far fa-arrow-alt-circle-left"></i> @lang('custom_admin.btn_back')
+							<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="javascript: void(0);" onclick="window.close();">
+								<i class="far fa-times-circle"></i> @lang('custom_admin.btn_close')
 							</a>
 						</div>
 					</div>

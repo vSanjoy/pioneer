@@ -145,7 +145,7 @@ function getDistributionAreaList() {
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'title', name: 'title'},
 				// {data: 'created_at', name: 'created_at', orderable: false, searchable: false},
-			@if ($isAllow || in_array($viewUrl, $allowedRoutes))
+			@if ($isAllow || in_array('analysisSeason.distributor-list', $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],
@@ -219,7 +219,7 @@ function getDistributorList() {
 				// {data: 'email', name: 'email'},
 				{data: 'distribution_area_id', name: 'distribution_area_id'},
 				// {data: 'created_at', name: 'created_at', orderable: false, searchable: false},
-			@if ($isAllow || in_array($viewUrl, $allowedRoutes))
+			@if ($isAllow || in_array('analysisSeason.store-list', $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],
@@ -293,7 +293,7 @@ function getStoreList() {
 				{data: 'store_name', name: 'store_name'},
 				{data: 'grade_id', name: 'grade_id'},
 				{data: 'progress_status', name: 'progress_status', orderable: false, searchable: false},
-			@if ($isAllow || in_array($viewUrl, $allowedRoutes))
+			@if ($isAllow || in_array('analysisSeason.analysis', $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif
 			],

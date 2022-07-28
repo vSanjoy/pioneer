@@ -35,7 +35,7 @@ function getList() {
 	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
 			destroy: true,
 			autoWidth: false,
-	        responsive: true,
+	        responsive: false,
 			processing: true,
 			language: {
 				processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
@@ -76,6 +76,9 @@ function getList() {
 				{data: 'id', name: 'id'},
 	            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'created_at', name: 'created_at', orderable: false, searchable: false},
+				@if (\Auth::guard('admin')->user()->type != 'S')
+				{data: 'seller_id', name: 'seller_id'},
+				@endif
 				{data: 'store_id', name: 'store_id'},
 				{data: 'product_id', name: 'product_id'},
 				{data: 'qty', name: 'qty'},

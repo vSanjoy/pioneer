@@ -421,7 +421,7 @@ class StoresController extends Controller
                     $updateData['zip']                  = $request->zip ?? null;
                     $updateData['beat_id']              = $request->beat_id ?? null;
                     $updateData['grade_id']             = $request->grade_id ?? null;
-                    $updateData['beat_name']            = $request->beat_name ?? null;
+                    // $updateData['beat_name']            = $request->beat_name ?? null;
                     $updateData['email']                = $request->email ?? null;
                     $updateData['sale_size_category']   = $request->sale_size_category ?? 'S';
                     $updateData['integrity']            = $request->integrity ?? 'A+';

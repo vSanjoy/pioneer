@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2022 at 02:54 PM
+-- Generation Time: Jul 28, 2022 at 11:32 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -46,7 +46,8 @@ CREATE TABLE `up_analyses` (
 --
 
 INSERT INTO `up_analyses` (`id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `store_id`, `beat_id`, `analysis_date`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 3, 5, 4, 2, '2022-07-17 18:30:00', '1', '2022-07-20 02:33:28', '2022-07-22 00:13:16', NULL);
+(1, 1, 3, 5, 4, 2, '2022-07-17 18:30:00', '1', '2022-07-20 02:33:28', '2022-07-22 00:13:16', NULL),
+(2, 1, 1, 3, 3, 2, '2022-07-24 18:30:00', '1', '2022-07-26 00:30:00', '2022-07-26 00:30:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -71,7 +72,8 @@ CREATE TABLE `up_analyses_details` (
 --
 
 INSERT INTO `up_analyses_details` (`id`, `analyses_id`, `category_id`, `product_id`, `target_monthly_sales`, `type_of_analysis`, `action`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, '1000', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '2022-07-20 08:03:28', '2022-07-22 00:13:16');
+(1, 1, 1, 1, '1000', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '2022-07-20 08:03:28', '2022-07-22 00:13:16'),
+(2, 2, 1, 1, '5000', 'This is analysis', 'This is action', '2022-07-26 06:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -127,13 +129,6 @@ CREATE TABLE `up_area_analyses` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `up_area_analyses`
---
-
-INSERT INTO `up_area_analyses` (`id`, `season_id`, `year`, `analysis_date`, `distribution_area_id`, `distributor_id`, `store_id`, `category_id`, `product_id`, `target_monthly_sales`, `type_of_analysis`, `action`, `result`, `why`, `comment`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(4, 3, 2022, '2022-05-24 18:30:00', 1, 3, 1, 5, 21, '1200', 'Test Type of Analysis', 'Test Analysis Action', 'Test Result', 'Test Why', 'Test Comment', '1', '2022-05-25 07:09:15', '2022-06-17 07:03:22', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -153,14 +148,6 @@ CREATE TABLE `up_area_analysis_details` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `up_area_analysis_details`
---
-
-INSERT INTO `up_area_analysis_details` (`id`, `area_analysis_id`, `distributor_id`, `result`, `why`, `commented_by`, `is_viewed`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 4, 3, 'Test result', 'Test Why', 'D', 'N', '1', '2022-05-27 06:46:10', '2022-05-27 06:46:10', NULL),
-(2, 4, 3, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'D', 'N', '1', '2022-06-15 23:45:23', '2022-06-15 23:45:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -353,7 +340,8 @@ CREATE TABLE `up_orders` (
 --
 
 INSERT INTO `up_orders` (`id`, `seller_id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `beat_id`, `store_id`, `analysis_date`, `analyses_id`, `category_id`, `product_id`, `qty`, `why`, `result`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(2, 6, 1, 3, 5, 2, 4, '2022-07-17 18:30:00', 1, 1, 1, 2, 'Why 1', 'Result 1', '1', '2022-07-22 04:59:27', '2022-07-22 04:59:27', NULL);
+(2, 6, 1, 3, 5, 2, 4, '2022-07-17 18:30:00', 1, 1, 1, 4, 'Test Why', 'Test Result', '1', '2022-07-22 04:59:27', '2022-07-25 01:36:16', NULL),
+(3, 6, 1, 1, 3, 2, 3, '2022-07-24 18:30:00', 2, 1, 1, 5, 'This is why', 'This is result', '1', '2022-07-26 00:31:21', '2022-07-26 00:31:21', NULL);
 
 -- --------------------------------------------------------
 
@@ -487,7 +475,7 @@ CREATE TABLE `up_roles` (
 
 INSERT INTO `up_roles` (`id`, `name`, `slug`, `is_admin`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Super Admin', 'super-admin', '1', '1', '2022-05-06 07:39:45', '2022-06-24 08:27:38', NULL),
-(2, 'Distributor', 'distributor-1', '1', '1', '2022-05-25 23:52:00', '2022-07-13 23:54:08', NULL),
+(2, 'Distributor', 'distributor', '1', '1', '2022-05-25 23:52:00', '2022-07-25 23:46:29', NULL),
 (3, 'Seller', 'seller', '1', '1', '2022-07-13 23:51:50', '2022-07-22 04:59:05', NULL);
 
 -- --------------------------------------------------------
@@ -576,7 +564,8 @@ INSERT INTO `up_role_pages` (`id`, `routeName`) VALUES
 (71, 'sellerAnalyses.analysis'),
 (72, 'order.list'),
 (73, 'order.edit'),
-(74, 'order.delete');
+(74, 'order.delete'),
+(75, 'order.view');
 
 -- --------------------------------------------------------
 
@@ -594,12 +583,6 @@ CREATE TABLE `up_role_permissions` (
 --
 
 INSERT INTO `up_role_permissions` (`role_id`, `page_id`) VALUES
-(2, 37),
-(2, 38),
-(2, 39),
-(2, 40),
-(2, 63),
-(2, 64),
 (3, 66),
 (3, 67),
 (3, 68),
@@ -608,7 +591,19 @@ INSERT INTO `up_role_permissions` (`role_id`, `page_id`) VALUES
 (3, 71),
 (3, 72),
 (3, 73),
-(3, 74);
+(3, 74),
+(2, 55),
+(2, 56),
+(2, 57),
+(2, 58),
+(2, 59),
+(2, 60),
+(2, 61),
+(2, 62),
+(2, 72),
+(2, 73),
+(2, 75),
+(2, 74);
 
 -- --------------------------------------------------------
 
@@ -722,11 +717,11 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1658482881, 'Y', '2022-05-06 07:39:45', '2022-07-22 04:11:21', NULL),
-(3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1655357183, 'N', '2022-05-09 06:16:32', '2022-06-15 23:56:23', NULL),
-(4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1653979441, 'N', '2022-05-26 05:32:09', '2022-06-28 04:21:35', NULL),
-(5, 'My Job Title', NULL, NULL, 'My', 'Job', 'My Job Title New', 'dev', 'dev@yopmail.com', 'Vishi Prem Workz', NULL, '$2y$10$Ks26Ofv37EMqNgZZ7lr61OCZfUqMxTe27S2SGgoovbEJ7pyZpW.3m', '', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-06-27 04:20:38', '2022-06-28 04:00:02', NULL),
-(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1658477504, 'N', '2022-07-14 00:43:42', '2022-07-22 02:41:44', NULL),
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1658999807, 'Y', '2022-05-06 07:39:45', '2022-07-28 03:46:47', NULL),
+(3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1658815921, 'N', '2022-05-09 06:16:32', '2022-07-26 00:42:01', NULL),
+(4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1658818985, 'N', '2022-05-26 05:32:09', '2022-07-26 01:33:05', NULL),
+(5, 'My Job Title', NULL, NULL, 'My', 'Job', 'My Job Title New', 'dev', 'dev@yopmail.com', 'Vishi Prem Workz', NULL, '$2y$10$Ks26Ofv37EMqNgZZ7lr61OCZfUqMxTe27S2SGgoovbEJ7pyZpW.3m', '', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1658815879, 'N', '2022-06-27 04:20:38', '2022-07-26 00:41:19', NULL),
+(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1658990178, 'N', '2022-07-14 00:43:42', '2022-07-28 01:06:18', NULL),
 (7, NULL, NULL, NULL, 'Soubhik', 'Paul', 'Soubhik Paul', 'soubhikpaul', 'soubhikpaul@yopmail.com', NULL, NULL, '$2y$10$0PWEImztEZMoA0AvRgdV5untgyY.V4Qt7xoQ28FCwvcpPAWKGPdXq', 'seller_1657785389.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1657886407, 'N', '2022-07-14 02:26:29', '2022-07-15 06:30:07', NULL);
 
 -- --------------------------------------------------------
@@ -778,6 +773,7 @@ CREATE TABLE `up_user_distribution_areas` (
 
 INSERT INTO `up_user_distribution_areas` (`user_id`, `distribution_area_id`) VALUES
 (7, 3),
+(6, 1),
 (6, 3);
 
 -- --------------------------------------------------------
@@ -974,13 +970,13 @@ ALTER TABLE `up_website_settings`
 -- AUTO_INCREMENT for table `up_analyses`
 --
 ALTER TABLE `up_analyses`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `up_analyses_details`
 --
 ALTER TABLE `up_analyses_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `up_analysis_seasons`
@@ -992,13 +988,13 @@ ALTER TABLE `up_analysis_seasons`
 -- AUTO_INCREMENT for table `up_area_analyses`
 --
 ALTER TABLE `up_area_analyses`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `up_area_analysis_details`
 --
 ALTER TABLE `up_area_analysis_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `up_beats`
@@ -1034,7 +1030,7 @@ ALTER TABLE `up_migrations`
 -- AUTO_INCREMENT for table `up_orders`
 --
 ALTER TABLE `up_orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `up_products`
@@ -1052,7 +1048,7 @@ ALTER TABLE `up_roles`
 -- AUTO_INCREMENT for table `up_role_pages`
 --
 ALTER TABLE `up_role_pages`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `up_seasons`

@@ -119,7 +119,7 @@ class SellerAnalysesController extends Controller
                     }
                 }
 
-                $data = DistributionArea::whereIn('id', $distributionAreaIds)->whereNull('deleted_at');
+                $data = DistributionArea::whereIn('id', $distributionAreaIds)->whereNull('deleted_at')->orderBy('title', 'ASC');
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -210,7 +210,7 @@ class SellerAnalysesController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = Beat::where(['status' => '1'])->whereNull('deleted_at');
+                $data = Beat::where(['status' => '1'])->whereNull('deleted_at')->orderBy('title', 'ASC');
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -306,7 +306,9 @@ class SellerAnalysesController extends Controller
                                 'distribution_area_id' => customEncryptionDecryption($distributionAreaId, 'decrypt'),
                                 'beat_id' => customEncryptionDecryption($beatId, 'decrypt'),
                                 'status' => '1'
-                                ])->whereNull('deleted_at');
+                                ])
+                                ->whereNull('deleted_at')
+                                ->orderBy('store_name', 'ASC');
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -439,7 +441,7 @@ class SellerAnalysesController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = Category::where(['status' => '1'])->whereNull('deleted_at');
+                $data = Category::where(['status' => '1'])->whereNull('deleted_at')->orderBy('title', 'ASC');
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -538,7 +540,9 @@ class SellerAnalysesController extends Controller
                 $data = Product::where([
                                     'category_id' => customEncryptionDecryption($categoryId, 'decrypt'),
                                     'status' => '1'
-                                    ])->whereNull('deleted_at');
+                                    ])
+                                    ->whereNull('deleted_at')
+                                    ->orderBy('title', 'ASC');
 
                 // Start :: Manage restriction
                 $isAllow = false;

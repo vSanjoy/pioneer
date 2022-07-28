@@ -143,6 +143,7 @@ ul,li {list-style: none; padding: 0;}
 }
 .text-center{text-align: center;}
 .ml_minus_1 {margin-left: -1px;}
+.ml_minus_2 {margin-left: -2px;}
 
 .search-toggle{padding: 25px 0 0 25px; border: none;}
 .search-toggle-icon{position: absolute; top: 5px; right: 0px;}
@@ -152,9 +153,11 @@ ul,li {list-style: none; padding: 0;}
     .notfound .notfound-404 {height: 142px;}
     .notfound .notfound-404 h1 {font-size: 130px;}
     .auth-wrapper {min-height: 0;}
+    .mb-hide{display: none;}
 }
 @media only screen and (max-width: 592px) {
     .notfound .notfound-404 {height: 142px;}
     .notfound .notfound-404 h1 {font-size: 110px;}
     .export-all-contacts{float: none;}
+    .mb-heading{font-size: 1rem;}
 }

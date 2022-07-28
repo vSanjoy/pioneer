@@ -12,6 +12,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Auth;
 use Carbon\Carbon;
 use App\Traits\GeneralMethods;
 use App\Models\Category;
@@ -113,7 +114,21 @@ class OrdersController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = $this->model->orderBy('id', 'desc')->get();
+                if (Auth::guard('admin')->user()->type == 'D') {
+                    $data = $this->model->where([
+                                            'distributor_id' => Auth::guard('admin')->user()->id
+                                        ])
+                                        ->orderBy('id', 'desc')
+                                        ->get();
+                } else if (Auth::guard('admin')->user()->type == 'S') {
+                    $data = $this->model->where([
+                                            'seller_id' => Auth::guard('admin')->user()->id
+                                        ])
+                                        ->orderBy('id', 'desc')
+                                        ->get();
+                } else {
+                    $data = $this->model->orderBy('id', 'desc')->get();
+                }
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -128,6 +143,13 @@ class OrdersController extends Controller
                         ->addIndexColumn()
                         ->addColumn('created_at', function ($row) {
                             return changeDateFormat($row->created_at, 'd-m-Y');
+                        })
+                        ->addColumn('seller_id', function ($row) {
+                            if ($row->sellerDetails) {
+                                return $row->sellerDetails->full_name;
+                            } else {
+                                return 'N/A';
+                            }
                         })
                         ->addColumn('store_id', function ($row) {
                             if ($row->storeDetails) {
@@ -164,14 +186,19 @@ class OrdersController extends Controller
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes) {
                             $btn = '';
-                            if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
-                                $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
-
-                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
+                            if (Auth::guard('admin')->user()->type == 'S') {
+                                if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
+                                    $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
+    
+                                    $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
+                                }
+                                if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
+                                    $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
+                                }
+                            } else {
+                                $btn .= '<a href="'.route($this->routePrefix.'.order.view', customEncryptionDecryption($row->id)).'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_view').'" target="_blank"><i class="fa fa-eye ml_minus_2"></i></a>';
                             }
-                            if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
-                                $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
-                            }
+                            
                             return $btn;
                         })
                         ->rawColumns(['status','action'])
@@ -189,23 +216,23 @@ class OrdersController extends Controller
 
     /*
         * Function name : edit
-        * Purpose       : This function is to edit category
+        * Purpose       : This function is to edit order
         * Author        :
         * Created Date  :
         * Modified Date : 
         * Input Params  : Request $request
-        * Return Value  : Returns category data
+        * Return Value  : Returns order data
     */
     public function edit(Request $request, $id = null) {
         $data = [
-            'pageTitle'     => trans('custom_admin.label_edit_category'),
-            'panelTitle'    => trans('custom_admin.label_edit_category'),
+            'pageTitle'     => trans('custom_admin.label_edit_order'),
+            'panelTitle'    => trans('custom_admin.label_edit_order'),
             'pageType'      => 'EDITPAGE'
         ];
 
         try {
             $data['id']         = $id;
-            $data['categoryId'] = $id = customEncryptionDecryption($id, 'decrypt');
+            $data['orderId']    = $id = customEncryptionDecryption($id, 'decrypt');
             $data['details']    = $details = $this->model->where(['id' => $id])->first();
             
             if ($request->isMethod('POST')) {
@@ -214,11 +241,15 @@ class OrdersController extends Controller
                     return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                 }
                 $validationCondition = array(
-                    'title' => 'required|unique:'.($this->model)->getTable().',title,'.$id.',id,deleted_at,NULL',
+                    'qty'   => 'required|regex:'.config('global.VALID_NUMERIC'),
+                    'why'   => 'required',
+                    'result'=> 'required',
                 );
                 $validationMessages = array(
-                    'title.required'=> trans('custom_admin.error_title'),
-                    'title.unique'  => trans('custom_admin.error_unique_category_title'),
+                    'qty.required'      => trans('custom_admin.error_qty'),
+                    'qty.regex'         => trans('custom_admin.error_enter_valid_number'),
+                    'why.required'      => trans('custom_admin.error_why'),
+                    'result.required'   => trans('custom_admin.error_result')
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -227,8 +258,9 @@ class OrdersController extends Controller
                     return redirect()->back()->withInput();
                 } else {
                     $updateData             = [];
-                    $updateData['title']    = $request->title ?? null;
-                    $updateData['slug']     = generateUniqueSlug($this->model, trim($request->title,' '), $data['id']);
+                    $updateData['qty']      = $request->qty ?? null;
+                    $updateData['why']      = $request->why ?? null;
+                    $updateData['result']   = $request->result ?? null;
                     $update = $details->update($updateData);
 
                     if ($update) {
@@ -242,6 +274,37 @@ class OrdersController extends Controller
                 }
             }
             return view($this->viewFolderPath.'.edit', $data);
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+        }
+    }
+
+    /*
+        * Function name : view
+        * Purpose       : This function is to view order
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : Request $request
+        * Return Value  : Returns order data
+    */
+    public function view(Request $request, $id = null) {
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_view_order'),
+            'panelTitle'    => trans('custom_admin.label_view_order'),
+            'pageType'      => 'VIEWPAGE'
+        ];
+
+        try {
+            $data['id']         = $id;
+            $data['orderId']    = $id = customEncryptionDecryption($id, 'decrypt');
+            $data['details']    = $details = $this->model->where(['id' => $id])->first();
+            
+            return view($this->viewFolderPath.'.view', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
             return redirect()->route($this->routePrefix.'.'.$this->listUrl);

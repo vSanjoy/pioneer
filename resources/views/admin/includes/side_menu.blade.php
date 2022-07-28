@@ -220,7 +220,7 @@ $getSiteSettings = getSiteSettings();
 				</li>
 			@endif
 
-			<!-- Area Analysis Management Start -->
+			<!-- Area Analysis Management Start BLOCKED for new logic implementation -->
 			{{-- @php
 			$areaAnalysisRoutes = ['areaAnalysis.list','areaAnalysis.add','areaAnalysis.edit','areaAnalysis.sort','areaAnalysis.details-list'];
 			@endphp
@@ -295,7 +295,7 @@ $getSiteSettings = getSiteSettings();
 			@php
 			$sellerAnalysesRoutes = ['sellerAnalyses.distribution-area-list','sellerAnalyses.beat-list','sellerAnalyses.store-list','sellerAnalyses.category-list','sellerAnalyses.product-list','sellerAnalyses.analysis'];
 			@endphp
-			@if ( ($isSuperAdmin) || in_array('sellerAnalyses.distribution-area-list', $getAllRoles) )
+			@if ( \Auth::guard('admin')->user()->type == 'S' || in_array('sellerAnalyses.distribution-area-list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $sellerAnalysesRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $sellerAnalysesRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
 						<i data-feather="life-buoy" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_analysis')</span>
@@ -303,6 +303,25 @@ $getSiteSettings = getSiteSettings();
 					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $sellerAnalysesRoutes))in @endif">
 						<li class="sidebar-item">
 							<a href="{{ route('admin.sellerAnalyses.distribution-area-list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+			@endif
+
+			<!-- Order Management Start -->
+			@php
+			$orderRoutes = ['order.list'];
+			@endphp
+			@if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type != 'S' || in_array('order.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $orderRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $orderRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="shopping-bag" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_order')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $orderRoutes))in @endif">
+						<li class="sidebar-item">
+							<a href="{{ route('admin.order.list') }}" class="sidebar-link sub-menu">
 								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
 							</a>
 						</li>

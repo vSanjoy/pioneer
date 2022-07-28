@@ -7,7 +7,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>
-					<h3>{!! $details->distributionAreaDetails->title !!} - {!! $details->beatDetails->title !!} - {!! $details->storeDetails->name_1.' ('.$details->storeDetails->store_name.')' !!} - {!! $details->categoryDetails->title !!} - {!! $details->productDetails->title !!}</h3>
+					<h3 class="mb-heading">{!! $details->distributionAreaDetails->title !!} - {!! $details->beatDetails->title !!} - {!! $details->storeDetails->name_1.' ('.$details->storeDetails->store_name.')' !!} - {!! $details->categoryDetails->title !!} - {!! $details->productDetails->title !!}</h3>
 				</div>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="text-dark font-bold"><strong>@lang('custom_admin.label_product_name')</strong>:</label>
+								<label class="text-dark font-bold"><strong>@lang('custom_admin.label_product_name'):</strong></label>
 							</div>
 						</div>
 						<div class="col-md-9">
@@ -110,65 +110,61 @@
 		<div class="col-12">
 			<div class="card">
 				<div class="card-body">
-					{{ Form::open([
-						'method'=> 'POST',
-						'class' => '',
-						'route' => [$routePrefix.'.order.edit-submit', $id],
-						'name'  => 'updateOrderForm',
-						'id'    => 'updateOrderForm',
-						'files' => true,
-						'novalidate' => true ]) }}
-						<div class="form-body">
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_order_qty')<span class="red_star">*</span></label>
-										{{ Form::text('qty', $details->qty ?? null, [
-                                                                'id' => 'qty',
-                                                                'class' => 'form-control',
-                                                                'placeholder' => '',
-                                                                'required' => true ]) }}
-									</div>
-								</div>
-							</div>
-							<div class="row mt-1">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_why')<span class="red_star">*</span></label>
-										{{ Form::textarea('why', $details->why ?? null, [
-                                                                'id' => 'why',
-                                                                'class' => 'form-control',
-                                                                'placeholder' => '',
-                                                                'required' => true,
-																'rows' => 5 ]) }}
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="text-dark font-bold">@lang('custom_admin.label_result')<span class="red_star">*</span></label>
-										{{ Form::textarea('result', $details->result ?? null, [
-                                                                'id' => 'result',
-                                                                'class' => 'form-control',
-                                                                'placeholder' => '',
-                                                                'required' => true,
-																'rows' => 5 ]) }}
-									</div>
-								</div>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label class="text-dark font-bold"><strong>@lang('custom_admin.label_seller'):</strong></label>
 							</div>
 						</div>
-						<div class="form-actions mt-4">
-							<div class="float-left">
-								<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3 mb-hide" href="javascript: void(0);" onclick="window.close();">
-									<i class="fas fa-times-circle"></i> @lang('custom_admin.btn_close')
-								</a>
-							</div>
-							<div class="float-right">
-								<button type="submit" id="btn-processing" class="btn btn-primary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3">
-									<i class="far fa-save" aria-hidden="true"></i> @lang('custom_admin.btn_submit')
-								</button>
+						<div class="col-md-9">
+							<div class="form-group">
+								<label class="text-dark font-bold"><strong>{!! $details->sellerDetails->full_name.' ('.$details->sellerDetails->email.')' ?? 'NA' !!}</strong></label>
 							</div>
 						</div>
-					{{ Form::close() }}
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label class="text-dark font-bold">@lang('custom_admin.label_order_qty'):</label>
+							</div>
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<label class="text-dark font-bold">{!! $details->qty ?? 'NA' !!}</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label class="text-dark font-bold">@lang('custom_admin.label_why'):</label>
+							</div>
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<label class="text-dark font-bold">{!! $details->why ?? 'NA' !!}</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label class="text-dark font-bold">@lang('custom_admin.label_result'):</label>
+							</div>
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<label class="text-dark font-bold">{!! $details->result ?? 'NA' !!}</label>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-4 mb-hide">
+						<div class="col-md-12">
+							<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="javascript: void(0);" onclick="window.close();">
+								<i class="fas fa-times-circle"></i> @lang('custom_admin.btn_close')
+							</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
