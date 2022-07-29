@@ -36,6 +36,65 @@ $(document).ready(function() {
 
 	@include($routePrefix.'.includes.filter_for_store_script')
 
+	// On Distribution Area change
+	$(document).on('change', '#distribution_area_id', function() {
+		var distributionAreaId 	= $(this).val();
+		// if (distributionAreaId != '') {
+			$('.preloader').show();
+			// Beat
+			$.ajax({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: adminPanelUrl + '/store/ajax-distribution-area-wise-beat',
+				method: 'POST',
+				data: {
+					distribution_area_id: distributionAreaId
+				},
+				success: function (response) {
+					$('.preloader').hide();
+					$("#beat_id").html(response.options).selectpicker('refresh');
+				}
+			});
+
+			@if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)
+			// Distributor
+			$.ajax({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: adminPanelUrl + '/store/ajax-distribution-area-wise-distributor',
+				method: 'POST',
+				data: {
+					distribution_area_id: distributionAreaId
+				},
+				success: function (response) {
+					$('.preloader').hide();
+					$("#distributor_id").html(response.options).selectpicker('refresh');
+				}
+			});
+			// Store
+			$.ajax({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: adminPanelUrl + '/store/ajax-distribution-area-wise-store',
+				method: 'POST',
+				data: {
+					distribution_area_id: distributionAreaId
+				},
+				success: function (response) {
+					$('.preloader').hide();
+					$("#store_id").html(response.options).selectpicker('refresh');
+					$("#name_1_id").html(response.options).selectpicker('refresh');
+				}
+			});
+			@endif
+		// } else {
+		// 	$("#beat_id").selectpicker("refresh");
+		// }
+	});
+
 });
 
 @if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)

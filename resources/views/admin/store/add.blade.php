@@ -235,4 +235,5 @@
 @endsection
 
 @push('scripts')
+@include($routePrefix.'.'.$pageRoute.'.scripts')
 @endpush

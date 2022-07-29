@@ -123,7 +123,7 @@ $getSiteSettings = getSiteSettings();
 			@if ( ($isSuperAdmin) || in_array('beat.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $beatRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $beatRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
-						<i data-feather="users" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_beat')</span>
+						<i data-feather="map-pin" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_beat')</span>
 					</a>
 					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $beatRoutes))in @endif">
 						<li class="sidebar-item">

@@ -49,6 +49,148 @@
 	<!-- ============================================================== -->
 	<!-- ============================================================== -->
 
+	@if(Auth::guard('admin')->user()->type == 'SA')
+	<!-- ============================================================== -->
+	<!-- Start Second Cards -->
+	<!-- ============================================================== -->
+	<div class="card-group">
+		<div class="card border-right mr-3">
+			<div class="card-body">
+				<div class="d-flex d-lg-flex d-md-block align-items-center">
+					<div>
+						<div class="d-inline-flex align-items-center">
+							<h2 class="text-dark mb-1 font-weight-medium">{{ $totalDistributionAreas }}</h2>
+						</div>
+						<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Distribution Areas</h6>
+					</div>
+					<div class="ml-auto mt-md-3 mt-lg-0">
+						<span class="opacity-7 text-muted">
+							<a href="{{ route('admin.distributionArea.list') }}" class="hover-dark"><i data-feather="map" class="feather-icon"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card border-right mr-3">
+			<div class="card-body">
+				<div class="d-flex d-lg-flex d-md-block align-items-center">
+					<div>
+						<h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $totalDistributors }}</h2>
+						<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Distributors</h6>
+					</div>
+					<div class="ml-auto mt-md-3 mt-lg-0">
+						<span class="opacity-7 text-muted">
+							<a href="{{ route('admin.distributor.list') }}" class="hover-dark"><i data-feather="users" class="feather-icon"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card border-right mr-3">
+			<div class="card-body">
+				<div class="d-flex d-lg-flex d-md-block align-items-center">
+					<div>
+						<div class="d-inline-flex align-items-center">
+							<h2 class="text-dark mb-1 font-weight-medium">{{ $totalSellers }}</h2>
+						</div>
+						<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Sellers</h6>
+					</div>
+					<div class="ml-auto mt-md-3 mt-lg-0">
+						<span class="opacity-7 text-muted">
+							<a href="{{ route('admin.seller.list') }}" class="hover-dark"><i data-feather="users" class="feather-icon"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="d-flex d-lg-flex d-md-block align-items-center">
+					<div>
+						<h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $totalBeats }}</h2>
+						<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Beats</h6>
+					</div>
+					<div class="ml-auto mt-md-3 mt-lg-0">
+						<span class="opacity-7 text-muted">
+							<a href="{{ route('admin.beat.list') }}" class="hover-dark"><i data-feather="map-pin" class="feather-icon"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card-group">
+		<div class="card border-right mr-3">
+			<div class="card-body">
+				<div class="d-flex d-lg-flex d-md-block align-items-center">
+					<div>
+						<div class="d-inline-flex align-items-center">
+							<h2 class="text-dark mb-1 font-weight-medium">{{ $totalStores }}</h2>
+						</div>
+						<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Stores</h6>
+					</div>
+					<div class="ml-auto mt-md-3 mt-lg-0">
+						<span class="opacity-7 text-muted">
+							<a href="{{ route('admin.store.list') }}" class="hover-dark"><i class="fa fa-university" aria-hidden="true" style="font-size: 23px;"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card border-right mr-3">
+			<div class="card-body">
+				<div class="d-flex d-lg-flex d-md-block align-items-center">
+					<div>
+						<h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $totalCategories }}</h2>
+						<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Categories</h6>
+					</div>
+					<div class="ml-auto mt-md-3 mt-lg-0">
+						<span class="opacity-7 text-muted">
+							<a href="{{ route('admin.category.list') }}" class="hover-dark"><i data-feather="file-text" class="feather-icon"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card border-right mr-3">
+			<div class="card-body">
+				<div class="d-flex d-lg-flex d-md-block align-items-center">
+					<div>
+						<div class="d-inline-flex align-items-center">
+							<h2 class="text-dark mb-1 font-weight-medium">{{ $totalProducts }}</h2>
+						</div>
+						<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Products</h6>
+					</div>
+					<div class="ml-auto mt-md-3 mt-lg-0">
+						<span class="opacity-7 text-muted">
+							<a href="{{ route('admin.product.list') }}" class="hover-dark"><i data-feather="command" class="feather-icon"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="d-flex d-lg-flex d-md-block align-items-center">
+					<div>
+						<h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium">{{ $totalOrders }}</h2>
+						<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Orders</h6>
+					</div>
+					<div class="ml-auto mt-md-3 mt-lg-0">
+						<span class="opacity-7 text-muted">
+							<a href="{{ route('admin.order.list') }}" class="hover-dark"><i data-feather="shopping-bag" class="feather-icon"></i></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- End Second Cards -->
+	<!-- ============================================================== -->
+	<!-- ============================================================== -->
+	@endif
+
 	@if(Auth::guard('admin')->user()->type == 'S')
 	<!-- ============================================================== -->
 	<!-- Start Second Cards -->

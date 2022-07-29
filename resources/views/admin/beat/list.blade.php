@@ -2,6 +2,8 @@
 
 @section('content')
 
+	@include($routePrefix.'.includes.filter_by_distribution_area')
+
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
@@ -48,6 +50,7 @@
 								@endif
 									<th class="zeroColumn table-th-display-none"></th>
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
+									<th>@lang('custom_admin.label_distribution_area')</th>
 									<th>@lang('custom_admin.label_title')</th>
 									{{-- <th class="modifiedColumn">@lang('custom_admin.label_modified')</th> --}}
 									<th class="row_status">@lang('custom_admin.label_status')</th>

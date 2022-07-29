@@ -21,12 +21,12 @@ use App\Traits\GeneralMethods;
 use App\Models\WebsiteSetting;
 use App\Models\User;
 use App\Models\Cms;
-use App\Models\Contact;
-use App\Models\Season;
-use App\Models\Region;
-use App\Models\PlayerType;
-use App\Models\CompetitiveLevel;
-use App\Models\PreferredHomeCourt;
+use App\Models\DistributionArea;
+use App\Models\Beat;
+use App\Models\Store;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Order;
 
 class AccountController extends Controller
 {
@@ -84,21 +84,15 @@ class AccountController extends Controller
         ];
 
         try {
-            $data['websiteSettings']    = $this->websiteSettingModel->first();
-            // $data['months']                 = $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            // $contactGraph = [];
-            // if ($contacts) {
-            //     foreach ($months as $keyMonth => $valMonth) {
-            //         $count = 1;
-            //         foreach ($contacts as $key => $item) {
-            //             if ($valMonth == Carbon::parse($item->created_at)->format('F')) {
-            //                 $contactGraph[$valMonth] = $count;
-            //                 $count++;
-            //             }
-            //         }
-            //     }
-            // }
-            // $data['contactGraph'] = $contactGraph;
+            $data['websiteSettings']        = $this->websiteSettingModel->first();
+            $data['totalDistributionAreas'] = DistributionArea::whereNull('deleted_at')->count();
+            $data['totalDistributors']      = User::where(['type' => 'D'])->whereNull('deleted_at')->count();
+            $data['totalSellers']           = User::where(['type' => 'S'])->whereNull('deleted_at')->count();
+            $data['totalBeats']             = Beat::where(['status' => '1'])->whereNull('deleted_at')->count();
+            $data['totalStores']            = Store::where(['status' => '1'])->whereNull('deleted_at')->count();
+            $data['totalCategories']        = Category::where(['status' => '1'])->whereNull('deleted_at')->count();
+            $data['totalProducts']          = Product::where(['status' => '1'])->whereNull('deleted_at')->count();
+            $data['totalOrders']            = Order::whereNull('deleted_at')->count();
 
             return view($this->viewFolderPath.'.dashboard', $data);
         } catch (Exception $e) {

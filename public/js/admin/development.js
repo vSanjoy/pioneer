@@ -1148,11 +1148,17 @@ $(document).ready(function() {
         ignore: ":hidden",
         debug: false,
         rules: {
+            distribution_area_id: {
+                required: true
+            },
             title: {
                 required: true,
             },
         },
         messages: {
+            distribution_area_id: {
+                required: "Please select distribution area."
+            },
             title: {
                 required: "Please enter title.",
             },
@@ -1176,7 +1182,11 @@ $(document).ready(function() {
             toastr.error(overallErrorMessage, errorMessage+'!');
         },
         errorPlacement: function(error, element) {
-            error.insertAfter(element);
+            if ($(element).attr('id') == 'distribution_area_id') {
+                error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else {
+                error.insertAfter(element);
+            }
         },
         submitHandler: function(form) {
             $('#btn-processing').html(btnSavingPreloader);
@@ -1189,11 +1199,17 @@ $(document).ready(function() {
         ignore: ":hidden",
         debug: false,
         rules: {
+            distribution_area_id: {
+                required: true
+            },
             title: {
                 required: true,
             },
         },
         messages: {
+            distribution_area_id: {
+                required: "Please select distribution area."
+            },
             title: {
                 required: "Please enter title.",
             },
@@ -1217,7 +1233,11 @@ $(document).ready(function() {
             toastr.error(overallErrorMessage, errorMessage+'!');
         },
         errorPlacement: function(error, element) {
-            error.insertAfter(element);
+            if ($(element).attr('id') == 'distribution_area_id') {
+                error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else {
+                error.insertAfter(element);   
+            }
         },
         submitHandler: function(form) {
             $('#btn-processing').html(btnSavingPreloader);

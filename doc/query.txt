@@ -286,3 +286,6 @@ INSERT INTO `up_user_distribution_areas` (`user_id`, `distribution_area_id`) VAL
 
 13)
 ALTER TABLE `up_users` CHANGE `type` `type` ENUM('SA','A','U','D','S') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'U' COMMENT 'SA=>Super Admin, A=>Sub Admin, U=>User, D=>Distributor, S=>Seller';
+
+14)
+ALTER TABLE `up_beats` ADD `distribution_area_id` INT(11) NULL DEFAULT NULL COMMENT 'Id from distribution_areas table' AFTER `id`;

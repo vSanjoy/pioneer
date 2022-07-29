@@ -372,10 +372,10 @@ class StoresController extends Controller
         try {
             $data['id']                 = $id;
             $data['storeId']            = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->select('id','title')->get();
-            $data['beats']              = Beat::where(['status' => '1'])->select('id','title')->get();
-            $data['grades']             = Grade::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
             $data['details']            = $details = $this->model->where(['id' => $id])->first();
+            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->select('id','title')->get();
+            $data['beats']              = Beat::where(['distribution_area_id' => $details->distribution_area_id,  'status' => '1'])->select('id','title')->get();
+            $data['grades']             = Grade::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
             
             if ($request->isMethod('POST')) {
                 if ($id == null) {
@@ -577,6 +577,132 @@ class StoresController extends Controller
             $message = $e->getMessage();
         }
         return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
+    }
+
+    /*
+        * Function Name : ajaxDistributionAreaWiseDistributor
+        * Purpose       : This function is to get distribution area wise distributor
+        * Author        : 
+        * Created Date  : 
+        * Modified date : 
+        * Input Params  : Request $request
+        * Return Value  : 
+    */
+    public function ajaxDistributionAreaWiseDistributor(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+        $options    = '<option value="">--'.trans('custom_admin.label_select').'--</option>';
+
+        try {
+            if ($request->ajax()) {
+                $distributionAreaId = $request->distribution_area_id ?? '';
+                
+                $title      = trans('custom_admin.message_success');
+                $message    = trans('custom_admin.message_success');
+                $type       = 'success';
+                
+                if ($distributionAreaId != '') {
+                    $distributors = User::where(['distribution_area_id' => $distributionAreaId, 'type' => 'D', 'status' => '1'])->whereNull('deleted_at')->select('id','full_name','email')->orderBy('full_name', 'ASC')->get();
+                } else {
+                    $distributors = User::where(['type' => 'D', 'status' => '1'])->whereNull('deleted_at')->select('id','full_name','email')->orderBy('full_name', 'ASC')->get();
+                }
+                if ($distributors->count()) {
+                    foreach ($distributors as $keyDistributor => $valDistributor) {
+                        $options .= '<option value="'.$valDistributor->id.'">'.$valDistributor->full_name.' ('.$valDistributor->email.')'.'</option>';
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'options' => $options]);
+    }
+
+    /*
+        * Function Name : ajaxDistributionAreaWiseBeat
+        * Purpose       : This function is to get distribution area wise beats
+        * Author        : 
+        * Created Date  : 
+        * Modified date : 
+        * Input Params  : Request $request
+        * Return Value  : 
+    */
+    public function ajaxDistributionAreaWiseBeat(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+        $options    = '<option value="">--'.trans('custom_admin.label_select').'--</option>';
+
+        try {
+            if ($request->ajax()) {
+                $distributionAreaId = $request->distribution_area_id ?? '';
+                
+                $title      = trans('custom_admin.message_success');
+                $message    = trans('custom_admin.message_success');
+                $type       = 'success';
+                
+                if ($distributionAreaId != '') {
+                    $beats = Beat::where(['distribution_area_id' => $distributionAreaId, 'status' => '1'])->whereNull('deleted_at')->orderBy('title', 'ASC')->get();
+                } else {
+                    $beats = Beat::where(['status' => '1'])->whereNull('deleted_at')->orderBy('title', 'ASC')->get();
+                }
+                if ($beats->count()) {
+                    foreach ($beats as $keyBeat => $valBeat) {
+                        $options .= '<option value="'.$valBeat->id.'">'.$valBeat->title.'</option>';
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'options' => $options]);
+    }
+    
+    /*
+        * Function Name : ajaxDistributionAreaWiseStore
+        * Purpose       : This function is to get distribution area wise stores
+        * Author        : 
+        * Created Date  : 
+        * Modified date : 
+        * Input Params  : Request $request
+        * Return Value  : 
+    */
+    public function ajaxDistributionAreaWiseStore(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+        $options    = '<option value="">--'.trans('custom_admin.label_select').'--</option>';
+
+        try {
+            if ($request->ajax()) {
+                $distributionAreaId = $request->distribution_area_id ?? '';
+                
+                $title      = trans('custom_admin.message_success');
+                $message    = trans('custom_admin.message_success');
+                $type       = 'success';
+                
+                if ($distributionAreaId != '') {
+                    $stores = $this->model->where(['distribution_area_id' => $distributionAreaId, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1')->orderBy('store_name', 'ASC')->get();
+                } else {
+                    $stores = $this->model->where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1')->orderBy('store_name', 'ASC')->get();
+                }
+                if ($stores->count()) {
+                    foreach ($stores as $keyStore => $valStore) {
+                        $options .= '<option value="'.$valStore->id.'">'.$valStore->store_name.'</option>';
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'options' => $options]);
     }
 
 }

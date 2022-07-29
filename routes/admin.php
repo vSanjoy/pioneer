@@ -92,6 +92,9 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/status/{id}', 'StoresController@status')->name('change-status');
                 Route::get('/delete/{id}', 'StoresController@delete')->name('delete');
                 Route::post('/bulk-actions', 'StoresController@bulkActions')->name('bulk-actions');
+                Route::post('/ajax-distribution-area-wise-distributor', 'StoresController@ajaxDistributionAreaWiseDistributor')->name('ajax-distribution-area-wise-distributor');
+                Route::post('/ajax-distribution-area-wise-beat', 'StoresController@ajaxDistributionAreaWiseBeat')->name('ajax-distribution-area-wise-beat');
+                Route::post('/ajax-distribution-area-wise-store', 'StoresController@ajaxDistributionAreaWiseStore')->name('ajax-distribution-area-wise-store');
             });
 
             Route::group(['prefix' => 'category', 'as' => 'category.'], function () {

@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Traits\GeneralMethods;
 use App\Models\Beat;
 use App\Models\Store;
+use App\Models\DistributionArea;
 use DataTables;
 
 class BeatsController extends Controller
@@ -85,6 +86,8 @@ class BeatsController extends Controller
             $data['allowedRoutes']  = $restrictions['allow_routes'];
             // End :: Manage restriction
 
+            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->get();
+
             return view($this->viewFolderPath.'.list', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
@@ -112,7 +115,12 @@ class BeatsController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = $this->model->orderBy('id', 'desc')->get();
+                $distributionAreaId = $request->distribution_area_id ?? '';
+                if ($distributionAreaId == '') {
+                    $data = $this->model->orderBy('id', 'desc')->get();
+                } else {
+                    $data = $this->model->where(['distribution_area_id' => $distributionAreaId])->whereNull('deleted_at')->get();    // Based on category search
+                }
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -125,6 +133,13 @@ class BeatsController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
+                        ->addColumn('distribution_area_id', function ($row) {
+                            if ($row->distributionAreaDetails) {
+                                return $row->distributionAreaDetails->title;
+                            } else {
+                                return 'NA';
+                            }
+                        })
                         ->addColumn('title', function ($row) {
                             return $row->title;
                         })
@@ -189,11 +204,15 @@ class BeatsController extends Controller
         ];
 
         try {
+            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->get();
+
             if ($request->isMethod('POST')) {
                 $validationCondition = array(
+                    'distribution_area_id'  => 'required',
                     'title' => 'required|unique:'.($this->model)->getTable().',title,NULL,id,deleted_at,NULL',
                 );
                 $validationMessages = array(
+                    'distribution_area_id.required' => 'Please select distribution area.',
                     'title.required'=> trans('custom_admin.error_title'),
                     'title.unique'  => trans('custom_admin.error_unique_beat_title'),
                 );
@@ -203,10 +222,11 @@ class BeatsController extends Controller
                     $this->generateToastMessage('error', $validationFailedMessages, false);
                     return redirect()->back()->withInput();
                 } else {
-                    $saveData           = [];
-                    $saveData['title']  = $request->title ?? null;
-                    $saveData['slug']   = generateUniqueSlug($this->model, trim($request->title,' '));
-                    $saveData['sort']   = generateSortNumber($this->model);
+                    $saveData                           = [];
+                    $saveData['distribution_area_id']   = $request->distribution_area_id ?? null;
+                    $saveData['title']                  = $request->title ?? null;
+                    $saveData['slug']                   = generateUniqueSlug($this->model, trim($request->title,' '));
+                    $saveData['sort']                   = generateSortNumber($this->model);
                     $save = $this->model->create($saveData);
                     
                     if ($save) {
@@ -235,7 +255,7 @@ class BeatsController extends Controller
         * Created Date  :
         * Modified Date : 
         * Input Params  : Request $request
-        * Return Value  : Returns category data
+        * Return Value  : Returns beat data
     */
     public function edit(Request $request, $id = null) {
         $data = [
@@ -245,9 +265,10 @@ class BeatsController extends Controller
         ];
 
         try {
-            $data['id']         = $id;
-            $data['categoryId'] = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['details']    = $details = $this->model->where(['id' => $id])->first();
+            $data['id']                 = $id;
+            $data['beatId']             = $id = customEncryptionDecryption($id, 'decrypt');
+            $data['distributionAreas']  = DistributionArea::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->get();
+            $data['details']            = $details = $this->model->where(['id' => $id])->first();
             
             if ($request->isMethod('POST')) {
                 if ($id == null) {
@@ -255,9 +276,11 @@ class BeatsController extends Controller
                     return redirect()->route($this->routePrefix.'.'.$this->listUrl);
                 }
                 $validationCondition = array(
+                    'distribution_area_id'  => 'required',
                     'title' => 'required|unique:'.($this->model)->getTable().',title,'.$id.',id,deleted_at,NULL',
                 );
                 $validationMessages = array(
+                    'distribution_area_id.required' => 'Please select distributor.',
                     'title.required'=> trans('custom_admin.error_title'),
                     'title.unique'  => trans('custom_admin.error_unique_beat_title'),
                 );
@@ -267,9 +290,10 @@ class BeatsController extends Controller
                     $this->generateToastMessage('error', $validationFailedMessages, false);
                     return redirect()->back()->withInput();
                 } else {
-                    $updateData             = [];
-                    $updateData['title']    = $request->title ?? null;
-                    $updateData['slug']     = generateUniqueSlug($this->model, trim($request->title,' '), $data['id']);
+                    $updateData                         = [];
+                    $updateData['distribution_area_id'] = $request->distribution_area_id ?? null;
+                    $updateData['title']                = $request->title ?? null;
+                    $updateData['slug']                 = generateUniqueSlug($this->model, trim($request->title,' '), $data['id']);
                     $update = $details->update($updateData);
 
                     if ($update) {

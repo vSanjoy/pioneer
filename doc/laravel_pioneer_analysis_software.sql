@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 28, 2022 at 11:32 AM
+-- Generation Time: Jul 29, 2022 at 03:29 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -157,6 +157,7 @@ CREATE TABLE `up_area_analysis_details` (
 
 CREATE TABLE `up_beats` (
   `id` int(10) UNSIGNED NOT NULL,
+  `distribution_area_id` int(11) DEFAULT NULL COMMENT 'Id from distribution_areas table',
   `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sort` int(11) NOT NULL DEFAULT 0,
@@ -170,9 +171,9 @@ CREATE TABLE `up_beats` (
 -- Dumping data for table `up_beats`
 --
 
-INSERT INTO `up_beats` (`id`, `title`, `slug`, `sort`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Katulpur', 'katulpur', 0, '1', '2022-07-10 23:51:42', '2022-07-10 23:57:44', NULL),
-(2, 'Jirat', 'jirat', 1, '1', '2022-07-10 23:56:56', '2022-07-10 23:57:44', NULL);
+INSERT INTO `up_beats` (`id`, `distribution_area_id`, `title`, `slug`, `sort`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 3, 'Katulpur', 'katulpur', 0, '1', '2022-07-10 23:51:42', '2022-07-28 04:14:51', NULL),
+(2, 1, 'Jirat', 'jirat', 1, '1', '2022-07-10 23:56:56', '2022-07-28 04:14:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -672,9 +673,9 @@ CREATE TABLE `up_stores` (
 
 INSERT INTO `up_stores` (`id`, `distribution_area_id`, `name_1`, `name_2`, `store_name`, `slug`, `phone_no_1`, `whatsapp_no_1`, `phone_no_2`, `whatsapp_no_2`, `street`, `district_region`, `zip`, `beat_name`, `beat_id`, `grade_id`, `email`, `sale_size_category`, `integrity`, `notes`, `sort`, `status`, `progress_status`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'Store Name 11', 'Store Name 2', 'Dipankar Stores', 'dipankar-stores', '987543210', '9876543211', '9876543212', '9876543213', 'M.G. Road', 'Kolkata', '700033', NULL, 1, 2, 'dipankarstores@yopmail.com', 'L', 'A', 'Test notes.', 0, '1', 'IP', '2022-05-13 04:39:17', '2022-07-13 02:30:26', NULL),
-(2, 3, 'Dealer', NULL, 'Maa Laxmi Bhandar', 'maa-laxmi-bhandar', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'M', 'B', NULL, 1, '1', 'CP', '2022-06-27 04:22:59', '2022-07-13 01:44:22', NULL),
+(2, 3, 'Dealer', NULL, 'Maa Laxmi Bhandar', 'maa-laxmi-bhandar', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'M', 'B', NULL, 1, '1', 'CP', '2022-06-27 04:22:59', '2022-07-28 23:50:48', NULL),
 (3, 1, 'Test Name 1', NULL, 'Test Store Name 1', 'test-store-name-1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'S', 'A+', NULL, 2, '1', 'IP', '2022-07-13 01:40:04', '2022-07-13 01:40:04', NULL),
-(4, 3, 'Sanjoy Kayal', NULL, 'Sanjoy Stores', 'sanjoy-stores', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 4, NULL, 'S', 'B', NULL, 3, '1', 'IP', '2022-07-13 02:50:09', '2022-07-13 02:50:46', NULL);
+(4, 1, 'Sanjoy Kayal', NULL, 'Sanjoy Stores', 'sanjoy-stores', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 4, NULL, 'S', 'B', NULL, 3, '1', 'IP', '2022-07-13 02:50:09', '2022-07-28 05:13:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -717,11 +718,11 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1658999807, 'Y', '2022-05-06 07:39:45', '2022-07-28 03:46:47', NULL),
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1659086496, 'Y', '2022-05-06 07:39:45', '2022-07-29 03:51:36', NULL),
 (3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1658815921, 'N', '2022-05-09 06:16:32', '2022-07-26 00:42:01', NULL),
 (4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1658818985, 'N', '2022-05-26 05:32:09', '2022-07-26 01:33:05', NULL),
 (5, 'My Job Title', NULL, NULL, 'My', 'Job', 'My Job Title New', 'dev', 'dev@yopmail.com', 'Vishi Prem Workz', NULL, '$2y$10$Ks26Ofv37EMqNgZZ7lr61OCZfUqMxTe27S2SGgoovbEJ7pyZpW.3m', '', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1658815879, 'N', '2022-06-27 04:20:38', '2022-07-26 00:41:19', NULL),
-(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1658990178, 'N', '2022-07-14 00:43:42', '2022-07-28 01:06:18', NULL),
+(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1659086525, 'N', '2022-07-14 00:43:42', '2022-07-29 03:52:05', NULL),
 (7, NULL, NULL, NULL, 'Soubhik', 'Paul', 'Soubhik Paul', 'soubhikpaul', 'soubhikpaul@yopmail.com', NULL, NULL, '$2y$10$0PWEImztEZMoA0AvRgdV5untgyY.V4Qt7xoQ28FCwvcpPAWKGPdXq', 'seller_1657785389.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1657886407, 'N', '2022-07-14 02:26:29', '2022-07-15 06:30:07', NULL);
 
 -- --------------------------------------------------------

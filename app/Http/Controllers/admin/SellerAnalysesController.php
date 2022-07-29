@@ -210,7 +210,10 @@ class SellerAnalysesController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = Beat::where(['status' => '1'])->whereNull('deleted_at')->orderBy('title', 'ASC');
+                $data = Beat::where([
+                                'distribution_area_id' => customEncryptionDecryption($distributionAreaId, 'decrypt'),
+                                'status' => '1'
+                                ])->whereNull('deleted_at')->orderBy('title', 'ASC');
 
                 // Start :: Manage restriction
                 $isAllow = false;
