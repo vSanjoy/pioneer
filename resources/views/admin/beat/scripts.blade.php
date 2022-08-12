@@ -46,7 +46,7 @@ function getList() {
 	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
 			destroy: true,
 			autoWidth: false,
-	        responsive: true,
+	        responsive: false,
 			processing: true,
 			language: {
 				processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',

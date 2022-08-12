@@ -97,7 +97,7 @@ $getSiteSettings = getSiteSettings();
 			@if ( ($isSuperAdmin) || in_array('seller.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $sellerRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $sellerRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
-						<i data-feather="users" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_seller')</span>
+						<i data-feather="users" class="feather-icon"></i><span class="hide-menu"> Representative</span>
 					</a>
 					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $sellerRoutes))in @endif">
 						<li class="sidebar-item">
