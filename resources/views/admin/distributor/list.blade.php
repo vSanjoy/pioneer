@@ -8,7 +8,7 @@
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>					
 					<div class="table-responsive mt-4-5">
-						<table id="list-table" class="table table-striped table-bordered no-wrap list-data custom-table custom-table-second-column">
+						<table id="list-table" class="table table-striped table-bordered no-wrap list-data custom-table custom-table-first-column">
 							<thead>
 								<tr>
 								@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
@@ -57,7 +57,7 @@
 									<th>@lang('custom_admin.label_distribution_area')</th>
 									{{-- <th class="modifiedColumn">@lang('custom_admin.label_modified')</th> --}}
 									<th class="row_status">@lang('custom_admin.label_status')</th>
-									<th class="actions">@lang('custom_admin.label_action')</th>
+									<th class="more_actions">@lang('custom_admin.label_action')</th>
 								</tr>
 							</thead>							
 						</table>
@@ -66,7 +66,6 @@
 			</div>
 		</div>
 	</div>
-
 
 @endsection
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
+use Auth;
 use App\Traits\GeneralMethods;
 use App\Models\AnalysisSeason;
 use App\Models\DistributionArea;
@@ -345,8 +346,16 @@ class AnalysisSeasonsController extends Controller
 
         try {
             if ($request->ajax()) {
-                $data = DistributionArea::where(['status' => '1'])->whereNull('deleted_at');
-
+                if (Auth::guard('admin')->user()->type == 'D') {
+                    if (Auth::guard('admin')->user()->distribution_area_id != null) {
+                        $data = DistributionArea::where(['id' => Auth::guard('admin')->user()->distribution_area_id, 'status' => '1'])->whereNull('deleted_at');
+                    } else {
+                        $data = DistributionArea::where(['status' => '1'])->whereNull('deleted_at');
+                    }
+                } else {
+                    $data = DistributionArea::where(['status' => '1'])->whereNull('deleted_at');
+                }
+                
                 // Start :: Manage restriction
                 $isAllow = false;
                 $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
