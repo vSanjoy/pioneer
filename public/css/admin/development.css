@@ -149,6 +149,9 @@ ul,li {list-style: none; padding: 0;}
 .search-toggle-icon{position: absolute; top: 5px; right: 0px;}
 .display-none{display: none;}
 
+.bg-white{background-color: #ffffff;}
+.accordion-border-top{border-top: 1px solid #edf2f9}
+
 @media only screen and (max-width: 767px) {
     .notfound .notfound-404 {height: 142px;}
     .notfound .notfound-404 h1 {font-size: 130px;}

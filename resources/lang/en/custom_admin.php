@@ -386,6 +386,8 @@ return [
     'label_add_order'                               => 'Add Order',
     'label_edit_order'                              => 'Edit Order',
     'label_view_order'                              => 'View Order',
+    'label_multi_step_analysis'                     => 'Multi Step Analysis',
+    'label_single_step_analysis'                    => 'Single Step Analysis',
 
     
 /* Buttons */

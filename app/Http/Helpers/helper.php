@@ -9,10 +9,8 @@ use Illuminate\Support\Facades\Session;
 use App\Models\Cms;
 use App\Models\Contact;
 use App\Models\WebsiteSetting;
-use App\Models\Season;
-use App\Models\Region;
-use App\Models\Score;
-use App\Models\PlayerLeagueAssignment;
+use App\Models\Analyses;
+use App\Models\AnalysisSeason;
 
 /*
     * Function name : getAppName
@@ -719,4 +717,36 @@ function getAge($dob = null) {
         $age = "NA";
     }
     return $age;
+}
+
+/*
+    * Function name : getAnalysisDetails
+    * Purpose       : This function is to get analysis details from admin / distributor
+    * Author        :
+    * Created Date  :
+    * Modified Date : 
+    * Input Params  : 
+    * Return Value  : 
+*/
+function getAnalysisDetails($distributionAreaId = null, $beatId = null, $storeId = null, $categoryId = null, $productId = null) {
+    $details = null;
+
+    $analysisSeasonDetails = AnalysisSeason::where(['year' => Carbon::now()->format('Y')])->first();
+    if ($analysisSeasonDetails != null) {
+        $details = Analyses::where([
+                                    'analysis_season_id' => $analysisSeasonDetails->id,
+                                    'distribution_area_id' => customEncryptionDecryption($distributionAreaId, 'decrypt'),
+                                    'store_id' => customEncryptionDecryption($storeId, 'decrypt'),
+                                    'beat_id' => customEncryptionDecryption($beatId, 'decrypt')
+                                ])
+                                ->with('analysesDetails')
+                                ->whereHas('analysesDetails', function ($query) use($categoryId, $productId) {
+                                    $query->where([
+                                        'category_id' => $categoryId,
+                                        'product_id' => $productId
+                                    ]);
+                                })
+                                ->first();
+    }
+    return $details;
 }

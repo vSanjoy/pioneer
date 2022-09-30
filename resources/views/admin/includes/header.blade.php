@@ -9,7 +9,7 @@
             <!-- ============================================================== -->
             <div class="navbar-brand">
                 <!-- Logo icon -->
-                <a @if (\Auth::guard('admin')->user()->type != 'S') href="{{ url('/adminpanel') }}" @else href="{{ url('/adminpanel/sellerAnalyses/distribution-area-list') }}" @endif>
+                <a href="{{ url('/adminpanel') }}">
                     <!-- Logo text -->
                     <span class="logo-text">
                         <!-- dark Logo text -->

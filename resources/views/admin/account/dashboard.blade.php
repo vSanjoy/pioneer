@@ -210,7 +210,7 @@
 								</h2>
 								<h2 class="font-light text-white">
 									<a href="{{ route('admin.sellerAnalyses.distribution-area-list') }}" class="text-white">
-										@lang('custom_admin.label_analysis')
+										@lang('custom_admin.label_multi_step_analysis')
 									</a>
 								</h2>
 							</div>
@@ -221,13 +221,13 @@
 						<div class="card card-hover">
 							<div class="p-2 bg-success text-center">
 								<h2 class="font-light text-white">
-									<a href="{{ route('admin.order.list') }}" class="text-white">
-										<i data-feather="shopping-bag" class="feather-icon"></i>
+									<a href="{{ route('admin.singleStepSellerAnalyses.distribution-area-list') }}" class="text-white">
+										<i data-feather="life-buoy" class="feather-icon"></i>
 									</a>
 								</h2>
 								<h2 class="font-light text-white">
-									<a href="{{ route('admin.order.list') }}" class="text-white">
-										@lang('custom_admin.label_order')
+									<a href="{{ route('admin.singleStepSellerAnalyses.distribution-area-list') }}" class="text-white">
+										@lang('custom_admin.label_single_step_analysis')
 									</a>
 								</h2>
 							</div>

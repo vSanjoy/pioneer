@@ -102,6 +102,8 @@
                 @include('admin.includes.analysis_breadcrumb')
             @elseif (strpos(Route::currentRouteName(), 'sellerAnalyses.distribution-area-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.beat-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.store-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.category-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.product-list') == true || strpos(Route::currentRouteName(), 'sellerAnalyses.analysis') == true)
                 @include('admin.includes.seller_analysis_breadcrumb')
+            @elseif (strpos(Route::currentRouteName(), 'singleStepSellerAnalyses.distribution-area-list') == true || strpos(Route::currentRouteName(), 'singleStepSellerAnalyses.beat-list') == true || strpos(Route::currentRouteName(), 'singleStepSellerAnalyses.store-list') == true || strpos(Route::currentRouteName(), 'singleStepSellerAnalyses.category-list') == true || strpos(Route::currentRouteName(), 'singleStepSellerAnalyses.product-list') == true || strpos(Route::currentRouteName(), 'singleStepSellerAnalyses.analysis') == true)
+                @include('admin.includes.single_step_seller_analysis_breadcrumb')
             @else
                 @include('admin.includes.breadcrumb')
             @endif

@@ -131,7 +131,8 @@ class AuthController extends Controller
                                     $user  = Auth::guard('admin')->user();
                                     $user->lastlogintime = strtotime(date('Y-m-d H:i:s'));
                                     $user->save();
-                                    return redirect()->route($this->routePrefix.'.sellerAnalyses.distribution-area-list');
+                                    return redirect()->route($this->routePrefix.'.dashboard');
+                                    // return redirect()->route($this->routePrefix.'.sellerAnalyses.distribution-area-list');
                                 } else {
                                     Auth::guard('admin')->logout();
     
