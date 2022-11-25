@@ -7,7 +7,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>
-					<h3>{!! $distributionArea->title !!} - {!! $beat->title !!} - {!! $store->name_1.' ('.$store->store_name.')' !!}</h3>
+					<h3>{!! $distributionArea->title !!} - {!! $beat->title !!} - {!! $store->name_1.' ('.$store->store_name.')' !!} - {!! $season->title.' ('.$season->year.')' !!}</h3>
 				</div>
 			</div>
 		</div>
@@ -18,7 +18,7 @@
 		{{ Form::open([
 			'method'=> 'POST',
 			'class' => '',
-			'route' => [$routePrefix.'.singleStepSellerAnalyses.analysis-update', $distributionAreaId, $beatId, $storeId],
+			'route' => [$routePrefix.'.singleStepSellerAnalyses.analysis-update', $distributionAreaId, $beatId, $storeId, $seasonId],
 			'name'  => 'updateSingleStepSellerAnalysesForm',
 			'id'    => 'updateSingleStepSellerAnalysesForm',
 			'files' => true,
@@ -43,7 +43,7 @@
 								@php
 								$categoryId = $category->id;
 								$productId	= $product->id;
-								$analysisDetails = getAnalysisDetails($distributionAreaId, $beatId, $storeId, $categoryId, $productId);
+								$analysisDetails = getAnalysisDetails($distributionAreaId, $beatId, $storeId, $seasonId, $categoryId, $productId);
 								@endphp
 								<div class="card mb-3">
 									<div class="card-header" id="headingOne_{{$productId}}">
@@ -125,8 +125,8 @@
 											{{-- End :: Display Analysis Data --}}
 
 											{{-- Start :: Analysis fields --}}
-											{{ Form::text('analysis['.$categoryId.']['.$productId.'][category_id]', $categoryId) }}
-											{{ Form::text('analysis['.$categoryId.']['.$productId.'][product_id]', $productId) }}
+											{{ Form::hidden('analysis['.$categoryId.']['.$productId.'][category_id]', $categoryId) }}
+											{{ Form::hidden('analysis['.$categoryId.']['.$productId.'][product_id]', $productId) }}
 											<div class="row mt-2">
 												<div class="col-md-6">
 													<div class="form-group">

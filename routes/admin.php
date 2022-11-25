@@ -224,6 +224,14 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::post('/analysis-update/{distributionAreaId}/{beatId}/{storeId}/{categoryId}/{productId}', 'SellerAnalysesController@analysisUpdate')->name('analysis-update');
             });
 
+            Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
+                Route::get('/', 'OrdersController@list')->name('list');
+                Route::post('ajax-list-request', 'OrdersController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/view/{id}', 'OrdersController@view')->name('view');
+                Route::get('/delete/{id}', 'OrdersController@delete')->name('delete');
+                Route::post('/bulk-actions', 'OrdersController@bulkActions')->name('bulk-actions');
+            });
+
             Route::group(['prefix' => 'singleStepSellerAnalyses', 'as' => 'singleStepSellerAnalyses.'], function () {
                 // Distribution Area
                 Route::get('/distribution-area-list', 'SingleStepSellerAnalysesController@distributionAreaList')->name('distribution-area-list');
@@ -237,27 +245,25 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/store-list/{distributionAreaId}/{beatId}', 'SingleStepSellerAnalysesController@storeList')->name('store-list');
                 Route::post('/ajax-store-list-request/{distributionAreaId}/{beatId}', 'SingleStepSellerAnalysesController@ajaxStoreListRequest')->name('ajax-store-list-request');
 
-                // Category
-                Route::get('/category-list/{distributionAreaId}/{beatId}/{storeId}', 'SingleStepSellerAnalysesController@categoryList')->name('category-list');
-                Route::post('/ajax-category-list-request/{distributionAreaId}/{beatId}/{storeId}', 'SingleStepSellerAnalysesController@ajaxCategoryListRequest')->name('ajax-category-list-request');
+                // Store
+                Route::get('/season-list/{distributionAreaId}/{beatId}/{storeId}', 'SingleStepSellerAnalysesController@seasonList')->name('season-list');
+                Route::post('/ajax-season-list-request/{distributionAreaId}/{beatId}/{storeId}', 'SingleStepSellerAnalysesController@ajaxSeasonListRequest')->name('ajax-season-list-request');
 
-                // Product
-                Route::get('/product-list/{distributionAreaId}/{beatId}/{storeId}/{categoryId}', 'SingleStepSellerAnalysesController@productList')->name('product-list');
-                Route::post('/ajax-product-list-request/{distributionAreaId}/{beatId}/{storeId}/{categoryId}', 'SingleStepSellerAnalysesController@ajaxProductListRequest')->name('ajax-product-list-request');
+                // Category
+                Route::get('/category-list/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@categoryList')->name('category-list');
+                Route::post('/ajax-category-list-request/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@ajaxCategoryListRequest')->name('ajax-category-list-request');
 
                 // Analysis
-                Route::get('/analysis/{distributionAreaId}/{beatId}/{storeId}', 'SingleStepSellerAnalysesController@analysisUpdate')->name('analysis');
-                Route::post('/analysis-update/{distributionAreaId}/{beatId}/{storeId}', 'SingleStepSellerAnalysesController@analysisUpdate')->name('analysis-update');
+                Route::get('/analysis/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@analysisUpdate')->name('analysis');
+                Route::post('/analysis-update/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@analysisUpdate')->name('analysis-update');
             });
 
-            Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
-                Route::get('/', 'OrdersController@list')->name('list');
-                Route::post('ajax-list-request', 'OrdersController@ajaxListRequest')->name('ajax-list-request');
-                Route::get('/edit/{id}', 'OrdersController@edit')->name('edit');
-                Route::any('/edit-submit/{id}', 'OrdersController@edit')->name('edit-submit');
-                Route::get('/view/{id}', 'OrdersController@view')->name('view');
-                Route::get('/delete/{id}', 'OrdersController@delete')->name('delete');
-                Route::post('/bulk-actions', 'OrdersController@bulkActions')->name('bulk-actions');
+            Route::group(['prefix' => 'singleStepOrder', 'as' => 'singleStepOrder.'], function () {
+                Route::get('/', 'SingleStepOrdersController@list')->name('list');
+                Route::post('ajax-list-request', 'SingleStepOrdersController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/view/{id}', 'SingleStepOrdersController@view')->name('view');
+                Route::get('/delete/{id}', 'SingleStepOrdersController@delete')->name('delete');
+                Route::post('/bulk-actions', 'SingleStepOrdersController@bulkActions')->name('bulk-actions');
             });
             
         });

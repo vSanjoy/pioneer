@@ -29,16 +29,11 @@
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.store-list', [$distributionAreaId, $beatId]) }}" class="">@lang('custom_admin.label_store_list')</a></li>
                         @endif
 
-                        {{-- Category --}}
-                        @if (isset($categoryId))
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId]) }}" class="">@lang('custom_admin.label_category_list')</a></li>
+                        {{-- Store --}}
+                        @if (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($seasonId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.season-list', [$distributionAreaId, $beatId, $storeId]) }}" class="">@lang('custom_admin.label_season_list')</a></li>
                         @endif
 
-                        {{-- Product --}}
-                        @if (isset($productId))
-                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.product-list', [$distributionAreaId, $beatId, $storeId, $categoryId]) }}" class="">@lang('custom_admin.label_product_list')</a></li>
-                        @endif
-                        
                         <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }}</li>
                     </ol>
                 </nav>

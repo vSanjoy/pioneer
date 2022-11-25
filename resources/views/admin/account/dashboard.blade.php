@@ -253,7 +253,7 @@
 			<div class="card-body">
 				<div class="row justify-content-center">
 					<!-- Column -->
-					<div class="col-md-6 col-lg-6 col-xlg-3">
+					<div class="col-md-4 col-lg-4 col-xlg-3">
 						<div class="card card-hover">
 							<div class="p-2 bg-primary text-center">
 								<h2 class="font-light text-white">
@@ -270,7 +270,7 @@
 						</div>
 					</div>
 					<!-- Column -->
-					<div class="col-md-6 col-lg-6 col-xlg-3">
+					<div class="col-md-4 col-lg-4 col-xlg-3">
 						<div class="card card-hover">
 							<div class="p-2 bg-success text-center">
 								<h2 class="font-light text-white">
@@ -287,6 +287,22 @@
 						</div>
 					</div>
 					<!-- Column -->
+					<div class="col-md-4 col-lg-4 col-xlg-3">
+						<div class="card card-hover">
+							<div class="p-2 bg-warning text-center">
+								<h2 class="font-light text-white">
+									<a href="{{ route('admin.singleStepOrder.list') }}" class="text-white">
+										<i data-feather="shopping-bag" class="feather-icon"></i>
+									</a>
+								</h2>
+								<h2 class="font-light text-white">
+									<a href="{{ route('admin.order.list') }}" class="text-white">
+										@lang('custom_admin.label_menu_single_step_order')
+									</a>
+								</h2>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

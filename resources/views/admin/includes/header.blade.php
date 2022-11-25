@@ -80,6 +80,7 @@
                         <a class="dropdown-item" href="{{ route('admin.change-password') }}"><i data-feather="lock" class="svg-icon mr-2 ml-1"></i> @lang('custom_admin.label_change_password')</a>
                         @if (\Auth::guard('admin')->user()->type == 'S')
                         <a class="dropdown-item" href="{{ route('admin.order.list') }}"><i data-feather="shopping-bag" class="svg-icon mr-2 ml-1"></i> @lang('custom_admin.label_menu_order')</a>
+                        <a class="dropdown-item" href="{{ route('admin.singleStepOrder.list') }}"><i data-feather="shopping-bag" class="svg-icon mr-2 ml-1"></i> @lang('custom_admin.label_menu_single_step_order')</a>
                         @endif
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('admin.logout') }}"><i data-feather="power" class="svg-icon mr-2 ml-1"></i> @lang('custom_admin.label_signout')</a>                        

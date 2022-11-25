@@ -75,13 +75,13 @@ function getList() {
 		@endif	
 				{data: 'id', name: 'id'},
 	            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-				{data: 'created_at', name: 'created_at', orderable: false, searchable: false},
+				{data: 'created_at', name: 'created_at'},
+				{data: 'unique_order_id', name: 'unique_order_id'},
 				@if (\Auth::guard('admin')->user()->type != 'S')
 				{data: 'seller_id', name: 'seller_id'},
 				@endif
 				{data: 'store_id', name: 'store_id'},
-				{data: 'product_id', name: 'product_id'},
-				{data: 'qty', name: 'qty'},
+				{data: 'analysis_season_id', name: 'analysis_season_id'},
 			@if ($isAllow || in_array($viewUrl, $allowedRoutes))
 				{data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif

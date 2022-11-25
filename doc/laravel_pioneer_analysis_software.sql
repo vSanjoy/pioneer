@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2022 at 03:29 PM
+-- Generation Time: Oct 11, 2022 at 07:40 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -41,14 +41,6 @@ CREATE TABLE `up_analyses` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `up_analyses`
---
-
-INSERT INTO `up_analyses` (`id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `store_id`, `beat_id`, `analysis_date`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 3, 5, 4, 2, '2022-07-17 18:30:00', '1', '2022-07-20 02:33:28', '2022-07-22 00:13:16', NULL),
-(2, 1, 1, 3, 3, 2, '2022-07-24 18:30:00', '1', '2022-07-26 00:30:00', '2022-07-26 00:30:00', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -66,14 +58,6 @@ CREATE TABLE `up_analyses_details` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `up_analyses_details`
---
-
-INSERT INTO `up_analyses_details` (`id`, `analyses_id`, `category_id`, `product_id`, `target_monthly_sales`, `type_of_analysis`, `action`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, '1000', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '2022-07-20 08:03:28', '2022-07-22 00:13:16'),
-(2, 2, 1, 1, '5000', 'This is analysis', 'This is action', '2022-07-26 06:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -213,9 +197,7 @@ INSERT INTO `up_categories` (`id`, `title`, `slug`, `sort`, `status`, `created_a
 (14, 'Spl Note Book & Loose Sheet', 'spl-note-book-loose-sheet', 13, '1', '2022-05-16 07:37:09', '2022-05-16 07:49:36', NULL),
 (15, 'Stitch D.C. Exercise Book', 'stitch-dc-exercise-book', 14, '1', '2022-05-16 07:37:17', '2022-05-16 07:49:36', NULL),
 (16, 'Stitch D.C. Exercise Book & Scrap Book', 'stitch-dc-exercise-book-scrap-book', 15, '1', '2022-05-16 07:37:23', '2022-05-16 07:49:36', NULL),
-(17, 'Stitch Graph', 'stitch-graph', 16, '1', '2022-05-16 07:37:32', '2022-05-17 07:04:11', NULL),
-(18, 'Test cate', 'test-cate', 17, '0', '2022-06-17 06:32:56', '2022-06-17 06:33:57', '2022-06-17 06:33:57'),
-(19, 'Testing', 'testing', 17, '1', '2022-06-24 05:26:34', '2022-06-24 05:26:34', NULL);
+(17, 'Stitch Graph', 'stitch-graph', 16, '1', '2022-05-16 07:37:32', '2022-05-17 07:04:11', NULL);
 
 -- --------------------------------------------------------
 
@@ -240,8 +222,8 @@ CREATE TABLE `up_distribution_areas` (
 --
 
 INSERT INTO `up_distribution_areas` (`id`, `title`, `definition`, `slug`, `sort`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Bagnan', 'Test1', 'bagnan', 0, '1', '2022-05-09 04:14:38', '2022-06-28 01:55:28', NULL),
-(3, 'Barasat', 'Test Definition', 'barasat', 1, '1', '2022-05-09 06:33:21', '2022-06-28 06:45:28', NULL);
+(1, 'Bagnan', 'Bagnan', 'bagnan', 0, '1', '2022-05-09 04:14:38', '2022-10-11 05:30:00', NULL),
+(3, 'Barasat', 'Barasat', 'barasat', 1, '1', '2022-05-09 06:33:21', '2022-10-11 05:30:03', NULL);
 
 -- --------------------------------------------------------
 
@@ -307,7 +289,9 @@ INSERT INTO `up_migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2022_07_11_045625_create_beats_table', 11),
 (19, '2022_07_13_073334_create_grades_table', 12),
 (20, '2022_07_14_073113_create_user_distribution_areas_table', 13),
-(21, '2022_07_19_061036_create_orders_table', 14);
+(21, '2022_07_19_061036_create_orders_table', 14),
+(22, '2022_10_06_061535_create_single_step_orders_table', 15),
+(23, '2022_10_06_062117_create_single_step_order_details_table', 15);
 
 -- --------------------------------------------------------
 
@@ -335,14 +319,6 @@ CREATE TABLE `up_orders` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `up_orders`
---
-
-INSERT INTO `up_orders` (`id`, `seller_id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `beat_id`, `store_id`, `analysis_date`, `analyses_id`, `category_id`, `product_id`, `qty`, `why`, `result`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(2, 6, 1, 3, 5, 2, 4, '2022-07-17 18:30:00', 1, 1, 1, 4, 'Test Why', 'Test Result', '1', '2022-07-22 04:59:27', '2022-07-25 01:36:16', NULL),
-(3, 6, 1, 1, 3, 2, 3, '2022-07-24 18:30:00', 2, 1, 1, 5, 'This is why', 'This is result', '1', '2022-07-26 00:31:21', '2022-07-26 00:31:21', NULL);
 
 -- --------------------------------------------------------
 
@@ -375,7 +351,7 @@ INSERT INTO `up_products` (`id`, `category_id`, `grade_id`, `title`, `slug`, `ra
 (1, 1, 3, 'Pioneer 100 Page A4', 'pioneer-100-page-a4', 27.00, 40.00, 30.00, '6', 0, '1', '2022-05-17 04:24:55', '2022-07-22 00:14:58', NULL),
 (2, 1, 1, 'Pioneer 144 Page A4', 'pioneer-144-page-a4', 36.00, 58.00, 40.00, NULL, 1, '1', '2022-05-17 05:01:00', '2022-07-13 06:11:13', NULL),
 (3, 1, 2, 'Pioneer 200 Page A4', 'pioneer-200-page-a4', 45.00, 75.00, 50.00, NULL, 2, '1', '2022-05-17 05:01:13', '2022-07-13 06:10:48', NULL),
-(4, 2, NULL, 'G.B. 28 Page Drawing', 'gb-28-page-drawing', 8.00, NULL, 10.00, NULL, 3, '1', '2022-05-17 05:02:06', '2022-07-13 06:09:55', NULL),
+(4, 2, 2, 'G.B. 28 Page Drawing', 'gb-28-page-drawing', 8.00, 15.00, 10.00, '10', 3, '1', '2022-05-17 05:02:06', '2022-10-07 04:40:09', NULL),
 (5, 2, NULL, 'G.B. 4 No Drawing', 'gb-4-no-drawing', 17.00, 34.00, 20.00, '10', 4, '1', '2022-05-17 05:02:21', '2022-07-13 06:09:00', NULL),
 (6, 3, 2, 'Pioneer 4 No Drawing', 'pioneer-4-no-drawing', 24.83, 43.00, 30.00, NULL, 5, '1', '2022-05-17 05:02:41', '2022-07-13 06:15:42', NULL),
 (7, 3, 1, 'Pioneer 40 Page 11x15 Drawing', 'pioneer-40-page-11x15-drawing', 36.00, 60.00, 40.00, NULL, 6, '1', '2022-05-17 05:02:55', '2022-07-13 06:15:32', NULL),
@@ -450,8 +426,7 @@ INSERT INTO `up_products` (`id`, `category_id`, `grade_id`, `title`, `slug`, `ra
 (76, 16, 1, 'Pioneer 36 Page Scrap', 'pioneer-36-page-scrap', 36.08, 70.00, 50.00, NULL, 75, '1', '2022-05-17 05:24:55', '2022-07-13 06:24:56', NULL),
 (77, 17, 3, 'Pioneer 2No St. Graph', 'pioneer-2no-st-graph', 9.50, 14.00, 12.00, NULL, 76, '1', '2022-05-17 05:25:10', '2022-07-13 06:24:49', NULL),
 (78, 17, 2, 'Pioneer 44Page Big Graph', 'pioneer-44page-big-graph', 22.42, 38.00, 25.00, NULL, 77, '1', '2022-05-17 05:25:31', '2022-07-13 06:24:43', NULL),
-(79, 17, 1, 'Pioneer 4No. St. Graph', 'pioneer-4no-st-graph', 13.42, 20.00, 15.00, '10', 78, '1', '2022-05-17 05:25:47', '2022-07-13 06:31:29', NULL),
-(80, 1, 2, 'Test Pro', 'test-pro', 105.55, 106.66, 107.78, '100', 79, '1', '2022-07-13 05:46:29', '2022-07-13 06:31:16', NULL);
+(79, 17, 1, 'Pioneer 4No. St. Graph', 'pioneer-4no-st-graph', 13.42, 20.00, 15.00, '10', 78, '1', '2022-05-17 05:25:47', '2022-07-13 06:31:29', NULL);
 
 -- --------------------------------------------------------
 
@@ -477,7 +452,7 @@ CREATE TABLE `up_roles` (
 INSERT INTO `up_roles` (`id`, `name`, `slug`, `is_admin`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Super Admin', 'super-admin', '1', '1', '2022-05-06 07:39:45', '2022-06-24 08:27:38', NULL),
 (2, 'Distributor', 'distributor', '1', '1', '2022-05-25 23:52:00', '2022-07-25 23:46:29', NULL),
-(3, 'Seller', 'seller', '1', '1', '2022-07-13 23:51:50', '2022-07-22 04:59:05', NULL);
+(3, 'Seller', 'seller-1', '1', '1', '2022-07-13 23:51:50', '2022-10-10 05:27:03', NULL);
 
 -- --------------------------------------------------------
 
@@ -566,7 +541,17 @@ INSERT INTO `up_role_pages` (`id`, `routeName`) VALUES
 (72, 'order.list'),
 (73, 'order.edit'),
 (74, 'order.delete'),
-(75, 'order.view');
+(75, 'order.view'),
+(76, 'singleStepSellerAnalyses.distribution-area-list'),
+(77, 'singleStepSellerAnalyses.beat-list'),
+(78, 'singleStepSellerAnalyses.store-list'),
+(79, 'singleStepSellerAnalyses.category-list'),
+(80, 'singleStepSellerAnalyses.product-list'),
+(81, 'singleStepSellerAnalyses.analysis'),
+(82, 'singleStepOrder.list'),
+(83, 'singleStepOrder.view'),
+(84, 'singleStepOrder.delete'),
+(85, 'singleStepSellerAnalyses.season-list');
 
 -- --------------------------------------------------------
 
@@ -584,15 +569,6 @@ CREATE TABLE `up_role_permissions` (
 --
 
 INSERT INTO `up_role_permissions` (`role_id`, `page_id`) VALUES
-(3, 66),
-(3, 67),
-(3, 68),
-(3, 69),
-(3, 70),
-(3, 71),
-(3, 72),
-(3, 73),
-(3, 74),
 (2, 55),
 (2, 56),
 (2, 57),
@@ -604,7 +580,26 @@ INSERT INTO `up_role_permissions` (`role_id`, `page_id`) VALUES
 (2, 72),
 (2, 73),
 (2, 75),
-(2, 74);
+(2, 74),
+(3, 66),
+(3, 67),
+(3, 68),
+(3, 69),
+(3, 70),
+(3, 71),
+(3, 72),
+(3, 75),
+(3, 74),
+(3, 76),
+(3, 77),
+(3, 78),
+(3, 85),
+(3, 79),
+(3, 80),
+(3, 81),
+(3, 82),
+(3, 83),
+(3, 84);
 
 -- --------------------------------------------------------
 
@@ -631,6 +626,45 @@ INSERT INTO `up_seasons` (`id`, `title`, `slug`, `sort`, `status`, `created_at`,
 (1, 'High Season', 'high-season', 0, '1', '2022-05-20 10:34:40', '2022-05-20 10:34:40', NULL),
 (2, 'Incentive Season', 'incentive-season', 1, '1', '2022-05-20 10:34:40', '2022-05-20 10:34:40', NULL),
 (3, 'Mid Season', 'mid-season', 2, '1', '2022-05-20 10:34:56', '2022-05-20 10:34:56', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `up_single_step_orders`
+--
+
+CREATE TABLE `up_single_step_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `unique_order_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `seller_id` int(11) DEFAULT NULL COMMENT 'Id from users table',
+  `analysis_season_id` int(11) DEFAULT NULL COMMENT 'Id from analysis_seasons table',
+  `distribution_area_id` int(11) DEFAULT NULL COMMENT 'Id from distribution_areas table',
+  `distributor_id` int(11) DEFAULT NULL COMMENT 'Id from users table',
+  `beat_id` int(11) DEFAULT NULL COMMENT 'beat_id foreign key from stores table',
+  `store_id` int(11) DEFAULT NULL COMMENT 'Id from stores table',
+  `analysis_date` timestamp NULL DEFAULT current_timestamp(),
+  `analyses_id` int(11) DEFAULT NULL COMMENT 'Id from analyses table',
+  `status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `up_single_step_order_details`
+--
+
+CREATE TABLE `up_single_step_order_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `single_step_order_id` int(11) DEFAULT NULL COMMENT 'Id from users table',
+  `category_id` int(11) DEFAULT NULL COMMENT 'Id from analyses_details table',
+  `product_id` int(11) DEFAULT NULL COMMENT 'Id from analyses_details table',
+  `qty` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `why` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `result` text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -672,9 +706,7 @@ CREATE TABLE `up_stores` (
 --
 
 INSERT INTO `up_stores` (`id`, `distribution_area_id`, `name_1`, `name_2`, `store_name`, `slug`, `phone_no_1`, `whatsapp_no_1`, `phone_no_2`, `whatsapp_no_2`, `street`, `district_region`, `zip`, `beat_name`, `beat_id`, `grade_id`, `email`, `sale_size_category`, `integrity`, `notes`, `sort`, `status`, `progress_status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'Store Name 11', 'Store Name 2', 'Dipankar Stores', 'dipankar-stores', '987543210', '9876543211', '9876543212', '9876543213', 'M.G. Road', 'Kolkata', '700033', NULL, 1, 2, 'dipankarstores@yopmail.com', 'L', 'A', 'Test notes.', 0, '1', 'IP', '2022-05-13 04:39:17', '2022-07-13 02:30:26', NULL),
 (2, 3, 'Dealer', NULL, 'Maa Laxmi Bhandar', 'maa-laxmi-bhandar', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'M', 'B', NULL, 1, '1', 'CP', '2022-06-27 04:22:59', '2022-07-28 23:50:48', NULL),
-(3, 1, 'Test Name 1', NULL, 'Test Store Name 1', 'test-store-name-1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'S', 'A+', NULL, 2, '1', 'IP', '2022-07-13 01:40:04', '2022-07-13 01:40:04', NULL),
 (4, 1, 'Sanjoy Kayal', NULL, 'Sanjoy Stores', 'sanjoy-stores', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 4, NULL, 'S', 'B', NULL, 3, '1', 'IP', '2022-07-13 02:50:09', '2022-07-28 05:13:01', NULL);
 
 -- --------------------------------------------------------
@@ -718,12 +750,13 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1659086496, 'Y', '2022-05-06 07:39:45', '2022-07-29 03:51:36', NULL),
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1665465722, 'Y', '2022-05-06 07:39:45', '2022-10-10 23:52:02', NULL),
 (3, 'Owner', NULL, NULL, 'Tibrewalla', 'Agarwal', 'Tibrewalla Agarwal', 'tibrewalla', 'info@lionsbbdbagbloodbank.org', 'Marwari Relief Society', '2274 5675', '$2y$10$0hd/hA0IA0zRWkIOP6gG1uaYK27jdvAnWNaf7XbMavBBah7r9Ld8y', 'admin_user_1653979426.png', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1658815921, 'N', '2022-05-09 06:16:32', '2022-07-26 00:42:01', NULL),
 (4, 'Owner', NULL, NULL, 'Mahendra', 'Agarwal', 'Mahendra Agarwal', 'mahendra', 'mahendra@yopmail.com', 'Marwari Relief Society', '9876543210', '$2y$10$QmoJYggTN670P.nJKSQxC..MdbtEEw2DLtw7RmDfnExZxjzSJsB5C', 'admin_user_1653979471.png', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1658818985, 'N', '2022-05-26 05:32:09', '2022-07-26 01:33:05', NULL),
 (5, 'My Job Title', NULL, NULL, 'My', 'Job', 'My Job Title New', 'dev', 'dev@yopmail.com', 'Vishi Prem Workz', NULL, '$2y$10$Ks26Ofv37EMqNgZZ7lr61OCZfUqMxTe27S2SGgoovbEJ7pyZpW.3m', '', 'M', NULL, 3, NULL, NULL, NULL, 'D', 'Y', '1', 1658815879, 'N', '2022-06-27 04:20:38', '2022-07-26 00:41:19', NULL),
-(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1659086525, 'N', '2022-07-14 00:43:42', '2022-07-29 03:52:05', NULL),
-(7, NULL, NULL, NULL, 'Soubhik', 'Paul', 'Soubhik Paul', 'soubhikpaul', 'soubhikpaul@yopmail.com', NULL, NULL, '$2y$10$0PWEImztEZMoA0AvRgdV5untgyY.V4Qt7xoQ28FCwvcpPAWKGPdXq', 'seller_1657785389.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1657886407, 'N', '2022-07-14 02:26:29', '2022-07-15 06:30:07', NULL);
+(6, NULL, NULL, NULL, 'Sanjoy', 'Kayal', 'Sanjoy Kayal', 'sanjoykayal', 'sanjoykayal@yopmail.com', NULL, '9876543210', '$2y$10$3zk0NqEBvS.4ai30L/RQJOG.c.QHWbRsUue9OKBH5deDvfHlvcvp2', 'seller_1657779221.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1664177525, 'N', '2022-07-14 00:43:42', '2022-09-26 02:02:05', NULL),
+(7, NULL, NULL, NULL, 'Soubhik', 'Paul', 'Soubhik Paul', 'soubhikpaul', 'soubhikpaul@yopmail.com', NULL, NULL, '$2y$10$0PWEImztEZMoA0AvRgdV5untgyY.V4Qt7xoQ28FCwvcpPAWKGPdXq', 'seller_1657785389.png', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1657886407, 'N', '2022-07-14 02:26:29', '2022-07-15 06:30:07', NULL),
+(8, NULL, NULL, NULL, 'Manish', 'Bera', 'Manish Bera', 'manish', 'manish@yopmail.com', NULL, NULL, '$2y$10$v4nXt4MnuDHbQ9tuiD5Oi.7Btoeve/AgJOj/VeFeImNAsVo.0SCSa', '', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1665464234, 'N', '2022-09-26 02:03:28', '2022-10-10 23:27:14', NULL);
 
 -- --------------------------------------------------------
 
@@ -755,7 +788,8 @@ INSERT INTO `up_user_details` (`id`, `user_id`, `job_title_2`, `full_name_2`, `p
 (2, 4, NULL, NULL, NULL, NULL, '225/227,  Rabindra Sarani Barabazar H.O.', 'Kolkata', 'South 24 Parganas', 'West Bengal', '700007', 'Testing'),
 (3, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (4, 6, NULL, NULL, NULL, '9876543210', 'G.P. Maitra Road', 'Kolkata', 'South 24 Parganas', 'West Bengal', '700143', NULL),
-(5, 7, NULL, NULL, NULL, '9876543210', 'Tollygunge', 'Kolkata', 'South 24 Parganas', 'West Bengal', '700033', NULL);
+(5, 7, NULL, NULL, NULL, '9876543210', 'Tollygunge', 'Kolkata', 'South 24 Parganas', 'West Bengal', '700033', NULL),
+(6, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -775,7 +809,9 @@ CREATE TABLE `up_user_distribution_areas` (
 INSERT INTO `up_user_distribution_areas` (`user_id`, `distribution_area_id`) VALUES
 (7, 3),
 (6, 1),
-(6, 3);
+(6, 3),
+(8, 1),
+(8, 3);
 
 -- --------------------------------------------------------
 
@@ -797,7 +833,8 @@ INSERT INTO `up_user_roles` (`user_id`, `role_id`) VALUES
 (5, 2),
 (4, 2),
 (6, 3),
-(7, 3);
+(7, 3),
+(8, 3);
 
 -- --------------------------------------------------------
 
@@ -940,6 +977,18 @@ ALTER TABLE `up_seasons`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `up_single_step_orders`
+--
+ALTER TABLE `up_single_step_orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `up_single_step_order_details`
+--
+ALTER TABLE `up_single_step_order_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `up_stores`
 --
 ALTER TABLE `up_stores`
@@ -971,13 +1020,13 @@ ALTER TABLE `up_website_settings`
 -- AUTO_INCREMENT for table `up_analyses`
 --
 ALTER TABLE `up_analyses`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `up_analyses_details`
 --
 ALTER TABLE `up_analyses_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `up_analysis_seasons`
@@ -1025,13 +1074,13 @@ ALTER TABLE `up_grades`
 -- AUTO_INCREMENT for table `up_migrations`
 --
 ALTER TABLE `up_migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `up_orders`
 --
 ALTER TABLE `up_orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `up_products`
@@ -1049,13 +1098,25 @@ ALTER TABLE `up_roles`
 -- AUTO_INCREMENT for table `up_role_pages`
 --
 ALTER TABLE `up_role_pages`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `up_seasons`
 --
 ALTER TABLE `up_seasons`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `up_single_step_orders`
+--
+ALTER TABLE `up_single_step_orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `up_single_step_order_details`
+--
+ALTER TABLE `up_single_step_order_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `up_stores`
@@ -1067,13 +1128,13 @@ ALTER TABLE `up_stores`
 -- AUTO_INCREMENT for table `up_users`
 --
 ALTER TABLE `up_users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `up_user_details`
 --
 ALTER TABLE `up_user_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `up_website_settings`

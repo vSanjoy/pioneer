@@ -10,6 +10,7 @@ use App\Models\Cms;
 use App\Models\Contact;
 use App\Models\WebsiteSetting;
 use App\Models\Analyses;
+use App\Models\AnalysesDetail;
 use App\Models\AnalysisSeason;
 
 /*
@@ -629,7 +630,7 @@ function priceRoundOff(float $price) {
 function generateUniqueId() {
     $timeNow        = date("his");
     $randNumber     = strtoupper(substr(sha1(time()), 0, 4));
-    return $unique  = 'CR' . $timeNow . $randNumber;
+    return $unique  = 'PSA' . $timeNow . $randNumber;
 }
 
 /*
@@ -728,25 +729,43 @@ function getAge($dob = null) {
     * Input Params  : 
     * Return Value  : 
 */
-function getAnalysisDetails($distributionAreaId = null, $beatId = null, $storeId = null, $categoryId = null, $productId = null) {
+function getAnalysisDetails($distributionAreaId = null, $beatId = null, $storeId = null, $seasonId = null, $categoryId = null, $productId = null) {
     $details = null;
 
-    $analysisSeasonDetails = AnalysisSeason::where(['year' => Carbon::now()->format('Y')])->first();
-    if ($analysisSeasonDetails != null) {
-        $details = Analyses::where([
-                                    'analysis_season_id' => $analysisSeasonDetails->id,
-                                    'distribution_area_id' => customEncryptionDecryption($distributionAreaId, 'decrypt'),
-                                    'store_id' => customEncryptionDecryption($storeId, 'decrypt'),
-                                    'beat_id' => customEncryptionDecryption($beatId, 'decrypt')
-                                ])
-                                ->with('analysesDetails')
-                                ->whereHas('analysesDetails', function ($query) use($categoryId, $productId) {
-                                    $query->where([
-                                        'category_id' => $categoryId,
-                                        'product_id' => $productId
-                                    ]);
-                                })
-                                ->first();
-    }
+    $details = Analyses::with(['analysesDetails' => function ($q) use ($categoryId, $productId) {
+                            $q->where([
+                                'category_id' => $categoryId,
+                                'product_id' => $productId
+                            ]);
+                        }])
+                        ->where([
+                            'analysis_season_id' => customEncryptionDecryption($seasonId, 'decrypt'),
+                            'distribution_area_id' => customEncryptionDecryption($distributionAreaId, 'decrypt'),
+                            'store_id' => customEncryptionDecryption($storeId, 'decrypt'),
+                            'beat_id' => customEncryptionDecryption($beatId, 'decrypt')
+                        ])
+                        ->first();
     return $details;
+}
+
+/*
+    * Function name : analysisDetails
+    * Purpose       : This function is to get analysis details from admin / distributor
+    * Author        :
+    * Created Date  :
+    * Modified Date : 
+    * Input Params  : 
+    * Return Value  : 
+*/
+function analysisDetails($analysesId = null, $categoryId = null, $productId = null) {
+    $analysisDetails = null;
+
+    $analysisDetails = AnalysesDetail::where([
+                                'analyses_id' => $analysesId,
+                                'category_id' => $categoryId,
+                                'product_id' => $productId
+                            ])
+                            ->first();
+
+    return $analysisDetails;
 }

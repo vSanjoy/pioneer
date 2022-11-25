@@ -15,7 +15,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>
-					<h3>{!! $analysisSeason->title.' ('.$analysisSeason->year.')' !!} - {!! $distributionArea->title !!} - {!! $distributor->full_name.' ('.$distributor->company.')' !!} - {!! $store->name_1.' ('.$store->store_name.', '.$store->beatDetails->title.')'.$store->id !!}</h3>
+					<h3>{!! $analysisSeason->title.' ('.$analysisSeason->year.')' !!} - {!! $distributionArea->title !!} - {!! $distributor->full_name.' ('.$distributor->company.')' !!} - {!! $store->name_1.' ('.$store->store_name.', '.$store->beatDetails->title.')' !!}</h3>
 					@php $analysisDate = null; if (isset($details->analysis_date)) { $analysisDate = changeDateFormat($details->analysis_date, 'm/d/Y'); } @endphp
 
 					<div class="form-body mt-4-5">

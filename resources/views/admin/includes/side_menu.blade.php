@@ -329,6 +329,25 @@ $getSiteSettings = getSiteSettings();
 				</li>
 			@endif
 
+			<!-- Single Step Order Management Start -->
+			@php
+			$singleStepOrderRoutes = ['singleStepOrder.list'];
+			@endphp
+			@if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type != 'S' || in_array('singleStepOrder.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $singleStepOrderRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $singleStepOrderRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="shopping-bag" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_single_step_order')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $singleStepOrderRoutes))in @endif">
+						<li class="sidebar-item">
+							<a href="{{ route('admin.singleStepOrder.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+			@endif
+
 			<!-- Website Settings Management Start -->
 			{{-- @php
 			$siteSettingRoutes 	= ['website-settings'];

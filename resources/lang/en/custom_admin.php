@@ -388,6 +388,9 @@ return [
     'label_view_order'                              => 'View Order',
     'label_multi_step_analysis'                     => 'Multi Step Analysis',
     'label_single_step_analysis'                    => 'Single Step Analysis',
+    'label_menu_single_step_order'                  => 'Single Step Order',
+    'label_unique_order_id'                         => 'Order Id',
+    'label_season_list'                             => 'Season List',
 
     
 /* Buttons */
@@ -555,6 +558,7 @@ return [
     'error_retailer_price'                          => 'Please enter retailer price.',
     'error_enter_valid_number'                      => 'Please enter valid number.',
     'error_qty'                                     => 'Please enter order quantity.',
+    'error_analysis_not_done_yet'                   => 'Analysis for this season not done yet from distributor.',
     
 
 /* Messages */

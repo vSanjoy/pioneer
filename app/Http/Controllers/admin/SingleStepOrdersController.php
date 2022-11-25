@@ -3,7 +3,7 @@
 # Company Name      :
 # Author            :
 # Created Date      :
-# Page/Class name   : OrdersController
+# Page/Class name   : Single Step Orders Controller
 # Purpose           : Category Management
 /*****************************************************/
 
@@ -17,27 +17,28 @@ use Carbon\Carbon;
 use App\Traits\GeneralMethods;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Order;
+use App\Models\SingleStepOrder;
+use App\Models\SingleStepOrderDetail;
 use DataTables;
 
-class OrdersController extends Controller
+class SingleStepOrdersController extends Controller
 {
     use GeneralMethods;
-    public $controllerName  = 'Orders';
+    public $controllerName  = 'SingleStepOrders';
     public $management;
-    public $modelName       = 'Order';
+    public $modelName       = 'SingleStepOrder';
     public $breadcrumb;
     public $routePrefix     = 'admin';
-    public $pageRoute       = 'order';
-    public $listUrl         = 'order.list';
-    public $listRequestUrl  = 'order.ajax-list-request';
-    public $addUrl          = 'order.add';
-    public $editUrl         = 'order.edit';
-    public $viewUrl         = 'order.view';
-    public $statusUrl       = 'order.change-status';
-    public $deleteUrl       = 'order.delete';
-    public $viewFolderPath  = 'admin.order';
-    public $model           = 'Order';
+    public $pageRoute       = 'singleStepOrder';
+    public $listUrl         = 'singleStepOrder.list';
+    public $listRequestUrl  = 'singleStepOrder.ajax-list-request';
+    public $addUrl          = 'singleStepOrder.add';
+    public $editUrl         = 'singleStepOrder.edit';
+    public $viewUrl         = 'singleStepOrder.view';
+    public $statusUrl       = 'singleStepOrder.change-status';
+    public $deleteUrl       = 'singleStepOrder.delete';
+    public $viewFolderPath  = 'admin.singleStepOrder';
+    public $model           = 'SingleStepOrder';
 
     /*
         * Function Name : __construct
@@ -53,7 +54,7 @@ class OrdersController extends Controller
         parent::__construct();
 
         $this->management   = trans('custom_admin.label_menu_order');
-        $this->model        = new Order();
+        $this->model        = new SingleStepOrder();
 
         // Assign breadcrumb
         $this->assignBreadcrumb();
@@ -143,7 +144,10 @@ class OrdersController extends Controller
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
                         ->addColumn('created_at', function ($row) {
-                            return changeDateFormat($row->created_at, 'd-m-Y');
+                            return changeDateFormat($row->created_at, 'd-m-Y H:i');
+                        })
+                        ->addColumn('unique_order_id', function ($row) {
+                            return $row->unique_order_id;
                         })
                         ->addColumn('seller_id', function ($row) {
                             if ($row->sellerDetails) {
@@ -159,9 +163,9 @@ class OrdersController extends Controller
                                 return 'N/A';
                             }
                         })
-                        ->addColumn('product_id', function ($row) {
-                            if ($row->productDetails) {
-                                return $row->productDetails->title;
+                        ->addColumn('analysis_season_id', function ($row) {
+                            if ($row->analysisSeasonDetails) {
+                                return $row->analysisSeasonDetails->title.' ('.$row->analysisSeasonDetails->year.')';
                             } else {
                                 return 'N/A';
                             }
@@ -189,13 +193,15 @@ class OrdersController extends Controller
                             $btn = '';
                             if (Auth::guard('admin')->user()->type == 'S') {
                                 if ($isAllow || in_array($this->viewUrl, $allowedRoutes)) {
-                                    $btn .= '<a href="'.route($this->routePrefix.'.order.view', customEncryptionDecryption($row->id)).'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_view').'" target="_blank"><i class="fa fa-eye ml_minus_2"></i></a>';
+                                    $btn .= '<a href="'.route($this->routePrefix.'.singleStepOrder.view', customEncryptionDecryption($row->id)).'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_view').'" target="_blank"><i class="fa fa-eye ml_minus_2"></i></a>';
                                 }
                                 if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
                                     $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
                                 }
                             } else {
-                                $btn .= '<a href="'.route($this->routePrefix.'.order.view', customEncryptionDecryption($row->id)).'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_view').'" target="_blank"><i class="fa fa-eye ml_minus_2"></i></a>';
+                                $btn .= '<a href="'.route($this->routePrefix.'.singleStepOrder.view', customEncryptionDecryption($row->id)).'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_view').'" target="_blank"><i class="fa fa-eye ml_minus_2"></i></a>';
+
+                                $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
                             }
                             
                             return $btn;
@@ -210,75 +216,6 @@ class OrdersController extends Controller
         } catch (\Throwable $e) {
             $this->generateToastMessage('error', $e->getMessage(), false);
             return '';
-        }
-    }
-
-    /*
-        * Function name : edit
-        * Purpose       : This function is to edit order
-        * Author        :
-        * Created Date  :
-        * Modified Date : 
-        * Input Params  : Request $request
-        * Return Value  : Returns order data
-    */
-    public function edit(Request $request, $id = null) {
-        $data = [
-            'pageTitle'     => trans('custom_admin.label_edit_order'),
-            'panelTitle'    => trans('custom_admin.label_edit_order'),
-            'pageType'      => 'EDITPAGE'
-        ];
-
-        try {
-            $data['id']         = $id;
-            $data['orderId']    = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['details']    = $details = $this->model->where(['id' => $id])->first();
-            
-            if ($request->isMethod('POST')) {
-                if ($id == null) {
-                    $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-                    return redirect()->route($this->routePrefix.'.'.$this->listUrl);
-                }
-                $validationCondition = array(
-                    'qty'   => 'required|regex:'.config('global.VALID_NUMERIC'),
-                    'why'   => 'required',
-                    'result'=> 'required',
-                );
-                $validationMessages = array(
-                    'qty.required'      => trans('custom_admin.error_qty'),
-                    'qty.regex'         => trans('custom_admin.error_enter_valid_number'),
-                    'why.required'      => trans('custom_admin.error_why'),
-                    'result.required'   => trans('custom_admin.error_result')
-                );
-                $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
-                if ($validator->fails()) {
-                    $validationFailedMessages = validationMessageBeautifier($validator->messages()->getMessages());
-                    $this->generateToastMessage('error', $validationFailedMessages, false);
-                    return redirect()->back()->withInput();
-                } else {
-                    $updateData             = [];
-                    $updateData['qty']      = $request->qty ?? null;
-                    $updateData['why']      = $request->why ?? null;
-                    $updateData['result']   = $request->result ?? null;
-                    $update = $details->update($updateData);
-
-                    if ($update) {
-                        $this->generateToastMessage('success', trans('custom_admin.success_data_updated_successfully'), false);
-                        $this->windowCloseOnSuccess();
-                        // return redirect()->route($this->routePrefix.'.'.$this->listUrl);
-                    } else {
-                        $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
-                        return redirect()->back()->withInput();
-                    }
-                }
-            }
-            return view($this->viewFolderPath.'.edit', $data);
-        } catch (Exception $e) {
-            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
-        } catch (\Throwable $e) {
-            $this->generateToastMessage('error', $e->getMessage(), false);
-            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
         }
     }
 
@@ -301,7 +238,7 @@ class OrdersController extends Controller
         try {
             $data['id']         = $id;
             $data['orderId']    = $id = customEncryptionDecryption($id, 'decrypt');
-            $data['details']    = $details = $this->model->where(['id' => $id])->first();
+            $data['details']    = $details = $this->model->where(['id' => $id])->with(['singleStepOrderDetails','analysesDetails','analysisSeasonDetails'])->first();
             
             return view($this->viewFolderPath.'.view', $data);
         } catch (Exception $e) {
@@ -330,6 +267,7 @@ class OrdersController extends Controller
                 if ($id != null) {
                     $details = $this->model->where('id', $id)->first();
                     if ($details != null) {
+                        SingleStepOrderDetail::where(['single_step_order_id' => $id])->delete();
                         $delete = $details->delete();
                         if ($delete) {
                             $title      = trans('custom_admin.message_success');
