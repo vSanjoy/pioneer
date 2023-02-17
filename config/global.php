@@ -37,4 +37,5 @@ return [
     'GALLERY_MAX_IMAGE_UPLOAD_SIZE'     => 5120,                                    // Maximum upload images
     'WEBSITE_LANGUAGE'                  => ['en' => 'English', 'ar' => 'Arabic'],   // Website language
     'BOOKING_SHOW_PER_PAGE'             => 10,                                      // Number of booking show in booking history page
+    'DATATABLE_SCROLL_HEIGHT'           => 600,
 ];

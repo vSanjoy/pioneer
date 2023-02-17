@@ -347,6 +347,37 @@ $getSiteSettings = getSiteSettings();
 					</ul>
 				</li>
 			@endif
+			
+			<!-- Report Management Start -->
+			@php
+			$analysisReportRoutes 	= ['analysisReport.list','sellerAnalyses.export'];
+			$areaReportRoutes 		= ['areaReport.list'];
+			$storeReportRoutes 		= ['storeReport.list'];
+			@endphp
+			@if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type == 'SA' )
+				<li class="sidebar-item @if (in_array($currentPage, $analysisReportRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $analysisReportRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="bar-chart-2" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_report')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $analysisReportRoutes))in @endif">
+						<li class="sidebar-item">
+							<a href="{{ route('admin.analysisReport.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_menu_analysis') @lang('custom_admin.label_menu_report')</span>
+							</a>
+						</li>
+						<li class="sidebar-item">
+							<a href="{{ route('admin.areaReport.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_menu_area') @lang('custom_admin.label_menu_report')</span>
+							</a>
+						</li>
+						<li class="sidebar-item">
+							<a href="{{ route('admin.storeReport.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_menu_store') @lang('custom_admin.label_menu_report')</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+			@endif
 
 			<!-- Website Settings Management Start -->
 			{{-- @php

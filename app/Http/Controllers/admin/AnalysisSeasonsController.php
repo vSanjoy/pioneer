@@ -634,7 +634,14 @@ class AnalysisSeasonsController extends Controller
 
                             return $btn;
                         })
-                        ->rawColumns(['distribution_area_id','sale_size_category','progress_status','action'])
+                        ->addColumn('analysis_link', function ($row) use ($isAllow, $allowedRoutes, $analysisSeasonId, $distributionAreaId, $distributorId) {
+                            $analysisLink = '';
+                            if ($isAllow || in_array('analysisSeason.analysis', $allowedRoutes)) {
+                                $analysisLink = route($this->routePrefix.'.analysisSeason.analysis', [$analysisSeasonId, $distributionAreaId, $distributorId, customEncryptionDecryption($row->id)]);
+                            }
+                            return $analysisLink;
+                        })
+                        ->rawColumns(['analysis_link','distribution_area_id','sale_size_category','progress_status','action'])
                         ->make(true);
             }
 

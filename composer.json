@@ -19,8 +19,8 @@
         "maatwebsite/excel": "^3.1",
         "mews/captcha": "^3.2",
         "spatie/laravel-translatable": "^4.6",
-        "yajra/laravel-datatables-oracle": "^9.15",
         "stripe/stripe-php": "^7.97.0",
+        "yajra/laravel-datatables-oracle": "^9.15",
         "yoeunes/toastr": "^1.2"
     },
     "require-dev": {

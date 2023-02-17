@@ -2379,19 +2379,46 @@ $(document).ready(function() {
         // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
 
-    $('.dateRangePicker').daterangepicker({
+    // $('.dateRangePicker').daterangepicker({
+    //     singleDatePicker: false,
+    //     showDropdowns: false,
+    //     showWeekNumbers: false,
+    //     showISOWeekNumbers: false,
+    //     timePicker: true,
+    //     timePicker24Hour: true,
+    //     timePickerSeconds: false,
+    //     autoApply: true,
+    //     autoUpdateInput: false,
+    //     alwaysShowCalendars: false,
+    //     startDate: moment().startOf('hour'),
+    //     // endDate: moment().startOf('hour').add(24, 'hour'),
+    //     ranges: {
+    //         'Today': [moment(), moment()],
+    //         'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+    //         'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+    //         'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+    //         'This Month': [moment().startOf('month'), moment().endOf('month')],
+    //         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    //     },
+    //     locale: {
+    //         format: 'YYYY-MM-DD HH:mm'
+    //     }
+    // }, function(start, end, label, picker) {
+    //     $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + picker.endDate.format('YYYY-MM-DD HH:mm'));
+    //     // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    // });
+
+    $(".dateRangePicker").daterangepicker({
         singleDatePicker: false,
-        showDropdowns: false,
+        showDropdowns: true,
         showWeekNumbers: false,
         showISOWeekNumbers: false,
         timePicker: true,
         timePicker24Hour: true,
-        timePickerSeconds: false,
-        autoApply: true,
-        autoUpdateInput: true,
+        timePickerSeconds: true,
+        autoUpdateInput: false,
         alwaysShowCalendars: false,
-        startDate: moment().startOf('hour'),
-        // endDate: moment().startOf('hour').add(24, 'hour'),
+        minYear: 2022,
         ranges: {
             'Today': [moment(), moment()],
             'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -2403,16 +2430,14 @@ $(document).ready(function() {
         locale: {
             format: 'YYYY-MM-DD HH:mm'
         }
-    }, function(start, end, label) {
-        // $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + picker.endDate.format('YYYY-MM-DD HH:mm'));
-        // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    }).on("apply.daterangepicker", function (e, picker) {
+        picker.element.val(picker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + picker.endDate.format('YYYY-MM-DD HH:mm'));
     });
 
     $('.dateRangePickerInEdit').daterangepicker({
         singleDatePicker: false,
         showDropdowns: false,
-        showWeekNumbers: false,
-        showISOWeekNumbers: false,
+        
         timePicker: true,
         timePicker24Hour: true,
         timePickerSeconds: false,

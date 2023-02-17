@@ -256,7 +256,14 @@ class StoresController extends Controller
                             }                            
                             return $btn;
                         })
-                        ->rawColumns(['distribution_area_id','sale_size_category','status','action'])
+                        ->addColumn('edit_link', function ($row) use ($isAllow, $allowedRoutes) {
+                            $editLink = '';
+                            if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
+                                $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
+                            }
+                            return $editLink;
+                        })
+                        ->rawColumns(['edit_link','distribution_area_id','sale_size_category','status','action'])
                         ->make(true);
             }
             return view($this->viewFolderPath.'.list');

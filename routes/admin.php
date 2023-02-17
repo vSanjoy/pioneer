@@ -265,6 +265,24 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/delete/{id}', 'SingleStepOrdersController@delete')->name('delete');
                 Route::post('/bulk-actions', 'SingleStepOrdersController@bulkActions')->name('bulk-actions');
             });
+
+            Route::group(['prefix' => 'analysisReport', 'as' => 'analysisReport.'], function () {
+                Route::get('/', 'AnalysisReportController@list')->name('list');
+                Route::post('ajax-list-request', 'AnalysisReportController@ajaxListRequest')->name('ajax-list-request');
+                Route::any('/export', 'AnalysisReportController@export')->name('export');
+            });
+
+            Route::group(['prefix' => 'areaReport', 'as' => 'areaReport.'], function () {
+                Route::get('/', 'AreaReportController@list')->name('list');
+                Route::post('ajax-list-request', 'AreaReportController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/export', 'AreaReportController@export')->name('export');
+            });
+
+            Route::group(['prefix' => 'storeReport', 'as' => 'storeReport.'], function () {
+                Route::get('/', 'StoreReportController@list')->name('list');
+                Route::post('ajax-list-request', 'StoreReportController@ajaxListRequest')->name('ajax-list-request');
+                Route::any('/export', 'StoreReportController@export')->name('export');
+            });
             
         });
 

@@ -42,6 +42,6 @@ class Beat extends Model
         * Return Value  : 
     */
 	public function storeDetails() {
-		return $this->hasOne('App\Models\Store', 'beat_id');
+		return $this->hasOne('App\Models\Store', 'store_id');
 	}
 }

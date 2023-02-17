@@ -391,6 +391,21 @@ return [
     'label_menu_single_step_order'                  => 'Single Step Order',
     'label_unique_order_id'                         => 'Order Id',
     'label_season_list'                             => 'Season List',
+    'label_menu_report'                             => 'Report',
+    'label_menu_analysis_report'                    => 'Analysis Report',
+    'label_analysis_report_list'                    => 'List',
+    'label_store_phone'                             => 'Store Phone Number',
+    'label_distributor_phone'                       => 'Distributor Phone Number',
+    'label_distributor_company'                     => 'Distributor Company',
+    'label_total_target_completed'                  => 'Total Target Completed',
+    'label_menu_area'                               => 'Area',
+    'label_area_report_list'                        => 'List',
+    'label_menu_area_report'                        => 'Area Report',
+    'label_store_owner'                             => 'Store Owner',
+    'label_representative'                          => 'Representative',
+    'label_representative_phone'                    => 'Representative Phone Number',
+    'label_menu_store_report'                       => 'Store Report',
+    'label_store_report_list'                       => 'List',
 
     
 /* Buttons */
