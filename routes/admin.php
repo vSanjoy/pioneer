@@ -249,13 +249,17 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/season-list/{distributionAreaId}/{beatId}/{storeId}', 'SingleStepSellerAnalysesController@seasonList')->name('season-list');
                 Route::post('/ajax-season-list-request/{distributionAreaId}/{beatId}/{storeId}', 'SingleStepSellerAnalysesController@ajaxSeasonListRequest')->name('ajax-season-list-request');
 
+                // Distributor
+                Route::get('/distributor-list/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@distributorList')->name('distributor-list');
+                Route::post('/ajax-season-list-request/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@ajaxDistributorListRequest')->name('ajax-distributor-list-request');
+
                 // Category
-                Route::get('/category-list/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@categoryList')->name('category-list');
-                Route::post('/ajax-category-list-request/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@ajaxCategoryListRequest')->name('ajax-category-list-request');
+                Route::get('/category-list/{distributionAreaId}/{beatId}/{storeId}/{seasonId}/{distributorId}', 'SingleStepSellerAnalysesController@categoryList')->name('category-list');
+                Route::post('/ajax-category-list-request/{distributionAreaId}/{beatId}/{storeId}/{seasonId}/{distributorId}', 'SingleStepSellerAnalysesController@ajaxCategoryListRequest')->name('ajax-category-list-request');
 
                 // Analysis
-                Route::get('/analysis/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@analysisUpdate')->name('analysis');
-                Route::post('/analysis-update/{distributionAreaId}/{beatId}/{storeId}/{seasonId}', 'SingleStepSellerAnalysesController@analysisUpdate')->name('analysis-update');
+                Route::get('/analysis/{distributionAreaId}/{beatId}/{storeId}/{seasonId}/{distributorId}', 'SingleStepSellerAnalysesController@analysisUpdate')->name('analysis');
+                Route::post('/analysis-update/{distributionAreaId}/{beatId}/{storeId}/{seasonId}/{distributorId}', 'SingleStepSellerAnalysesController@analysisUpdate')->name('analysis-update');
             });
 
             Route::group(['prefix' => 'singleStepOrder', 'as' => 'singleStepOrder.'], function () {

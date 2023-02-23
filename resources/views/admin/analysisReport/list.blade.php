@@ -38,7 +38,7 @@
 																	'id' => 'date_range',
 																	'class' => 'form-control dateRangePicker',
 																	'placeholder' => '',
-																	// 'readonly' => true
+																	'readonly' => true
 																	]) }}
 									</div>
 								</div>

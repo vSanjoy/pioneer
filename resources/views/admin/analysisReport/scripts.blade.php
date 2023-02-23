@@ -99,7 +99,7 @@ $(document).ready(function() {
 		var distributionAreaId	= $('#distribution_area_id').val();
 		var storeId				= $('#store_id').val();
 		
-		if (dateRange != '' || distributorId != '' || distributionAreaId != '') {
+		if (dateRange != '' || distributorId != '' || distributionAreaId != '' || storeId != '') {
 			var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}?date_range=" + dateRange + "&distributor_id=" + distributorId + "&distribution_area_id=" + distributionAreaId + "&store_id=" + storeId;
 			window.history.pushState({href: getListUrlWithFilter}, '', getListUrlWithFilter);
 			getList();

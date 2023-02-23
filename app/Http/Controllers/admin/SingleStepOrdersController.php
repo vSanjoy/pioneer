@@ -19,6 +19,9 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\SingleStepOrder;
 use App\Models\SingleStepOrderDetail;
+use App\Models\DistributionArea;
+use App\Models\Beat;
+use App\Models\Store;
 use DataTables;
 
 class SingleStepOrdersController extends Controller
@@ -80,6 +83,10 @@ class SingleStepOrdersController extends Controller
         ];
 
         try {
+            $data['beats'] = Beat::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
+            $data['distributionAreas'] = DistributionArea::where(['status' => '1'])->whereNull('deleted_at')->select('id','title')->orderBy('title', 'ASC')->get();
+            $data['stores'] = Store::where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name')->orderBy('store_name', 'ASC')->get();
+
             // Start :: Manage restriction
             $data['isAllow'] = false;
             $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
@@ -116,20 +123,53 @@ class SingleStepOrdersController extends Controller
 
         try {
             if ($request->ajax()) {
+                // Order list logged in user wise
                 if (Auth::guard('admin')->user()->type == 'D') {
                     $data = $this->model->where([
                                             'distributor_id' => Auth::guard('admin')->user()->id
                                         ])
-                                        ->orderBy('id', 'desc')
-                                        ->get();
+                                        ->orderBy('id', 'desc');
                 } else if (Auth::guard('admin')->user()->type == 'S') {
                     $data = $this->model->where([
                                             'seller_id' => Auth::guard('admin')->user()->id
                                         ])
-                                        ->orderBy('id', 'desc')
-                                        ->get();
+                                        ->orderBy('id', 'desc');
                 } else {
-                    $data = $this->model->orderBy('id', 'desc')->get();
+                    $data = $this->model->orderBy('id', 'desc');
+                }
+                // Order list logged in user wise
+
+                $dateRange          = $request->date_range;
+                $filterByDateRange  = false;
+                if ($dateRange != '') {
+                    $filterByDateRange  = true;
+                    $filter['date_range'] = $dateRange;
+
+                    $explodedDateRange = explode(' - ', $dateRange);
+
+                    $from   = $explodedDateRange[0];
+                    $to     = $explodedDateRange[1];
+                }
+                // Distribution Area
+                $distributionAreaId         = $request->distribution_area_id;
+                $filterByDistributionArea   = false;
+                if ($distributionAreaId != '') {
+                    $filterByDistributionArea = true;
+                    $filter['distribution_area_id'] = $distributionAreaId;
+                }
+                // Beat
+                $beatId         = $request->beat_id;
+                $filterByBeat   = false;
+                if ($beatId != '') {
+                    $filterByBeat = true;
+                    $filter['beat_id'] = $beatId;
+                }
+                // Store
+                $storeId            = $request->store_id;
+                $filterByStore      = false;
+                if ($storeId != '') {
+                    $filterByStore  = true;
+                    $filter['store_id'] = $storeId;
                 }
 
                 // Start :: Manage restriction
@@ -140,6 +180,21 @@ class SingleStepOrdersController extends Controller
                 }
                 $allowedRoutes  = $restrictions['allow_routes'];
                 // End :: Manage restriction
+
+                // Based on disribution area filter
+                if ($filterByDateRange) {
+                    $data = $data->whereBetween('created_at', [$from, $to]);
+                }
+                if ($filterByDistributionArea) {
+                    $data = $data->where('distribution_area_id', $distributionAreaId);
+                }
+                if ($filterByBeat) {
+                    $data = $data->where('beat_id', $beatId);
+                }
+                if ($filterByStore) {
+                    $data = $data->where('store_id', $storeId);
+                }
+                $data = $data->get();
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
@@ -152,6 +207,20 @@ class SingleStepOrdersController extends Controller
                         ->addColumn('seller_id', function ($row) {
                             if ($row->sellerDetails) {
                                 return $row->sellerDetails->full_name;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('distribution_area_id', function ($row) {
+                            if ($row->distributionAreaDetails) {
+                                return $row->distributionAreaDetails->title;
+                            } else {
+                                return 'N/A';
+                            }
+                        })
+                        ->addColumn('beat_id', function ($row) {
+                            if ($row->beatDetails) {
+                                return $row->beatDetails->title;
                             } else {
                                 return 'N/A';
                             }

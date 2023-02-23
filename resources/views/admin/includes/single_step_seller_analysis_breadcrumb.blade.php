@@ -29,9 +29,18 @@
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.store-list', [$distributionAreaId, $beatId]) }}" class="">@lang('custom_admin.label_store_list')</a></li>
                         @endif
 
-                        {{-- Store --}}
-                        @if (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($seasonId))
+                        {{-- Season --}}
+                        @if (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($analysisSeasonId))
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.season-list', [$distributionAreaId, $beatId, $storeId]) }}" class="">@lang('custom_admin.label_season_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($seasonId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.season-list', [$distributionAreaId, $beatId, $storeId]) }}" class="">@lang('custom_admin.label_season_list')</a></li>
+                        @endif
+
+                        {{-- Distributor --}}
+                        @if (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($seasonId) && isset($distributorId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.distributor-list', [$distributionAreaId, $beatId, $storeId, $seasonId]) }}" class="">@lang('custom_admin.label_distributor_list')</a></li>
+                        @elseif (isset($distributionAreaId) && isset($beatId) && isset($storeId) && isset($seasonId))
+                        <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.singleStepSellerAnalyses.distributor-list', [$distributionAreaId, $beatId, $storeId, $seasonId]) }}" class="">@lang('custom_admin.label_distributor_list')</a></li>
                         @endif
 
                         <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle }}</li>

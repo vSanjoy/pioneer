@@ -466,8 +466,12 @@ class SingleStepSellerAnalysesController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId)
                         ->addIndexColumn()
-                        ->addColumn('season_link', function ($row) use ($distributionAreaId, $beatId, $storeId) {
-                            $storeName = '<a href="'.route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, customEncryptionDecryption($row->id)]).'">'.$row->title.'</a>';
+                        ->addColumn('distributor_link', function ($row) use ($distributionAreaId, $beatId, $storeId) {
+                            // $storeName = '<a href="'.route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, customEncryptionDecryption($row->id)]).'">'.$row->title.'</a>';
+                            
+                            // return $storeName;
+                            
+                            $storeName = '<a href="'.route($this->routePrefix.'.singleStepSellerAnalyses.distributor-list', [$distributionAreaId, $beatId, $storeId, customEncryptionDecryption($row->id)]).'">'.$row->title.'</a>';
                             
                             return $storeName;
                         })
@@ -475,15 +479,109 @@ class SingleStepSellerAnalysesController extends Controller
                             return date('d-m-Y', strtotime($row->created_at));
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId) {
-                            $btn = '<a href="'.route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_category').'"><i class="far fa-file-alt"></i>';
+                            $btn = '<a href="'.route($this->routePrefix.'.singleStepSellerAnalyses.distributor-list', [$distributionAreaId, $beatId, $storeId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_distributor').'"><i class="far fa-file-alt"></i>';
 
                             return $btn;
                         })
-                        ->rawColumns(['season_link','action'])
+                        ->rawColumns(['distributor_link','action'])
                         ->make(true);
             }
 
             return view($this->viewFolderPath.'.season_list');
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return '';
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return '';
+        }
+    }
+
+    /*
+        * Function name : distributorList
+        * Purpose       : This function is for the distributor list
+        * Input Params  : Request $request
+        * Return Value  : Returns to the distributor list page
+    */
+    public function distributorList(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $analysisSeasonId = null) {
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_distributor_list'),
+            'panelTitle'    => trans('custom_admin.label_distributor_list'),
+            'pageType'      => 'LISTPAGE'
+        ];
+
+        try {
+            $data['distributionAreaId'] = $distributionAreaId;
+            $data['beatId']             = $beatId;
+            $data['storeId']            = $storeId;
+            $data['analysisSeasonId']   = $analysisSeasonId;
+            $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
+            $data['beat']               = Beat::where(['id' => customEncryptionDecryption($beatId, 'decrypt')])->first();
+            $data['store']              = Store::where(['id' => customEncryptionDecryption($storeId, 'decrypt')])->first();
+            $data['season']             = AnalysisSeason::where(['id' => customEncryptionDecryption($analysisSeasonId, 'decrypt')])->first();
+            
+            // Start :: Manage restriction
+            $data['isAllow'] = false;
+            $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
+            if ($restrictions['is_super_admin']) {
+                $data['isAllow'] = true;
+            }
+            $data['allowedRoutes'] = $restrictions['allow_routes'];
+            // End :: Manage restriction
+
+            return view($this->viewFolderPath.'.distributor_list', $data);
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.dashboard');
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.dashboard');
+        }
+    }
+
+    /*
+        * Function name : ajaxDistributorListRequest
+        * Purpose       : This function is for the reutrn ajax data
+        * Input Params  : Request $request
+        * Return Value  : Returns data
+    */
+    public function ajaxDistributorListRequest(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $analysisSeasonId = null) {
+        $data['pageTitle'] = trans('custom_admin.label_distributor_list');
+        $data['panelTitle']= trans('custom_admin.label_distributor_list');
+
+        try {
+            if ($request->ajax()) {
+                $data = User::where(['distribution_area_id' => customEncryptionDecryption($distributionAreaId,'decrypt'), 'type' => 'D', 'status' => '1'])->whereNull('deleted_at')->orderBy('full_name', 'ASC');
+                
+                // Start :: Manage restriction
+                $isAllow = false;
+                $restrictions   = checkingAllowRouteToUser($this->pageRoute.'.');
+                if ($restrictions['is_super_admin']) {
+                    $isAllow = true;
+                }
+                $allowedRoutes  = $restrictions['allow_routes'];
+                // End :: Manage restriction
+
+                return Datatables::of($data, $isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId, $analysisSeasonId)
+                        ->addIndexColumn()
+                        ->addColumn('analysis_link', function ($row) use ($distributionAreaId, $beatId, $storeId, $analysisSeasonId) {
+                            $storeName = '<a href="'.route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, $analysisSeasonId, customEncryptionDecryption($row->id)]).'">'.$row->full_name.'</a>';
+                            
+                            return $storeName;
+                        })
+                        ->addColumn('created_at', function ($row) {
+                            return date('d-m-Y', strtotime($row->created_at));
+                        })
+                        ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes, $distributionAreaId, $beatId, $storeId, $analysisSeasonId) {
+                            $btn = '<a href="'.route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, $analysisSeasonId, customEncryptionDecryption($row->id)]).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_category').'"><i class="far fa-file-alt"></i>';
+
+                            return $btn;
+                        })
+                        ->rawColumns(['analysis_link','action'])
+                        ->make(true);
+            }
+
+            return view($this->viewFolderPath.'.distributor_list');
         } catch (Exception $e) {
             $this->generateToastMessage('error', $e->getMessage(), false);
             return '';
@@ -501,7 +599,7 @@ class SingleStepSellerAnalysesController extends Controller
         * Input Params  : Request $request
         * Return Value  : Returns to the category list page
     */
-    public function categoryList(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $seasonId = null) {
+    public function categoryList(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $seasonId = null, $distributorId = null) {
         $data = [
             'pageTitle'     => trans('custom_admin.label_category_list'),
             'panelTitle'    => trans('custom_admin.label_category_list'),
@@ -513,11 +611,13 @@ class SingleStepSellerAnalysesController extends Controller
             $data['beatId']             = $beatId;
             $data['storeId']            = $storeId;
             $data['seasonId']           = $seasonId;
+            $data['distributorId']      = $distributorId;
             $data['distributionArea']   = DistributionArea::where(['id' => customEncryptionDecryption($distributionAreaId, 'decrypt')])->first();
             $data['beat']               = Beat::where(['id' => customEncryptionDecryption($beatId, 'decrypt')])->first();
             $data['store']              = Store::where(['id' => customEncryptionDecryption($storeId, 'decrypt')])->first();
             $data['categories']         = Category::where(['status' => '1'])->whereNull('deleted_at')->orderBy('title', 'ASC')->get();
             $data['season']             = AnalysisSeason::where(['id' => customEncryptionDecryption($seasonId, 'decrypt')])->first();
+            $data['distributor']        = User::where(['id' => customEncryptionDecryption($distributorId, 'decrypt'), 'type' => 'D'])->first();
 
             // Start :: Manage restriction
             $data['isAllow'] = false;
@@ -545,7 +645,7 @@ class SingleStepSellerAnalysesController extends Controller
         * Input Params  : Request $request
         * Return Value  : Returns sub admin data
     */
-    public function analysisUpdate(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $seasonId = null) {
+    public function analysisUpdate(Request $request, $distributionAreaId = null, $beatId = null, $storeId = null, $seasonId = null, $distributorId = null) {
         $data = [
             'pageTitle'     => trans('custom_admin.label_analysis'),
             'panelTitle'    => trans('custom_admin.label_analysis'),
@@ -561,16 +661,22 @@ class SingleStepSellerAnalysesController extends Controller
             $decryptBeatId              = customEncryptionDecryption($beatId, 'decrypt');
             $decryptStoreId             = customEncryptionDecryption($storeId, 'decrypt');
             $decryptSeasonId            = customEncryptionDecryption($seasonId, 'decrypt');
+            $decryptDistributorId       = customEncryptionDecryption($distributorId, 'decrypt');
             
             $data['distributionArea']   = DistributionArea::where(['id' => $decryptDistributionAreaId])->first();
             $data['beat']               = Beat::where(['id' => $decryptBeatId])->first();
             $data['store']              = Store::where(['id' => $decryptStoreId])->first();
             $data['season']             = AnalysisSeason::where(['id' => $decryptSeasonId])->first();
+            $data['distributor']        = User::where(['id' => $decryptDistributorId, 'type' => 'D'])->first();
             
             if ($request->isMethod('POST')) {
+                // dd($request->analysis);
+
+
                 $analysis = Analyses::where([
                                         'analysis_season_id' => $decryptSeasonId,
                                         'distribution_area_id' => $decryptDistributionAreaId,
+                                        'distributor_id' => $decryptDistributorId,
                                         'store_id' => $decryptStoreId,
                                         'beat_id' => $decryptBeatId
                                     ])
@@ -581,7 +687,7 @@ class SingleStepSellerAnalysesController extends Controller
                     $saveData['seller_id']              = Auth::guard('admin')->user()->id ?? null;
                     $saveData['analysis_season_id']     = $decryptSeasonId ?? null;
                     $saveData['distribution_area_id']   = $decryptDistributionAreaId;
-                    $saveData['distributor_id']         = $analysis->distributor_id ?? null;
+                    $saveData['distributor_id']         = $decryptDistributorId ?? null;
                     $saveData['beat_id']                = $decryptBeatId;
                     $saveData['store_id']               = $decryptStoreId;
                     $saveData['analyses_id']            = $analysis->id ?? null;
@@ -611,7 +717,7 @@ class SingleStepSellerAnalysesController extends Controller
                         }
 
                         $this->generateToastMessage('success', trans('custom_admin.success_data_added_successfully'), false);
-                        return redirect()->route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, $seasonId]);
+                        return redirect()->route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, $seasonId, $distributorId]);
                     } else {
                         $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_adding'), false);
                         return redirect()->back()->withInput();
@@ -625,10 +731,10 @@ class SingleStepSellerAnalysesController extends Controller
             return view($this->viewFolderPath.'.analysis_edit', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-            return redirect()->route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, $seasonId]);
+            return redirect()->route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, $seasonId, $distributorId]);
         } catch (\Throwable $e) {
             $this->generateToastMessage('error', $e->getMessage(), false);
-            return redirect()->route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, $seasonId]);
+            return redirect()->route($this->routePrefix.'.singleStepSellerAnalyses.category-list', [$distributionAreaId, $beatId, $storeId, $seasonId, $distributorId]);
         }
     }
 

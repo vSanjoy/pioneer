@@ -7,7 +7,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>
-					<h3>{!! $distributionArea->title !!} - {!! $beat->title !!} - {!! $store->name_1.' ('.$store->store_name.')' !!} - {!! $season->title.' ('.$season->year.')' !!}</h3>
+					<h3>{!! $distributionArea->title !!} - {!! $beat->title !!} - {!! $store->name_1.' ('.$store->store_name.')' !!} - {!! $season->title.' ('.$season->year.')' !!} - {!! $distributor->full_name.' ('.$distributor->email.')' !!}</h3>
 				</div>
 			</div>
 		</div>
@@ -18,7 +18,7 @@
 		{{ Form::open([
 			'method'=> 'POST',
 			'class' => '',
-			'route' => [$routePrefix.'.singleStepSellerAnalyses.analysis-update', $distributionAreaId, $beatId, $storeId, $seasonId],
+			'route' => [$routePrefix.'.singleStepSellerAnalyses.analysis-update', $distributionAreaId, $beatId, $storeId, $seasonId, $distributorId],
 			'name'  => 'updateSingleStepSellerAnalysesForm',
 			'id'    => 'updateSingleStepSellerAnalysesForm',
 			'files' => true,
@@ -43,7 +43,9 @@
 								@php
 								$categoryId = $category->id;
 								$productId	= $product->id;
-								$analysisDetails = getAnalysisDetails($distributionAreaId, $beatId, $storeId, $seasonId, $categoryId, $productId);
+								// dd(customEncryptionDecryption($distributionAreaId,'decrypt'), customEncryptionDecryption($distributorId,'decrypt'), customEncryptionDecryption($beatId,'decrypt'), customEncryptionDecryption($storeId,'decrypt'), customEncryptionDecryption($seasonId,'decrypt'), $categoryId, $productId);
+
+								$analysisDetails = getAnalysisDetails($distributionAreaId, $distributorId, $beatId, $storeId, $seasonId, $categoryId, $productId);
 								@endphp
 								<div class="card mb-3">
 									<div class="card-header" id="headingOne_{{$productId}}">

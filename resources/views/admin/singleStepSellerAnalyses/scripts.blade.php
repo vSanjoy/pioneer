@@ -15,6 +15,10 @@ $(document).ready(function() {
 	@if (Route::currentRouteName() == $routePrefix.'.singleStepSellerAnalyses.season-list')
 	getSeasonList();
 	@endif
+
+	@if (Route::currentRouteName() == $routePrefix.'.singleStepSellerAnalyses.distributor-list')
+	getDistributorList();
+	@endif
 });
 
 
@@ -275,8 +279,83 @@ function getSeasonList() {
 				{data: 'id', name: 'id'},
 				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
 				{data: 'title', name: 'title'},
-				{data: 'season_link', name: 'season_link'},
+				{data: 'distributor_link', name: 'distributor_link'},
 				{data: 'year', name: 'year'},
+			@if ($isAllow || in_array('singleStepSellerAnalyses.category-list', $allowedRoutes))
+				// {data: 'action', name: 'action', orderable: false, searchable: false},
+			@endif
+			],
+			columnDefs: [
+				{
+				targets: [ 0 ],
+				visible: false,
+				searchable: false,
+				},
+				{
+				targets: [ 2 ],
+				visible: false,
+				searchable: true,
+				},
+			],
+			order: [
+				[0, 'desc']
+			],
+			pageLength: 50,
+			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
+			fnDrawCallback: function(settings) {
+				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
+					$('#list-table_paginate').hide();
+				} else {
+					$('#list-table_paginate').show();
+				}
+			},
+	});
+	// Prevent alert box from datatable & console error message
+	$.fn.dataTable.ext.errMode = 'none';	
+	$('#list-table').on('error.dt', function (e, settings, techNote, message) {
+		$('#dataTableLoading').hide();
+		toastr.error(message, "@lang('custom_admin.message_error')");
+	});
+}
+@endif
+
+@if (Route::currentRouteName() == $routePrefix.'.singleStepSellerAnalyses.distributor-list')
+function getDistributorList() {
+	var getDistributorListDataUrl = "{{route($routePrefix.'.singleStepSellerAnalyses.ajax-distributor-list-request', [$distributionAreaId, $beatId, $storeId, $analysisSeasonId])}}";
+	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
+			destroy: true,
+			autoWidth: false,
+			responsive: false,
+			processing: true,
+			language: {
+				processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
+				search: "_INPUT_",
+				searchPlaceholder: '{{ trans("custom_admin.btn_search") }}',
+				emptyTable: '{{ trans("custom_admin.message_no_records_found") }}',
+				zeroRecords: '{{ trans("custom_admin.message_no_records_found") }}',
+				paginate: {
+					first: '{{trans("custom_admin.label_first")}}',
+					previous: '{{trans("custom_admin.label_previous")}}',
+					next: '{{trans("custom_admin.label_next")}}',
+					last: '{{trans("custom_admin.label_last")}}',
+				}
+			},
+			serverSide: true,
+			ajax: {
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: getDistributorListDataUrl,
+				type: 'POST',
+				data: function(data) {},
+			},
+			columns: [
+				{data: 'id', name: 'id'},
+				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+				{data: 'full_name', name: 'full_name'},
+				{data: 'analysis_link', name: 'analysis_link'},
+				{data: 'company', name: 'company'},
+				{data: 'email', name: 'email'},
 			@if ($isAllow || in_array('singleStepSellerAnalyses.category-list', $allowedRoutes))
 				// {data: 'action', name: 'action', orderable: false, searchable: false},
 			@endif

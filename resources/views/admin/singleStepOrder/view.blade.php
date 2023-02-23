@@ -18,7 +18,7 @@
 		<div class="col-12">
 			@foreach ($details->singleStepOrderDetails as $item)
 			@php
-			$analysisDetails = analysisDetails($details->analysis_season_id, $item->categoryDetails->id, $item->productDetails->id);
+			$analysisDetails = analysisDetails($details->analyses_id, $item->categoryDetails->id, $item->productDetails->id);
 			@endphp			
 			<div class="card mb-3">
 				<div class="card-body">

@@ -729,7 +729,7 @@ function getAge($dob = null) {
     * Input Params  : 
     * Return Value  : 
 */
-function getAnalysisDetails($distributionAreaId = null, $beatId = null, $storeId = null, $seasonId = null, $categoryId = null, $productId = null) {
+function getAnalysisDetails($distributionAreaId = null, $distributorId = null, $beatId = null, $storeId = null, $seasonId = null, $categoryId = null, $productId = null) {
     $details = null;
 
     $details = Analyses::with(['analysesDetails' => function ($q) use ($categoryId, $productId) {
@@ -741,6 +741,7 @@ function getAnalysisDetails($distributionAreaId = null, $beatId = null, $storeId
                         ->where([
                             'analysis_season_id' => customEncryptionDecryption($seasonId, 'decrypt'),
                             'distribution_area_id' => customEncryptionDecryption($distributionAreaId, 'decrypt'),
+                            'distributor_id' => customEncryptionDecryption($distributorId, 'decrypt'),
                             'store_id' => customEncryptionDecryption($storeId, 'decrypt'),
                             'beat_id' => customEncryptionDecryption($beatId, 'decrypt')
                         ])
