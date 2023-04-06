@@ -12,6 +12,7 @@ use App\Models\WebsiteSetting;
 use App\Models\Analyses;
 use App\Models\AnalysesDetail;
 use App\Models\AnalysisSeason;
+use App\Models\Product;
 
 /*
     * Function name : getAppName
@@ -769,4 +770,21 @@ function analysisDetails($analysesId = null, $categoryId = null, $productId = nu
                             ->first();
 
     return $analysisDetails;
+}
+
+/*
+    * Function name : orderProductsCategoryWise
+    * Purpose       : Get category wise products
+    * Author        :
+    * Created Date  :
+    * Modified Date : 
+    * Input Params  : 
+    * Return Value  : 
+*/
+function orderProductsCategoryWise($categoryId = null) {
+    $productList = null;
+
+    $productList = Product::where(['category_id' => $categoryId])->whereNull('deleted_at')->select('id','category_id','title')->get();
+
+    return $productList;
 }

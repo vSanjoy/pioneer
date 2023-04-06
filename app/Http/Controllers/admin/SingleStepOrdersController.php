@@ -22,7 +22,10 @@ use App\Models\SingleStepOrderDetail;
 use App\Models\DistributionArea;
 use App\Models\Beat;
 use App\Models\Store;
+use App\Models\Invoice;
+use App\Models\InvoiceDetail;
 use DataTables;
+
 
 class SingleStepOrdersController extends Controller
 {
@@ -268,7 +271,9 @@ class SingleStepOrdersController extends Controller
                                     $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
                                 }
                             } else {
-                                $btn .= '<a href="'.route($this->routePrefix.'.singleStepOrder.view', customEncryptionDecryption($row->id)).'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_view').'" target="_blank"><i class="fa fa-eye ml_minus_2"></i></a>';
+                                $btn .= '<a href="'.route($this->routePrefix.'.singleStepOrder.view', customEncryptionDecryption($row->id)).'" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_view').'" target="_blank"><i class="fa fa-eye ml_minus_2"></i></a>';
+
+                                $btn .= ' <a href="'.route($this->routePrefix.'.singleStepOrder.edit', customEncryptionDecryption($row->id)).'" data-microtip-position="top" role="tooltip" class="btn btn-primary btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
 
                                 $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
                             }
@@ -395,6 +400,287 @@ class SingleStepOrdersController extends Controller
                     }
                 } else {
                     $message = trans('custom_admin.error_invalid');
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
+    }
+
+    /*
+        * Function name : edit
+        * Purpose       : This function is to edit order
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : Request $request
+        * Return Value  : Returns order data
+    */
+    public function edit(Request $request, $id = null) {
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_edit_order'),
+            'panelTitle'    => trans('custom_admin.label_edit_order'),
+            'pageType'      => 'EDITPAGE'
+        ];
+
+        try {
+            $data['id']             = $id;
+            $data['orderId']        = $id = customEncryptionDecryption($id, 'decrypt');
+            $data['details']        = $details = $this->model->where(['id' => $id])->with(['singleStepOrderDetails','analysesDetails','analysisSeasonDetails'])->first();
+            $data['invoiceDetails'] = Invoice::where(['single_step_order_id' => $id])->with(['singleStepOrder','invoiceDetails'])->first();
+            $data['categories']     = Category::where(['status' => '1'])->select('id','title')->get();
+            $data['products']       = Product::where(['status' => '1'])->select('id','category_id','title')->get();
+
+            if ($request->isMethod('POST')) {
+                if ($id == null) {
+                    $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+                    return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+                }
+
+                if (count($request->category_id)) {
+                    // Invoice table insertion
+                    $newInvoice = new Invoice();
+                    $newInvoice->single_step_order_id = $id;
+                    if ($newInvoice->save()) {
+                        // Invoice details table insertion
+                        foreach ($request->category_id as $keyItem => $valItem) {
+                            if ($valItem != '') {
+                                $newInvoiceDetail                   = new InvoiceDetail();
+                                $newInvoiceDetail->invoice_id       = $newInvoice->id;
+                                $newInvoiceDetail->category_id      = $valItem;
+                                $newInvoiceDetail->product_id       = $request->product_id[$keyItem];
+                                $newInvoiceDetail->qty              = $request->qty[$keyItem];
+                                $newInvoiceDetail->unit_price       = $request->unit_price[$keyItem];
+                                $newInvoiceDetail->discount_percent = $request->discount_percent[$keyItem];
+                                $newInvoiceDetail->discount_amount  = $request->discount_amount[$keyItem];
+                                $newInvoiceDetail->total_price      = $request->total_price[$keyItem];
+                                $newInvoiceDetail->status           = $request->status[$keyItem];
+                                $newInvoiceDetail->save();
+                            }
+                        }
+
+                        $this->generateToastMessage('success', trans('custom_admin.success_invoice_created_successfully'), false);
+                        return redirect()->back();
+                    } else {
+                        $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
+                        return redirect()->back()->withInput();
+                    }
+                }
+            }
+            
+            return view($this->viewFolderPath.'.edit', $data);
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+        }
+    }
+    
+    /*
+        * Function name : ajaxCategoeyWiseProducts
+        * Purpose       : This function to get list of products, category wise
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function ajaxCategoeyWiseProducts(Request $request) {
+        $title  = trans('custom_admin.message_error');
+        $message= trans('custom_admin.error_something_went_wrong');
+        $type   = 'error';
+        $options= '<option value="">--Select--</option>';
+
+        try {
+            if ($request->ajax()) {
+                $productList = Product::where(['category_id' => $request->categoryId])->select('id','category_id','title')->get();
+                if ($productList->count()) {
+                    foreach ($productList as $itemProduct) {
+                        $options .= '<option value="'.$itemProduct->id.'">'.$itemProduct->title.'</option>';
+                    }
+                    
+                    $title  = trans('custom_admin.message_success');
+                    $message= trans('custom_admin.message_success');
+                    $type   = 'success';
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'options' => $options]);
+    }
+    
+    /*
+        * Function name : ajaxProductDetails
+        * Purpose       : This function to get product details
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function ajaxProductDetails(Request $request) {
+        $title  = trans('custom_admin.message_error');
+        $message= trans('custom_admin.error_something_went_wrong');
+        $type   = 'error';
+        $price  = 0;
+
+        try {
+            if ($request->ajax()) {
+                $productDetails = Product::where(['id' => $request->productId])->select('id','title','rate_per_pcs','mrp','retailer_price')->first();
+                if ($productDetails != null) {
+                    $price = $productDetails->retailer_price;
+                    
+                    $title  = trans('custom_admin.message_success');
+                    $message= trans('custom_admin.message_success');
+                    $type   = 'success';
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'price' => formatToTwoDecimalPlaces($price)]);
+    }
+
+    /*
+        * Function name : ajaxDiscountAmountCalculation
+        * Purpose       : This function to calculate discount of a product
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function ajaxDiscountAmountCalculation(Request $request) {
+        $title  = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type   = 'error';
+        $discountAmount = 0;
+        $totalAmountAfterDiscount = 0;
+        $qty = 1;
+
+        try {
+            if ($request->ajax()) {
+                $productId = $request->productId;
+                $qty = $request->qty;
+                $unitPrice = $request->unitPrice;
+                $discountPercent = $request->discountPercent;
+                
+                $productDetails = Product::where(['id' => $productId])->first();
+                if ($productDetails != null) {
+                    if ($qty != 0) {
+                        $productRetailAmount = $unitPrice ? $unitPrice : $productDetails->retailer_price;
+                        $productRetailAmount = $productRetailAmount * $qty;
+
+                        if ($discountPercent >= 0) {
+                            $discountAmount = ($productRetailAmount * $discountPercent ) / 100;
+                            if ($discountAmount >= 0) {
+                                if ($discountAmount > $productRetailAmount) {
+                                    $discountAmount = $productRetailAmount;
+                                    $totalAmountAfterDiscount = 0;
+                                } else {
+                                    if ($discountAmount <= 0) {
+                                        $discountAmount = 0;
+                                        $totalAmountAfterDiscount = $productRetailAmount;
+                                    } else {
+                                        $totalAmountAfterDiscount = $productRetailAmount - $discountAmount;
+                                    }
+                                }
+                            } else {
+                                $discountAmount = 0;
+                                $totalAmountAfterDiscount = $productRetailAmount;
+                            }
+                        } else {
+                            $totalAmountAfterDiscount = $productRetailAmount;
+                        }
+                    } else {
+                        $discountAmount = 0;
+                        $totalAmountAfterDiscount = 0;
+                    }
+                    $title  = trans('custom_admin.message_success');
+                    $message= trans('custom_admin.message_success');
+                    $type   = 'success';
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'qty' => $qty, 'discountAmount' => formatToTwoDecimalPlaces($discountAmount), 'totalAmountAfterDiscount' => formatToTwoDecimalPlaces($totalAmountAfterDiscount)]);
+    }
+    
+    /*
+        * Function name : ajaxDeleteOrder
+        * Purpose       : This function to delete order
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function ajaxDeleteOrder(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+        $allDeleted = 0;
+
+        try {
+            if ($request->ajax()) {
+                $isExistSingleStepOrder = SingleStepOrderDetail::where(['id' => $request->oid])->first();
+                if ($isExistSingleStepOrder != null) {
+                    $isExistSingleStepOrder->delete();
+
+                    $count = SingleStepOrderDetail::where(['single_step_order_id' => $isExistSingleStepOrder->single_step_order_id])->count();
+                    if ($count == 0) {
+                        SingleStepOrder::where(['id' => $isExistSingleStepOrder->single_step_order_id])->delete();
+                        $allDeleted = 1;
+                    }
+                    $title  = trans('custom_admin.message_success');
+                    $message= trans('custom_admin.message_success');
+                    $type   = 'success';
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'allDeleted' => $allDeleted]);
+    }
+    
+    /*
+        * Function name : ajaxDeleteSingleStepOrder
+        * Purpose       : This function to delete main single step order
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function ajaxDeleteSingleStepOrder(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+
+        try {
+            if ($request->ajax()) {
+                $isExistSingleStepOrder = SingleStepOrder::where(['id' => $request->orderid])->first();
+                if ($isExistSingleStepOrder != null) {
+                    // $isExistSingleStepOrder->delete();
+
+                    $title  = trans('custom_admin.message_success');
+                    $message= trans('custom_admin.message_success');
+                    $type   = 'success';
                 }
             }
         } catch (Exception $e) {

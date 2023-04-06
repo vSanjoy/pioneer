@@ -1,3 +1,4 @@
+@if (strpos(Route::currentRouteName(), 'singleStepOrder') != true)
 <div class="page-breadcrumb">
     <div class="row">
     @if (strpos(Route::currentRouteName(), 'dashboard') === false)
@@ -28,3 +29,4 @@
     @endif
     </div>
 </div>
+@endif

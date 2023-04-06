@@ -265,9 +265,17 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
             Route::group(['prefix' => 'singleStepOrder', 'as' => 'singleStepOrder.'], function () {
                 Route::get('/', 'SingleStepOrdersController@list')->name('list');
                 Route::post('ajax-list-request', 'SingleStepOrdersController@ajaxListRequest')->name('ajax-list-request');
+                Route::any('/edit/{id}', 'SingleStepOrdersController@edit')->name('edit');
+                Route::any('/edit-submit/{id}', 'SingleStepOrdersController@edit')->name('edit-submit');
                 Route::get('/view/{id}', 'SingleStepOrdersController@view')->name('view');
                 Route::get('/delete/{id}', 'SingleStepOrdersController@delete')->name('delete');
                 Route::post('/bulk-actions', 'SingleStepOrdersController@bulkActions')->name('bulk-actions');
+
+                Route::any('/ajax-discount-amount-calculation', 'SingleStepOrdersController@ajaxDiscountAmountCalculation')->name('ajax-discount-amount-calculation');
+                Route::any('/ajax-categoey-wise-products', 'SingleStepOrdersController@ajaxCategoeyWiseProducts')->name('ajax-categoey-wise-products');
+                Route::any('/ajax-product-details', 'SingleStepOrdersController@ajaxProductDetails')->name('ajax-product-details');
+                Route::any('/ajax-delete-order', 'SingleStepOrdersController@ajaxDeleteOrder')->name('ajax-delete-order');
+                Route::any('/ajax-delete-single-step-order', 'SingleStepOrdersController@ajaxDeleteSingleStepOrder')->name('ajax-delete-single-step-order');
             });
 
             Route::group(['prefix' => 'analysisReport', 'as' => 'analysisReport.'], function () {

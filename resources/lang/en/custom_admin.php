@@ -406,6 +406,16 @@ return [
     'label_representative_phone'                    => 'Representative Phone Number',
     'label_menu_store_report'                       => 'Store Report',
     'label_store_report_list'                       => 'List',
+    'label_unit'                                    => 'Unit',
+    'label_qty'                                     => 'QTY',
+    'label_discount_percent'                        => 'Discount(%)',
+    'label_discount_amount'                         => 'Discount',
+    'label_total_price'                             => 'Total',
+    'label_representative_name'                     => 'Representative Name',
+    'label_unit_price'                              => 'Unit Price',
+    'label_invoice_shipped'                         => 'Invoice/Shipped',
+    'label_on_hold'                                 => 'On Hold',
+    'label_owner'                                   => 'Owner',
 
     
 /* Buttons */
@@ -428,6 +438,12 @@ return [
     'btn_reload_gallery'                            => 'Reload Gallery',
     'btn_reloading_gallery'                         => 'Reloading Gallery',
     'btn_close'                                     => 'Close',
+    'btn_create_invoice'                            => 'Create Invoice',
+    'btn_print_invoice'                             => 'Print Invoice',
+    'btn_add_more_product'                          => 'Add More Product',
+    'btn_ship_order'                                => 'Ship Order',
+    'btn_complete_order'                            => 'Complete Order',
+    'btn_delete_order'                              => 'Delete Order',
     
 /* Errors */
     'error_enter_email'                             => 'Please enter email.',
@@ -648,5 +664,6 @@ return [
     'success_gallery_updated_successfully'          => 'Gallery has been updated successfully.',
     'success_gallery_deleted_successfully'          => 'Gallery image has been deleted successfully.',
     'success_for_security_reason_logged_out'        => 'For security reasons you have been signed out. Please sign in again.',
+    'success_invoice_created_successfully'          => 'Invoice created successfully.',
     
 ];

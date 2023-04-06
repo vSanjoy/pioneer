@@ -55,7 +55,11 @@
 											<option value="">--@lang('custom_admin.label_select')--</option>
 										@if ($distributionAreas)
 											@foreach ($distributionAreas as $itemDistributionArea)
+											@if (Auth::guard('admin')->user()->type == 'D' && Auth::guard('admin')->user()->distribution_area_id == $itemDistributionArea->id)
 											<option value="{{ $itemDistributionArea->id }}" @if ($distributionAreaId == $itemDistributionArea->id)selected @endif>{!! $itemDistributionArea->title !!}</option>
+											@elseif (Auth::guard('admin')->user()->type == 'SA')
+											<option value="{{ $itemDistributionArea->id }}" @if ($distributionAreaId == $itemDistributionArea->id)selected @endif>{!! $itemDistributionArea->title !!}</option>
+											@endif
 											@endforeach
 										@endif
 										</select>

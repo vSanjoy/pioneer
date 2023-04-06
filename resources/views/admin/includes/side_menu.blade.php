@@ -331,7 +331,7 @@ $getSiteSettings = getSiteSettings();
 
 			<!-- Single Step Order Management Start -->
 			@php
-			$singleStepOrderRoutes = ['singleStepOrder.list'];
+			$singleStepOrderRoutes = ['singleStepOrder.list', 'singleStepOrder.view', 'singleStepOrder.edit'];
 			@endphp
 			@if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type != 'S' || in_array('singleStepOrder.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $singleStepOrderRoutes))selected @endif">

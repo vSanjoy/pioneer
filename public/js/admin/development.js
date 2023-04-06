@@ -41,6 +41,7 @@ var btnUpdating         = 'Updating...';
 var btnSubmitPreloader  = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Submitting...';
 var btnUpdatePreloader  = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Updating...';
 var btnSavingPreloader  = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Saving...';
+var btnCreatingPreloader= '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Creating...';
 var btnLoadingPreloader = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading...';
 var btnSendingPreloader = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Sending...';
 
@@ -2236,6 +2237,71 @@ $(document).ready(function() {
     });
     // End :: Order Form //
 
+    // Start :: Create invoice single step order Form //
+    $("#createInvoiceSingleStepOrderForm").validate({
+        ignore: [],
+        rules: {
+            'category[]': {
+                required: true
+            },
+            'product_id[]': {
+                required: true
+            },
+            'qty[]': {
+                required: true
+            },
+            'unit_price[]': {
+                required: true
+            },
+            'status[]': {
+                required: true
+            },
+        },
+        messages: {
+            'category[]': {
+                required: "Please select category.",
+            },
+            'product_id[]': {
+                required: "Please select product.",
+            },
+            'qty[]': {
+                required: "Please enter quantity.",
+            },
+            'unit_price[]': {
+                required: "Please enter unit price.",
+            },
+            'status[]': {
+                required: "Please select status.",
+            }
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnCreatingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Create invoice single step order Form //
+
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //
 	$('.checkAll').click(function() {
@@ -3049,3 +3115,113 @@ $(document).on('click', '.clickToCopy', function(e) {
         $('#password').focus();
     }
 });
+
+// Start :: Remove Invoice Product //
+function removeInvoiceProduct(divId, type) {
+    if (divId != '') {
+        if (type != 'new') {
+            confirmDeleteMessage = 'Are you sure, you want to delete saved data?';
+        }
+        swal.fire({
+            text: confirmDeleteMessage,
+            type: 'warning',
+            allowOutsideClick: false,
+            confirmButtonColor: btnConfirmYesColor,
+            cancelButtonColor: btnCancelNoColor,
+            showCancelButton: true,
+            confirmButtonText: btnYes,
+            cancelButtonText: btnNo,
+        }).then((result) => {
+            if (result.value) {
+                if (type == 'new') {
+                    $('#append_div_'+divId).remove();
+                } else {
+                    var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-delete-order';
+
+                    $('.preloader').show();
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: actionUrl,
+                        method: 'GET',
+                        data: {
+                            'oid': divId
+                        },
+                        success: function (response) {
+                            $('.preloader').hide();
+                            if (response.type == 'success') {
+                                if (response.allDeleted == 1) {
+                                    window.location.href = adminPanelUrl + '/singleStepOrder';
+                                    $('.preloader').hide();
+                                } else {
+                                    $('#section_id_'+divId);
+                                    $('.preloader').hide();
+                                }
+                            } else if (response.type == 'warning') {
+                                $('.preloader').hide();
+                                toastr.warning(response.message, response.title+'!');
+                            } else {
+                                $('.preloader').hide();
+                                toastr.error(response.message, response.title+'!');
+                            }
+                        }
+                    });
+                }
+
+                calculateTotalQuantityAndAmount();
+            }
+        });
+    } else {
+        toastr.error(message, errorMessage+'!');
+    }
+}
+// End :: Remove Invoice Product //
+
+// Start :: Delete Single Step Order //
+function deleteSingleStepOrder(singleStepOrderId) {
+    if (singleStepOrderId != '') {
+        swal.fire({
+            text: 'Are you sure, you want to delete saved data?',
+            type: 'warning',
+            allowOutsideClick: false,
+            confirmButtonColor: btnConfirmYesColor,
+            cancelButtonColor: btnCancelNoColor,
+            showCancelButton: true,
+            confirmButtonText: btnYes,
+            cancelButtonText: btnNo,
+        }).then((result) => {
+            if (result.value) {
+                var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-delete-single-step-order';
+
+                $('.preloader').show();
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: actionUrl,
+                    method: 'GET',
+                    data: {
+                        'orderid': singleStepOrderId
+                    },
+                    success: function (response) {
+                        if (response.type == 'success') {
+                            window.location.href = adminPanelUrl + '/singleStepOrder';
+                            $('.preloader').hide();
+                        } else if (response.type == 'warning') {
+                            $('.preloader').hide();
+                            toastr.warning(response.message, response.title+'!');
+                        } else {
+                            $('.preloader').hide();
+                            toastr.error(response.message, response.title+'!');
+                        }
+                    }
+                });
+                
+            }
+        });
+    } else {
+        toastr.error(message, errorMessage+'!');
+    }
+}
+// End :: Delete Single Step Order //
