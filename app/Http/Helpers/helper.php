@@ -783,8 +783,21 @@ function analysisDetails($analysesId = null, $categoryId = null, $productId = nu
 */
 function orderProductsCategoryWise($categoryId = null) {
     $productList = null;
-
     $productList = Product::where(['category_id' => $categoryId])->whereNull('deleted_at')->select('id','category_id','title')->get();
+    return $productList;
+}
 
+/*
+    * Function name : invoiceProductsCategoryWise
+    * Purpose       : Get category wise products
+    * Author        :
+    * Created Date  :
+    * Modified Date : 
+    * Input Params  : 
+    * Return Value  : 
+*/
+function invoiceProductsCategoryWise($categoryId = null) {
+    $productList = null;
+    $productList = Product::where(['category_id' => $categoryId])->whereNull('deleted_at')->select('id','category_id','title')->get();
     return $productList;
 }

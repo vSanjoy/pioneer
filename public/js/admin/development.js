@@ -42,6 +42,7 @@ var btnSubmitPreloader  = '<span class="spinner-grow spinner-grow-sm" role="stat
 var btnUpdatePreloader  = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Updating...';
 var btnSavingPreloader  = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Saving...';
 var btnCreatingPreloader= '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Creating...';
+var btnUpdatingPreloader= '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Updating...';
 var btnLoadingPreloader = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading...';
 var btnSendingPreloader = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Sending...';
 
@@ -2302,6 +2303,71 @@ $(document).ready(function() {
     });
     // End :: Create invoice single step order Form //
 
+    // Start :: Update invoice Form //
+    $("#updateInvoiceForm").validate({
+        ignore: [],
+        rules: {
+            'category[]': {
+                required: true
+            },
+            'product_id[]': {
+                required: true
+            },
+            'qty[]': {
+                required: true
+            },
+            'unit_price[]': {
+                required: true
+            },
+            'status[]': {
+                required: true
+            },
+        },
+        messages: {
+            'category[]': {
+                required: "Please select category.",
+            },
+            'product_id[]': {
+                required: "Please select product.",
+            },
+            'qty[]': {
+                required: "Please enter quantity.",
+            },
+            'unit_price[]': {
+                required: "Please enter unit price.",
+            },
+            'status[]': {
+                required: "Please select status.",
+            }
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-updating').html(btnUpdatingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Update invoice Form //
+
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //
 	$('.checkAll').click(function() {
@@ -3136,7 +3202,7 @@ function removeInvoiceProduct(divId, type) {
                 if (type == 'new') {
                     $('#append_div_'+divId).remove();
                 } else {
-                    var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-delete-order';
+                    var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-delete-invoice-detail';
 
                     $('.preloader').show();
                     $.ajax({
@@ -3146,7 +3212,8 @@ function removeInvoiceProduct(divId, type) {
                         url: actionUrl,
                         method: 'GET',
                         data: {
-                            'oid': divId
+                            'id': divId,
+                            'type': type
                         },
                         success: function (response) {
                             $('.preloader').hide();
@@ -3155,7 +3222,8 @@ function removeInvoiceProduct(divId, type) {
                                     window.location.href = adminPanelUrl + '/singleStepOrder';
                                     $('.preloader').hide();
                                 } else {
-                                    $('#section_id_'+divId);
+                                    $('#section_id_'+divId).remove();
+                                    calculateTotalQuantityAndAmount();
                                     $('.preloader').hide();
                                 }
                             } else if (response.type == 'warning') {
@@ -3178,9 +3246,9 @@ function removeInvoiceProduct(divId, type) {
 }
 // End :: Remove Invoice Product //
 
-// Start :: Delete Single Step Order //
-function deleteSingleStepOrder(singleStepOrderId) {
-    if (singleStepOrderId != '') {
+// Start :: Delete Invoice //
+function deleteInvoice(id, type) {
+    if (id != '') {
         swal.fire({
             text: 'Are you sure, you want to delete saved data?',
             type: 'warning',
@@ -3192,7 +3260,7 @@ function deleteSingleStepOrder(singleStepOrderId) {
             cancelButtonText: btnNo,
         }).then((result) => {
             if (result.value) {
-                var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-delete-single-step-order';
+                var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-delete-invoice';
 
                 $('.preloader').show();
                 $.ajax({
@@ -3202,7 +3270,8 @@ function deleteSingleStepOrder(singleStepOrderId) {
                     url: actionUrl,
                     method: 'GET',
                     data: {
-                        'orderid': singleStepOrderId
+                        'id': id,
+                        'type': type
                     },
                     success: function (response) {
                         if (response.type == 'success') {
@@ -3224,4 +3293,44 @@ function deleteSingleStepOrder(singleStepOrderId) {
         toastr.error(message, errorMessage+'!');
     }
 }
-// End :: Delete Single Step Order //
+// End :: Delete Invoice //
+
+// Start :: Update invoice //
+function updateInvoice(invoiceDetailId, itemId, categoryId, productId, qty, unitPrice, discountPercent, discountAmount, totalPrice, status) {
+    if (invoiceDetailId != '') {
+        var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-update-invoice';
+
+        $('.preloader').show();
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: actionUrl,
+            method: 'GET',
+            data: {
+                'invoiceDetailId': invoiceDetailId,
+                'categoryId': categoryId,
+                'productId': productId,
+                'qty': qty,
+                'unitPrice': unitPrice,
+                'discountPercent': discountPercent,
+                'discountAmount': discountAmount,
+                'totalPrice': totalPrice,
+                'status': status
+            },
+            success: function (response) {
+                $('.preloader').hide();
+                if (response.type == 'success') {
+                    toastr.success(response.message, response.title+'!');
+                } else if (response.type == 'warning') {
+                    toastr.warning(response.message, response.title+'!');
+                } else {
+                    toastr.error(response.message, response.title+'!');
+                }
+            }
+        });
+    } else {
+        toastr.error(message, errorMessage+'!');
+    }
+}
+// End :: Update invoice //

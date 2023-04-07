@@ -6,7 +6,7 @@
 	.fs14{font-size: 14px !important;}
 	.fs12{font-size: 12px !important;}
 	.error{font-size: 10px !important;}
-	.form-control{height: 25px; line-height: 20px; padding: 0.275rem 0.25rem;}
+	.form-control{height: 26px; line-height: 20px; padding: 0.275rem 0.25rem;}
 	.table td{padding: 5px 10px;}
 	.table th{padding: 5px 10px;}
 	.btn-padding{padding: 0.175rem 0.5rem}
@@ -68,7 +68,7 @@
 											<a class="btn btn-warning waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
 												<i class="fa fa-check-circle" aria-hidden="true"></i> @lang('custom_admin.btn_complete_order')
 											</a>
-											<a class="btn btn-danger waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding deleteOrder" data-ordid="{{ $details->id }}" href="javascript: void(0);">
+											<a class="btn btn-danger waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding deleteInvoice" data-ordid="{{ $details->id }}" data-type="single_step_order" href="javascript: void(0);">
 												<i class="fa fa-trash" aria-hidden="true"></i> @lang('custom_admin.btn_delete_order')
 											</a>
 										</span>
@@ -106,7 +106,6 @@
 								@php
 								$analysisDetails = analysisDetails($details->analyses_id, $item->categoryDetails->id, $item->productDetails->id);
 								$getCategoryWiseProducts = orderProductsCategoryWise($item->categoryDetails->id);
-								// dd($item->productDetails);
 								@endphp
 								<tr id="section_id_{{ $item->id }}">
 									<th scope="row">
@@ -211,9 +210,9 @@
 	{{ Form::open([
 		'method'=> 'POST',
 		'class' => '',
-		'route' => [$routePrefix.'.'.$editUrl.'-submit', $id],
-		'name'  => 'createInvoiceSingleStepOrderForm',
-		'id'    => 'createInvoiceSingleStepOrderForm',
+		'route' => [$routePrefix.'.'.'singleStepOrder.update-invoice', customEncryptionDecryption($invoiceDetails->id)],
+		'name'  => 'updateInvoiceForm',
+		'id'    => 'updateInvoiceForm',
 		'files' => true,
 		'novalidate' => true ]) }}
 
@@ -230,17 +229,17 @@
 									<td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! Auth::guard('admin')->user()->full_name ?? 'NA' !!}</td>
 									<td>
 										<span class="float-right">
-											<button type="submit" class="btn btn-primary waves-effect waves-light btn-rounded shadow-md fs12 btn-padding" id="btn-processing">
-												<i class="far fa-save"></i> @lang('custom_admin.btn_create_invoice')
+											<button type="submit" class="btn btn-success waves-effect waves-light btn-rounded shadow-md fs12 btn-padding" id="btn-updating">
+												<i class="far fa-save"></i> @lang('custom_admin.btn_update_invoice')
 											</button>
-											<a class="btn btn-success waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
+											<a class="btn btn-primary waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
 												<i class="fas fa-shipping-fast"></i> @lang('custom_admin.btn_ship_order')
 											</a>
 											<a class="btn btn-warning waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
 												<i class="fa fa-check-circle" aria-hidden="true"></i> @lang('custom_admin.btn_complete_order')
 											</a>
-											<a class="btn btn-danger waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding deleteOrder" data-ordid="{{ $details->id }}" href="javascript: void(0);">
-												<i class="fa fa-trash" aria-hidden="true"></i> @lang('custom_admin.btn_delete_order')
+											<a class="btn btn-danger waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding deleteInvoice" data-ordid="{{ $invoiceDetails->id }}" data-type="invoice" href="javascript: void(0);">
+												<i class="fa fa-trash" aria-hidden="true"></i> @lang('custom_admin.btn_delete_invoice')
 											</a>
 										</span>
 									</td>
@@ -268,11 +267,100 @@
 									<th scope="col">@lang('custom_admin.label_discount_amount')</th>
 									<th scope="col">@lang('custom_admin.label_total_price')</th>
 									<th scope="col">@lang('custom_admin.label_status')</th>
-									<th scope="col">@lang('custom_admin.label_action')</th>
+									<th scope="col" style="width: 80px;">@lang('custom_admin.label_action')</th>
 								</tr>
 							</thead>
 							<tbody>
-
+						@if ($invoiceDetails->invoiceDetails)
+							@foreach ($invoiceDetails->invoiceDetails as $keyItem => $item)
+								@php
+								$getCategoryWiseProducts = invoiceProductsCategoryWise($item->categoryDetails->id);
+								@endphp
+								<tr id="section_id_{{ $item->id }}">
+									<th scope="row">
+										{{ Form::hidden('id[]', $item->id, ['id' => 'invoice_id_'.$keyItem]) }}
+										
+										<select name="category_id[{{ $keyItem }}]" id="category_id_{{ $keyItem }}" class="form-control fs12 categoryDiscountCalculation" data-iid="{{ $keyItem }}" required>
+											<option value="">--@lang('custom_admin.label_select')--</option>
+										@foreach ($categories as $itemCategory)
+											<option value="{{ $itemCategory->id }}" @if ($itemCategory->id == $item->category_id)selected @endif>{!! $itemCategory->title !!}</option>
+										@endforeach
+										</select>
+									</th>
+									<td>
+										<select name="product_id[{{ $keyItem }}]" id="product_id_{{ $keyItem }}" class="form-control fs12 productDiscountCalculation" data-iid="{{ $keyItem }}" required>
+											<option value="">--@lang('custom_admin.label_select')--</option>
+										@foreach ($getCategoryWiseProducts as $itemProduct)
+											<option value="{{ $itemProduct->id }}" @if ($itemProduct->id == $item->product_id)selected @endif>{!! $itemProduct->title !!}</option>
+										@endforeach
+										</select>
+									</td>
+									<td>
+										{{ Form::number('qty['.$keyItem.']', $item->qty, [
+																	'id' => 'qty_'.$keyItem,
+																	'placeholder' => '',
+																	'class' => 'form-control fs12 qtyUnit qtyDiscountCalculation',
+																	'data-iid' => $keyItem,
+																	'min' => 1,
+																	'required' => true
+																]) }}
+									</td>
+									<td>
+										{{ Form::number('unit_price['.$keyItem.']', $item->unit_price ? formatToTwoDecimalPlaces($item->unit_price) : null, [
+												'id' => 'unit_price_'.$keyItem,
+												'placeholder' => '',
+												'class' => 'form-control fs12 unitPriceDiscountCalculation',
+												'data-iid' => $keyItem,
+												'min' => 0,
+												'required' => true
+											]) }}
+									</td>
+									<td>
+										{{ Form::number('discount_percent['.$keyItem.']', $item->discount_percent ?? null, [
+																					'id' => 'discount_percent_'.$keyItem,
+																					'placeholder' => '',
+																					'class' => 'form-control fs12 discountCalculation',
+																					'data-iid' => $keyItem,
+																					'min' => 0,
+																					'onkeyup' => "if(this.value < 0){this.value= this.value * -1}"
+																				]) }}
+									</td>
+									<td>
+										{{ Form::number('discount_amount['.$keyItem.']', $item->discount_amount ? formatToTwoDecimalPlaces($item->discount_amount) : null, [
+																					'id' => 'discount_amount_'.$keyItem,
+																					'placeholder' => '',
+																					'class' => 'form-control fs12',
+																					'readonly' => true,
+																					'min' => 0
+																				]) }}
+									</td>
+									<td>
+										{{ Form::number('total_price['.$keyItem.']', $item->total_price ? formatToTwoDecimalPlaces($item->total_price) : null, [
+												'id' => 'total_price_'.$keyItem,
+												'placeholder' => '',
+												'class' => 'form-control fs12 totalPrice',
+												'readonly' => true,
+												'min' => 0
+											]) }}
+									</td>
+									<td>
+										<select name="status[{{ $keyItem }}]" id="status_{{ $keyItem }}" class="form-control fs12" required>
+											<option value="">@lang('custom_admin.label_select')</option>
+											<option value="IS" @if($item->status == 'IS')selected @endif>@lang('custom_admin.label_invoice_shipped')</option>
+											<option value="H" @if($item->status == 'H')selected @endif>@lang('custom_admin.label_on_hold')</option>
+										</select>
+									</td>
+									<td>
+										<a class="btn btn-success btn-rounded updateInvoice" href="javascript: void(0);" style="padding: 0.300rem 0.45rem; font-size: 11px; line-height: 1.4;" data-cid="{{ $item->id }}" data-itemid="{{ $keyItem }}" title="Update">
+											<i class="far fa-save"></i>
+										</a>
+										<a class="deleteRow btn btn-danger ibtnDel btn-rounded" href="javascript: void(0);" style="padding: 0.300rem 0.45rem; font-size: 11px; line-height: 1.4;" data-cid="{{ $item->id }}" data-type="invoice" title="Delete">
+											<i class="fa fa-trash" aria-hidden="true"></i>
+										</a>
+									</td>
+								</tr>
+							@endforeach
+						@endif
 							</tbody>
 							<tbody class="addMoreProduct"></tbody>
 							@if (count($invoiceDetails->invoiceDetails) > 0)
@@ -468,7 +556,7 @@ $(document).on('keyup keydown change','.discountCalculation',function() {
 function calculateDiscountAmpount(itemId, productId, qty, unitPrice, discountPercent) {
 	var actionUrl = adminPanelUrl+'/singleStepOrder/ajax-discount-amount-calculation';
 
-	// $('.preloader').show();
+	$('.preloader').show();
 	$.ajax({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -482,7 +570,7 @@ function calculateDiscountAmpount(itemId, productId, qty, unitPrice, discountPer
 			'discountPercent': discountPercent
 		},
 		success: function (response) {
-			// $('.preloader').hide();
+			$('.preloader').hide();
 			if (response.type == 'success') {
 				if (discountPercent != '') {
 					$('#discount_amount_'+itemId).val(response.discountAmount);
@@ -500,14 +588,37 @@ function calculateDiscountAmpount(itemId, productId, qty, unitPrice, discountPer
 		}
 	});
 }
+// End :: Calculate Discount Amount //
 
-$(document).on('click','.deleteOrder',function() {
-	var singleStepOrderId = $(this).data('ordid');
-	if (singleStepOrderId != '') {
-		deleteSingleStepOrder(singleStepOrderId);
+
+// Delete single step order
+$(document).on('click','.deleteInvoice',function() {
+	var id 	= $(this).data('ordid');
+	var type= $(this).data('type');
+
+	if (id != '' && type != '') {
+		deleteInvoice(id, type);
 	}
 });
-// End :: Calculate Discount Amount //
+
+// Update invoice
+$(document).on('click','.updateInvoice',function() {
+	var invoiceDetailId = $(this).data('cid');
+	var itemId			= $(this).data('itemid');
+	var categoryId		= $('#category_id_'+itemId).val();
+	var productId		= $('#product_id_'+itemId).val();
+	var qty				= $('#qty_'+itemId).val();
+	var unitPrice		= $('#unit_price_'+itemId).val();
+	var discountPercent	= $('#discount_percent_'+itemId).val();
+	var discountAmount	= $('#discount_amount_'+itemId).val();
+	var totalPrice		= $('#total_price_'+itemId).val();
+	var status			= $('#status_'+itemId).val();
+
+	if (invoiceDetailId != '' && categoryId != '' && productId != '' && qty != '' && status != '') {
+		updateInvoice(invoiceDetailId, itemId, categoryId, productId, qty, unitPrice, discountPercent, discountAmount, totalPrice, status);
+	}
+});
+
 
 // Calculate total quantity & amount
 $(window).on("load", function() {

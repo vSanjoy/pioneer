@@ -439,11 +439,13 @@ return [
     'btn_reloading_gallery'                         => 'Reloading Gallery',
     'btn_close'                                     => 'Close',
     'btn_create_invoice'                            => 'Create Invoice',
+    'btn_update_invoice'                            => 'Update Invoice',
     'btn_print_invoice'                             => 'Print Invoice',
     'btn_add_more_product'                          => 'Add More Product',
     'btn_ship_order'                                => 'Ship Order',
     'btn_complete_order'                            => 'Complete Order',
     'btn_delete_order'                              => 'Delete Order',
+    'btn_delete_invoice'                            => 'Delete Invoice',
     
 /* Errors */
     'error_enter_email'                             => 'Please enter email.',
@@ -665,5 +667,6 @@ return [
     'success_gallery_deleted_successfully'          => 'Gallery image has been deleted successfully.',
     'success_for_security_reason_logged_out'        => 'For security reasons you have been signed out. Please sign in again.',
     'success_invoice_created_successfully'          => 'Invoice created successfully.',
+    'success_invoice_data_updated_successfully'     => 'Invoice has been updated successfully.',
     
 ];

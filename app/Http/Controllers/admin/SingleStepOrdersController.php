@@ -480,6 +480,88 @@ class SingleStepOrdersController extends Controller
             return redirect()->route($this->routePrefix.'.'.$this->listUrl);
         }
     }
+
+    /*
+        * Function name : updateInvoice
+        * Purpose       : This function is to update invoice
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : Request $request
+        * Return Value  : Returns invoice data
+    */
+    public function updateInvoice(Request $request, $id = null) {
+        $data = [
+            'pageTitle'     => trans('custom_admin.label_edit_order'),
+            'panelTitle'    => trans('custom_admin.label_edit_order'),
+            'pageType'      => 'EDITPAGE'
+        ];
+
+        try {
+            $data['id']             = $id;
+            $data['invoiceId']      = $id = customEncryptionDecryption($id, 'decrypt');
+            $data['invoiceDetails'] = $invoiceDetails = Invoice::where(['id' => $id])->with(['singleStepOrder','invoiceDetails'])->first();
+
+            $data['details']        = $details = $this->model->where(['id' => $invoiceDetails->single_step_order_id])->with(['singleStepOrderDetails','analysesDetails','analysisSeasonDetails'])->first();
+            $data['categories']     = Category::where(['status' => '1'])->select('id','title')->get();
+            $data['products']       = Product::where(['status' => '1'])->select('id','category_id','title')->get();
+            
+            if ($request->isMethod('POST')) {
+                if ($id == null) {
+                    $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+                    return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+                }
+
+                if (count($request->category_id)) {
+                    foreach ($request->category_id as $keyItem => $valItem) {
+                        if ($valItem != '') {
+                            if (array_key_exists($keyItem, $request->id)) {
+                                InvoiceDetail::where(['id' => $request->id[$keyItem]])
+                                                ->update([
+                                                    'category_id'       => $valItem,
+                                                    'product_id'        => $request->product_id[$keyItem],
+                                                    'qty'               => $request->qty[$keyItem],
+                                                    'unit_price'        => $request->unit_price[$keyItem],
+                                                    'discount_percent'  => $request->discount_percent[$keyItem],
+                                                    'discount_amount'   => $request->discount_amount[$keyItem],
+                                                    'total_price'       => $request->total_price[$keyItem],
+                                                    'status'            => $request->status[$keyItem]
+                                                ]);
+                            } else {
+                                $newInvoiceDetail                   = new InvoiceDetail();
+                                $newInvoiceDetail->invoice_id       = $id;
+                                $newInvoiceDetail->category_id      = $valItem;
+                                $newInvoiceDetail->product_id       = $request->product_id[$keyItem];
+                                $newInvoiceDetail->qty              = $request->qty[$keyItem];
+                                $newInvoiceDetail->unit_price       = $request->unit_price[$keyItem];
+                                $newInvoiceDetail->discount_percent = $request->discount_percent[$keyItem];
+                                $newInvoiceDetail->discount_amount  = $request->discount_amount[$keyItem];
+                                $newInvoiceDetail->total_price      = $request->total_price[$keyItem];
+                                $newInvoiceDetail->status           = $request->status[$keyItem];
+                                $newInvoiceDetail->save();
+                            }
+                            $title  = trans('custom_admin.message_success');
+                            $message= trans('custom_admin.success_invoice_data_updated_successfully');
+                            $type   = 'success';
+                        }
+                    }
+                    $this->generateToastMessage('success', trans('custom_admin.success_invoice_created_successfully'), false);
+                    return redirect()->back();
+                } else {
+                    $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
+                    return redirect()->back()->withInput();
+                }
+            }
+            
+            return view($this->viewFolderPath.'.edit', $data);
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+        }
+    }
     
     /*
         * Function name : ajaxCategoeyWiseProducts
@@ -595,6 +677,9 @@ class SingleStepOrdersController extends Controller
                                         $totalAmountAfterDiscount = $productRetailAmount - $discountAmount;
                                     }
                                 }
+                            } else if ($discountPercent == '') {
+                                $discountAmount = '';
+                                $totalAmountAfterDiscount = $productRetailAmount;
                             } else {
                                 $discountAmount = 0;
                                 $totalAmountAfterDiscount = $productRetailAmount;
@@ -620,34 +705,45 @@ class SingleStepOrdersController extends Controller
     }
     
     /*
-        * Function name : ajaxDeleteOrder
-        * Purpose       : This function to delete order
+        * Function name : ajaxDeleteInvoice
+        * Purpose       : This function to delete main single step order / invoice
         * Author        :
         * Created Date  :
         * Modified date :
         * Input Params  : Request $request
         * Return Value  : Returns json
     */
-    public function ajaxDeleteOrder(Request $request) {
+    public function ajaxDeleteInvoice(Request $request) {
         $title      = trans('custom_admin.message_error');
         $message    = trans('custom_admin.error_something_went_wrong');
         $type       = 'error';
-        $allDeleted = 0;
 
         try {
             if ($request->ajax()) {
-                $isExistSingleStepOrder = SingleStepOrderDetail::where(['id' => $request->oid])->first();
-                if ($isExistSingleStepOrder != null) {
-                    $isExistSingleStepOrder->delete();
+                if ($request->type == 'invoice') {
+                    $isExistInvoice = Invoice::where(['id' => $request->id])->first();
+                    if ($isExistInvoice != null) {
+                        $isExistInvoice->delete();
 
-                    $count = SingleStepOrderDetail::where(['single_step_order_id' => $isExistSingleStepOrder->single_step_order_id])->count();
-                    if ($count == 0) {
-                        SingleStepOrder::where(['id' => $isExistSingleStepOrder->single_step_order_id])->delete();
-                        $allDeleted = 1;
+                        // Delete from details table
+                        InvoiceDetail::where(['invoice_id' => $request->id])->delete();
+
+                        $title  = trans('custom_admin.message_success');
+                        $message= trans('custom_admin.message_success');
+                        $type   = 'success';
                     }
-                    $title  = trans('custom_admin.message_success');
-                    $message= trans('custom_admin.message_success');
-                    $type   = 'success';
+                } else {
+                    $isExistSingleStepOrder = SingleStepOrder::where(['id' => $request->id])->first();
+                    if ($isExistSingleStepOrder != null) {
+                        $isExistSingleStepOrder->delete();
+
+                        // Delete from details table
+                        SingleStepOrderDetail::where(['single_step_order_id' => $request->id])->delete();
+
+                        $title  = trans('custom_admin.message_success');
+                        $message= trans('custom_admin.message_success');
+                        $type   = 'success';
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -655,31 +751,39 @@ class SingleStepOrdersController extends Controller
         } catch (\Throwable $e) {
             $message = $e->getMessage();
         }
-        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'allDeleted' => $allDeleted]);
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
     }
     
     /*
-        * Function name : ajaxDeleteSingleStepOrder
-        * Purpose       : This function to delete main single step order
+        * Function name : ajaxUpdateInvoice
+        * Purpose       : This function to update invoice details
         * Author        :
         * Created Date  :
         * Modified date :
         * Input Params  : Request $request
         * Return Value  : Returns json
     */
-    public function ajaxDeleteSingleStepOrder(Request $request) {
+    public function ajaxUpdateInvoice(Request $request) {
         $title      = trans('custom_admin.message_error');
         $message    = trans('custom_admin.error_something_went_wrong');
         $type       = 'error';
 
         try {
             if ($request->ajax()) {
-                $isExistSingleStepOrder = SingleStepOrder::where(['id' => $request->orderid])->first();
-                if ($isExistSingleStepOrder != null) {
-                    // $isExistSingleStepOrder->delete();
+                $isExistInvoice = InvoiceDetail::where(['id' => $request->invoiceDetailId])->first();
+                if ($isExistInvoice != null) {
+                    $isExistInvoice->category_id        = $request->categoryId;
+                    $isExistInvoice->product_id         = $request->productId;
+                    $isExistInvoice->qty                = $request->qty;
+                    $isExistInvoice->unit_price         = $request->unitPrice;
+                    $isExistInvoice->discount_percent   = $request->discountPercent;
+                    $isExistInvoice->discount_amount    = $request->discountAmount;
+                    $isExistInvoice->total_price        = $request->totalPrice;
+                    $isExistInvoice->status             = $request->status;
+                    $isExistInvoice->save();
 
                     $title  = trans('custom_admin.message_success');
-                    $message= trans('custom_admin.message_success');
+                    $message= trans('custom_admin.success_invoice_data_updated_successfully');
                     $type   = 'success';
                 }
             }
@@ -689,6 +793,61 @@ class SingleStepOrdersController extends Controller
             $message = $e->getMessage();
         }
         return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
+    }
+
+    /*
+        * Function name : ajaxDeleteInvoiceDetail
+        * Purpose       : This function to delete invoice details & invoice
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function ajaxDeleteInvoiceDetail(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+        $allDeleted = 0;
+
+        try {
+            if ($request->ajax()) {
+                if ($request->type == 'invoice') {  // Deleten data from invoice_details & invoices table
+                    $isExistInvoiceDetails = InvoiceDetail::where(['id' => $request->id])->first();
+                    if ($isExistInvoiceDetails != null) {
+                        $isExistInvoiceDetails->delete();
+
+                        $count = InvoiceDetail::where(['invoice_id' => $isExistInvoiceDetails->invoice_id])->count();
+                        if ($count == 0) {
+                            Invoice::where(['id' => $isExistInvoiceDetails->invoice_id])->delete();
+                            $allDeleted = 1;
+                        }
+                        $title  = trans('custom_admin.message_success');
+                        $message= trans('custom_admin.message_success');
+                        $type   = 'success';
+                    }
+                } else {  // Deleten data from single_step_order_details & single_step_orders table
+                    $isExistSingleStepOrder = SingleStepOrderDetail::where(['id' => $request->id])->first();
+                    if ($isExistSingleStepOrder != null) {
+                        $isExistSingleStepOrder->delete();
+
+                        $count = SingleStepOrderDetail::where(['single_step_order_id' => $isExistSingleStepOrder->single_step_order_id])->count();
+                        if ($count == 0) {
+                            SingleStepOrder::where(['id' => $isExistSingleStepOrder->single_step_order_id])->delete();
+                            $allDeleted = 1;
+                        }
+                        $title  = trans('custom_admin.message_success');
+                        $message= trans('custom_admin.message_success');
+                        $type   = 'success';
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'allDeleted' => $allDeleted]);
     }
 
 }
