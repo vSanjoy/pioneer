@@ -416,6 +416,10 @@ return [
     'label_invoice_shipped'                         => 'Invoice/Shipped',
     'label_on_hold'                                 => 'On Hold',
     'label_owner'                                   => 'Owner',
+    'label_allocated'                               => 'Allocated',
+    'label_invoice'                                 => 'Invoiced',
+    'label_shipped'                                 => 'Shipped',
+    'label_complete'                                => 'Complete',
 
     
 /* Buttons */
@@ -653,6 +657,9 @@ return [
     'message_inactive_related_store_records_exist'  => 'Related store exist, inactive those first.',
     'message_delete_related_store_records_exist'    => 'Related store exist, delete those first.',
     'message_no_analysis_found'                     => 'No analysis record found.',
+    'message_only_invoiced_orders_will_be_shipped'  => 'Only invoiced orders will be shipped.',
+    'message_only_shipped_orders_will_be_complete'  => 'Only shipped orders will be complete.',
+
     
 /* Success */
     'success_data_added_successfully'               => 'Data has been added successfully.',
@@ -668,5 +675,6 @@ return [
     'success_for_security_reason_logged_out'        => 'For security reasons you have been signed out. Please sign in again.',
     'success_invoice_created_successfully'          => 'Invoice created successfully.',
     'success_invoice_data_updated_successfully'     => 'Invoice has been updated successfully.',
+    'success_order_complete_successfully'           => 'Order complete successfully.',
     
 ];

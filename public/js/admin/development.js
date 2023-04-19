@@ -3334,3 +3334,69 @@ function updateInvoice(invoiceDetailId, itemId, categoryId, productId, qty, unit
     }
 }
 // End :: Update invoice //
+
+// Start :: Ship order //
+function shipOrder(ordId) {
+    if (ordId != '') {
+        var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-ship-order';
+
+        $('.preloader').show();
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: actionUrl,
+            method: 'GET',
+            data: {
+                'ordId': ordId
+            },
+            success: function (response) {
+                $('.preloader').hide();
+                if (response.type == 'success') {
+                    toastr.success(response.message, response.title+'!');
+                    window.location.reload();
+                } else if (response.type == 'warning') {
+                    toastr.warning(response.message, response.title+'!');
+                } else {
+                    toastr.error(response.message, response.title+'!');
+                }
+            }
+        });
+    } else {
+        toastr.error(message, errorMessage+'!');
+    }
+}
+// End :: Ship order //
+
+// Start :: Complete order //
+function completeOrder(ordId) {
+    if (ordId != '') {
+        var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-complete-order';
+
+        $('.preloader').show();
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: actionUrl,
+            method: 'GET',
+            data: {
+                'ordId': ordId
+            },
+            success: function (response) {
+                $('.preloader').hide();
+                if (response.type == 'success') {
+                    toastr.success(response.message, response.title+'!');
+                    window.location.reload();
+                } else if (response.type == 'warning') {
+                    toastr.warning(response.message, response.title+'!');
+                } else {
+                    toastr.error(response.message, response.title+'!');
+                }
+            }
+        });
+    } else {
+        toastr.error(message, errorMessage+'!');
+    }
+}
+// End :: Complete order //

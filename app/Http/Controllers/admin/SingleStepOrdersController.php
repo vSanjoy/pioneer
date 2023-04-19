@@ -849,5 +849,87 @@ class SingleStepOrdersController extends Controller
         }
         return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'allDeleted' => $allDeleted]);
     }
+    
+    /*
+        * Function name : ajaxShipOrder
+        * Purpose       : This function to ship order
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function ajaxShipOrder(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+
+        try {
+            if ($request->ajax()) {
+                $isExistInvoice = InvoiceDetail::where(['invoice_id' => $request->ordId])->get();
+                if ($isExistInvoice->count()) {
+                    foreach ($isExistInvoice as $invoice) {
+                        if ($invoice->status == 'I') {
+                            InvoiceDetail::where(['id' => $invoice->id])->update(['status' => 'S']);
+                        }
+                    }
+
+                    $title  = trans('custom_admin.message_success');
+                    $message= trans('custom_admin.success_invoice_data_updated_successfully');
+                    $type   = 'success';
+                } else {
+                    $title      = trans('custom_admin.message_warning');
+                    $message    = trans('custom_admin.message_only_invoiced_orders_will_be_shipped');
+                    $type       = 'warning';
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
+    }
+    
+    /*
+        * Function name : ajaxCompleteOrder
+        * Purpose       : This function to complete order
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function ajaxCompleteOrder(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+
+        try {
+            if ($request->ajax()) {
+                $isExistInvoice = InvoiceDetail::where(['invoice_id' => $request->ordId])->get();
+                if ($isExistInvoice->count()) {
+                    foreach ($isExistInvoice as $invoice) {
+                        if ($invoice->status == 'S') {
+                            InvoiceDetail::where(['id' => $invoice->id])->update(['status' => 'C']);
+                        }
+                    }
+
+                    $title  = trans('custom_admin.message_success');
+                    $message= trans('custom_admin.success_order_complete_successfully');
+                    $type   = 'success';
+                } else {
+                    $title      = trans('custom_admin.message_warning');
+                    $message    = trans('custom_admin.message_only_shipped_orders_will_be_complete');
+                    $type       = 'warning';
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
+    }
 
 }

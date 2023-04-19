@@ -276,6 +276,8 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::any('/ajax-categoey-wise-products', 'SingleStepOrdersController@ajaxCategoeyWiseProducts')->name('ajax-categoey-wise-products');
                 Route::any('/ajax-product-details', 'SingleStepOrdersController@ajaxProductDetails')->name('ajax-product-details');
                 Route::any('/ajax-delete-invoice', 'SingleStepOrdersController@ajaxDeleteInvoice')->name('ajax-delete-invoice');
+                Route::any('/ajax-ship-order', 'SingleStepOrdersController@ajaxShipOrder')->name('ajax-ship-order');
+                Route::any('/ajax-complete-order', 'SingleStepOrdersController@ajaxCompleteOrder')->name('ajax-complete-order');
 
                 Route::any('/ajax-update-invoice', 'SingleStepOrdersController@ajaxUpdateInvoice')->name('ajax-update-invoice');
                 Route::any('/ajax-delete-invoice-detail', 'SingleStepOrdersController@ajaxDeleteInvoiceDetail')->name('ajax-delete-invoice-detail');

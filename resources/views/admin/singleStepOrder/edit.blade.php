@@ -62,12 +62,12 @@
 											<button type="submit" class="btn btn-primary waves-effect waves-light btn-rounded shadow-md fs12 btn-padding" id="btn-processing">
 												<i class="far fa-save"></i> @lang('custom_admin.btn_create_invoice')
 											</button>
-											<a class="btn btn-success waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
+											{{-- <a class="btn btn-success waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
 												<i class="fas fa-shipping-fast"></i> @lang('custom_admin.btn_ship_order')
 											</a>
 											<a class="btn btn-warning waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
 												<i class="fa fa-check-circle" aria-hidden="true"></i> @lang('custom_admin.btn_complete_order')
-											</a>
+											</a> --}}
 											<a class="btn btn-danger waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding deleteInvoice" data-ordid="{{ $details->id }}" data-type="single_step_order" href="javascript: void(0);">
 												<i class="fa fa-trash" aria-hidden="true"></i> @lang('custom_admin.btn_delete_order')
 											</a>
@@ -175,8 +175,11 @@
 									<td>
 										<select name="status[{{ $keyItem }}]" id="status_{{ $keyItem }}" class="form-control fs12" required>
 											<option value="">@lang('custom_admin.label_select')</option>
-											<option value="IS">@lang('custom_admin.label_invoice_shipped')</option>
+											<option value="A">@lang('custom_admin.label_allocated')</option>
+											<option value="I">@lang('custom_admin.label_invoice')</option>
+											<option value="S">@lang('custom_admin.label_shipped')</option>
 											<option value="H">@lang('custom_admin.label_on_hold')</option>
+											<option value="C">@lang('custom_admin.label_complete')</option>
 										</select>
 									</td>
 									<td>
@@ -229,13 +232,13 @@
 									<td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! Auth::guard('admin')->user()->full_name ?? 'NA' !!}</td>
 									<td>
 										<span class="float-right">
-											<button type="submit" class="btn btn-success waves-effect waves-light btn-rounded shadow-md fs12 btn-padding" id="btn-updating">
+											<button type="submit" class="btn btn-success waves-effect waves-light btn-rounded shadow-md fs12 btn-padding formButton" id="btn-updating" data-type="update_invoice">
 												<i class="far fa-save"></i> @lang('custom_admin.btn_update_invoice')
 											</button>
-											<a class="btn btn-primary waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
+											<a class="btn btn-primary waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding shipOrder" href="javascript: void(0);" data-ordid="{{ $invoiceDetails->id }}">
 												<i class="fas fa-shipping-fast"></i> @lang('custom_admin.btn_ship_order')
 											</a>
-											<a class="btn btn-warning waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="javascript: void(0);">
+											<a class="btn btn-warning waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding completeOrder" href="javascript: void(0);" data-ordid="{{ $invoiceDetails->id }}">
 												<i class="fa fa-check-circle" aria-hidden="true"></i> @lang('custom_admin.btn_complete_order')
 											</a>
 											<a class="btn btn-danger waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding deleteInvoice" data-ordid="{{ $invoiceDetails->id }}" data-type="invoice" href="javascript: void(0);">
@@ -346,8 +349,11 @@
 									<td>
 										<select name="status[{{ $keyItem }}]" id="status_{{ $keyItem }}" class="form-control fs12" required>
 											<option value="">@lang('custom_admin.label_select')</option>
-											<option value="IS" @if($item->status == 'IS')selected @endif>@lang('custom_admin.label_invoice_shipped')</option>
+											<option value="A" @if($item->status == 'A')selected @endif>@lang('custom_admin.label_allocated')</option>
+											<option value="I" @if($item->status == 'I')selected @endif>@lang('custom_admin.label_invoice')</option>
+											<option value="S" @if($item->status == 'S')selected @endif>@lang('custom_admin.label_shipped')</option>
 											<option value="H" @if($item->status == 'H')selected @endif>@lang('custom_admin.label_on_hold')</option>
+											<option value="C" @if($item->status == 'C')selected @endif>@lang('custom_admin.label_complete')</option>
 										</select>
 									</td>
 									<td>
@@ -370,7 +376,7 @@
 									<td id="totalQuantity" class="fs14">&nbsp;</td>
 									<td class="fs14" colspan="3">&nbsp;</td>
 									<td id="totalAmount" class="fs14">&nbsp;</td>
-									<td id="totalAmount" class="fs14" colspan="2">&nbsp;</td>
+									<td class="fs14" colspan="2">&nbsp;</td>
 								</tr>
 							</tbody>
 							@endif
@@ -437,8 +443,11 @@ $(document).ready(function() {
 			cols += '		<td>'+
 								'<select name="status['+counter+']" id="status_'+counter+'" class="form-control fs12" required>'+
 									'<option value="">@lang("custom_admin.label_select")</option>'+
-									'<option value="IS">@lang("custom_admin.label_invoice_shipped")</option>'+
+									'<option value="A">@lang("custom_admin.label_allocated")</option>'+
+									'<option value="I">@lang("custom_admin.label_invoice")</option>'+
+									'<option value="S">@lang("custom_admin.label_shipped")</option>'+
 									'<option value="H">@lang("custom_admin.label_on_hold")</option>'+
+									'<option value="C">@lang("custom_admin.label_complete")</option>'
 								'</select>'+
 							'</td>';
 			cols += '		<td>';
@@ -619,7 +628,6 @@ $(document).on('click','.updateInvoice',function() {
 	}
 });
 
-
 // Calculate total quantity & amount
 $(window).on("load", function() {
 	calculateTotalQuantityAndAmount();
@@ -642,6 +650,25 @@ function calculateTotalQuantityAndAmount() {
 	});
 	$('#totalAmount').html(totalAmount.toFixed(2));
 }
+
+
+// Ship order
+$(document).on('click','.shipOrder',function() {
+	var ordId = $(this).data('ordid');
+
+	if (ordId != '') {
+		shipOrder(ordId);
+	}
+});
+
+// Complete order
+$(document).on('click','.completeOrder',function() {
+	var ordId = $(this).data('ordid');
+
+	if (ordId != '') {
+		completeOrder(ordId);
+	}
+});
 </script>
 
 @endpush
