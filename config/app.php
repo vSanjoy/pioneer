@@ -182,6 +182,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         // Captcha
         Mews\Captcha\CaptchaServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 
@@ -241,6 +242,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         // Captcha
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

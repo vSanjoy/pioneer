@@ -292,3 +292,7 @@ ALTER TABLE `up_beats` ADD `distribution_area_id` INT(11) NULL DEFAULT NULL COMM
 
 15)
 ALTER TABLE `up_invoice_details` CHANGE `status` `status` ENUM('A','I','S','H','C') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'A=> Allocated, S=>Shipped, I=>Invoiced, H=>On Hold, C=>Complete';
+
+16)
+ALTER TABLE `up_invoice_details` ADD `category` VARCHAR(255) NULL DEFAULT NULL AFTER `category_id`;
+ALTER TABLE `up_invoice_details` ADD `product` VARCHAR(255) NULL DEFAULT NULL AFTER `product_id`;

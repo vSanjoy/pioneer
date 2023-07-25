@@ -244,6 +244,9 @@
 											<a class="btn btn-danger waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding deleteInvoice" data-ordid="{{ $invoiceDetails->id }}" data-type="invoice" href="javascript: void(0);">
 												<i class="fa fa-trash" aria-hidden="true"></i> @lang('custom_admin.btn_delete_invoice')
 											</a>
+											<a class="btn btn-dark waves-effect waves-light btn-rounded shadow-md ml-1 fs12 btn-padding" href="{{ route($routePrefix.'.'.'singleStepOrder.download-invoice', customEncryptionDecryption($invoiceDetails->id)) }}" title="{{ __('custom_admin.btn_download_invoice') }}">
+												<i class="fa fa-download" aria-hidden="true"></i>
+											</a>
 										</span>
 									</td>
 								</tr>

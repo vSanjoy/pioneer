@@ -25,6 +25,7 @@ use App\Models\Store;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
 use DataTables;
+use PDF;
 
 
 class SingleStepOrdersController extends Controller
@@ -448,10 +449,15 @@ class SingleStepOrdersController extends Controller
                         // Invoice details table insertion
                         foreach ($request->category_id as $keyItem => $valItem) {
                             if ($valItem != '') {
+                                $category   = Category::where(['id' => $valItem])->first();
+                                $product    = Product::where(['id' => $request->product_id[$keyItem]])->first();
+
                                 $newInvoiceDetail                   = new InvoiceDetail();
                                 $newInvoiceDetail->invoice_id       = $newInvoice->id;
                                 $newInvoiceDetail->category_id      = $valItem;
+                                $newInvoiceDetail->category         = $category->title;
                                 $newInvoiceDetail->product_id       = $request->product_id[$keyItem];
+                                $newInvoiceDetail->product          = $product->title;
                                 $newInvoiceDetail->qty              = $request->qty[$keyItem];
                                 $newInvoiceDetail->unit_price       = $request->unit_price[$keyItem];
                                 $newInvoiceDetail->discount_percent = $request->discount_percent[$keyItem];
@@ -515,11 +521,16 @@ class SingleStepOrdersController extends Controller
                 if (count($request->category_id)) {
                     foreach ($request->category_id as $keyItem => $valItem) {
                         if ($valItem != '') {
+                            $category   = Category::where(['id' => $valItem])->first();
+                            $product    = Product::where(['id' => $request->product_id[$keyItem]])->first();
+                            
                             if (array_key_exists($keyItem, $request->id)) {
                                 InvoiceDetail::where(['id' => $request->id[$keyItem]])
                                                 ->update([
                                                     'category_id'       => $valItem,
+                                                    'category'          => $category->title,
                                                     'product_id'        => $request->product_id[$keyItem],
+                                                    'product'           => $product->title,
                                                     'qty'               => $request->qty[$keyItem],
                                                     'unit_price'        => $request->unit_price[$keyItem],
                                                     'discount_percent'  => $request->discount_percent[$keyItem],
@@ -930,6 +941,35 @@ class SingleStepOrdersController extends Controller
             $message = $e->getMessage();
         }
         return response()->json(['title' => $title, 'message' => $message, 'type' => $type]);
+    }
+
+    /*
+        * Function name : downloadInvoice
+        * Purpose       : This function to download invoice
+        * Author        :
+        * Created Date  :
+        * Modified date :
+        * Input Params  : Request $request
+        * Return Value  : Returns json
+    */
+    public function downloadInvoice(Request $request, $id = null) {
+        $data = [];
+
+        try {
+            $data['id']             = $id;
+            $data['invoiceId']      = $id = customEncryptionDecryption($id, 'decrypt');
+            $data['invoiceDetails'] = Invoice::where(['id' => $id])->with(['singleStepOrder','invoiceDetails'])->first();
+            
+            $pdf = PDF::loadView($this->viewFolderPath.'.invoice', $data);
+    
+            return $pdf->download('Pioneer_invoice_'.date("Y_m_d_H:i:s").'.pdf');
+        } catch (Exception $e) {
+            $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
+            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+        } catch (\Throwable $e) {
+            $this->generateToastMessage('error', $e->getMessage(), false);
+            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+        }
     }
 
 }

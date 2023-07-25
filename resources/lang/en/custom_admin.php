@@ -450,6 +450,7 @@ return [
     'btn_complete_order'                            => 'Complete Order',
     'btn_delete_order'                              => 'Delete Order',
     'btn_delete_invoice'                            => 'Delete Invoice',
+    'btn_download_invoice'                          => 'Download Invoice',
     
 /* Errors */
     'error_enter_email'                             => 'Please enter email.',
