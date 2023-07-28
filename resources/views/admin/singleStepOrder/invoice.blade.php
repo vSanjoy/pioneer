@@ -26,13 +26,31 @@
         </tr>
     </table>
 
+    <table style="margin:0 0 20px;padding:0;font-size:14px;font-family:'Arial', sans-serif;" width="100%" cellpadding="5" cellspacing="0" border="1">
+        <tbody>
+            <tr>
+                <td class="fs14"><strong>@lang('custom_admin.label_unique_order_id'):   </strong> {!! $invoiceDetails->singleStepOrder ? $invoiceDetails->singleStepOrder->unique_order_id : 'NA' !!}</td>
+                <td class="fs14"><strong>@lang('custom_admin.label_order_date_time'):</strong> {!! $invoiceDetails->singleStepOrder ? changeDateFormat($invoiceDetails->singleStepOrder->created_at) : 'NA' !!}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="margin:0 0 20px;padding:0;font-size:14px;font-family:'Arial', sans-serif;" width="100%" cellpadding="5" cellspacing="0" border="1">
+        <tbody>
+            <tr>
+                <td class="fs14"><strong>@lang('custom_admin.label_season'):</strong> {!! $invoiceDetails->singleStepOrder ? $invoiceDetails->singleStepOrder->analysisSeasonDetails->title : 'NA' !!}</td>
+                <td class="fs14"><strong>@lang('custom_admin.label_distribution_area'):</strong> {!! $invoiceDetails->singleStepOrder->distributionAreaDetails->title ?? 'NA' !!}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <table style="margin:0 0 30px;padding:0;font-size:14px;font-family:'Arial', sans-serif;" width="100%" cellpadding="5" cellspacing="0" border="1">
         <tbody>
             <tr>
                 <td class="fs14"><strong>@lang('custom_admin.label_store'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->store_name ?? 'NA' !!}</td>
                 <td class="fs14"><strong>@lang('custom_admin.label_owner'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->name_1 ?? 'NA' !!}</td>
                 <td class="fs14"><strong>@lang('custom_admin.label_phone'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->phone_no_1 ?? 'NA' !!}</td>
-                <td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! Auth::guard('admin')->user()->full_name ?? 'NA' !!}</td>
+                <td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! $invoiceDetails->singleStepOrder ? $invoiceDetails->singleStepOrder->sellerDetails->full_name : 'NA' !!}</td>
             </tr>
         </tbody>
     </table>
@@ -46,31 +64,33 @@
                 <th scope="col">@lang('custom_admin.label_discount_percent')</th>
                 <th scope="col">@lang('custom_admin.label_discount_amount')</th>
                 <th scope="col">@lang('custom_admin.label_total_price')</th>
-                <th scope="col">@lang('custom_admin.label_status')</th>
+                {{-- <th scope="col">@lang('custom_admin.label_status')</th> --}}
             </tr>
         </thead>
         <tbody>
     @php $totalCount = 0; $totalAmount = 0; @endphp
     @if ($invoiceDetails->invoiceDetails)
         @foreach ($invoiceDetails->invoiceDetails as $keyItem => $item)
-            @php $totalCount += $item->qty; $totalAmount += $item->total_price; @endphp
-            <tr class="fs12">
-                <td scope="col">{{ $item->category }}</td>
-                <td scope="col">{{ $item->product }}</td>
-                <td scope="col">{{ $item->qty }}</td>
-                <td scope="col">{{ formatToTwoDecimalPlaces($item->unit_price) }}</td>
-                <td scope="col">{{ $item->discount_percent ? formatToTwoDecimalPlaces($item->discount_percent) : '-' }}</td>
-                <td scope="col">{{ $item->discount_amount ? formatToTwoDecimalPlaces($item->discount_amount) : '-' }}</td>
-                <td scope="col">{{ formatToTwoDecimalPlaces($item->total_price) }}</td>
-                <td scope="col">
-                @if ($item->status == 'A') {{ 'Allocated' }}
-                @elseif ($item->status == 'S') {{ 'Shipped' }}
-                @elseif ($item->status == 'I') {{ 'Invoiced' }}
-                @elseif ($item->status == 'H') {{ 'On Hold' }}
-                @else {{ 'Complete' }}
-                @endif
-                </td>
-            </tr>
+            @if ($item->status == 'A')
+                @php $totalCount += $item->qty; $totalAmount += $item->total_price; @endphp
+                <tr class="fs12">
+                    <td scope="col">{{ $item->category }}</td>
+                    <td scope="col">{{ $item->product }}</td>
+                    <td scope="col">{{ $item->qty }}</td>
+                    <td scope="col">{{ formatToTwoDecimalPlaces($item->unit_price) }}</td>
+                    <td scope="col">{{ $item->discount_percent ? formatToTwoDecimalPlaces($item->discount_percent) : '-' }}</td>
+                    <td scope="col">{{ $item->discount_amount ? formatToTwoDecimalPlaces($item->discount_amount) : '-' }}</td>
+                    <td scope="col">{{ formatToTwoDecimalPlaces($item->total_price) }}</td>
+                    {{-- <td scope="col">
+                    @if ($item->status == 'A') {{ 'Allocated' }}
+                    @elseif ($item->status == 'S') {{ 'Shipped' }}
+                    @elseif ($item->status == 'I') {{ 'Invoiced' }}
+                    @elseif ($item->status == 'H') {{ 'On Hold' }}
+                    @else {{ 'Complete' }}
+                    @endif
+                    </td> --}}
+                </tr>
+            @endif
         @endforeach
     @endif
         </tbody>
@@ -81,7 +101,7 @@
                 <td class="fs12">{{ $totalCount }}</td>
                 <td class="fs12" colspan="3">&nbsp;</td>
                 <td class="fs12">{{ formatToTwoDecimalPlaces($totalAmount) }}</td>
-                <td class="fs12" colspan="1">&nbsp;</td>
+                {{-- <td class="fs12" colspan="1">&nbsp;</td> --}}
             </tr>
         </tbody>
         @endif

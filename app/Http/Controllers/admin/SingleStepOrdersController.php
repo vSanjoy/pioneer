@@ -175,6 +175,13 @@ class SingleStepOrdersController extends Controller
                     $filterByStore  = true;
                     $filter['store_id'] = $storeId;
                 }
+                // Order Status
+                $orderStatus        = $request->order_status;
+                $filterByOrderStatus= false;
+                if ($orderStatus != '') {
+                    $filterByOrderStatus = true;
+                    $filter['order_status'] = $orderStatus;
+                }
 
                 // Start :: Manage restriction
                 $isAllow = false;
@@ -197,6 +204,9 @@ class SingleStepOrdersController extends Controller
                 }
                 if ($filterByStore) {
                     $data = $data->where('store_id', $storeId);
+                }
+                if ($filterByOrderStatus) {
+                    $data = $data->where('order_status', $orderStatus);
                 }
                 $data = $data->get();
 
@@ -246,19 +256,29 @@ class SingleStepOrdersController extends Controller
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
                         })
-                        ->addColumn('status', function ($row) use ($isAllow, $allowedRoutes) {
-                            if ($isAllow || in_array($this->statusUrl, $allowedRoutes)) {
-                                if ($row->status == '1') {
-                                    $status = ' <a href="javascript:void(0)" data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" data-id="'.customEncryptionDecryption($row->id).'" data-action-type="inactive" class="custom_font status"><span class="badge badge-pill badge-success">'.trans('custom_admin.label_active').'</span></a>';
-                                } else {
-                                    $status = ' <a href="javascript:void(0)" data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_inactive').'" data-id="'.customEncryptionDecryption($row->id).'" data-action-type="active" class="custom_font status"><span class="badge badge-pill badge-danger">'.trans('custom_admin.label_inactive').'</span></a>';
-                                }
+                        // ->addColumn('status', function ($row) use ($isAllow, $allowedRoutes) {
+                        //     if ($isAllow || in_array($this->statusUrl, $allowedRoutes)) {
+                        //         if ($row->status == '1') {
+                        //             $status = ' <a href="javascript:void(0)" data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" data-id="'.customEncryptionDecryption($row->id).'" data-action-type="inactive" class="custom_font status"><span class="badge badge-pill badge-success">'.trans('custom_admin.label_active').'</span></a>';
+                        //         } else {
+                        //             $status = ' <a href="javascript:void(0)" data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_inactive').'" data-id="'.customEncryptionDecryption($row->id).'" data-action-type="active" class="custom_font status"><span class="badge badge-pill badge-danger">'.trans('custom_admin.label_inactive').'</span></a>';
+                        //         }
+                        //     } else {
+                        //         if ($row->status == '1') {
+                        //             $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" class="custom_font"><span class="badge badge-pill badge-success">'.trans('custom_admin.label_active').'</span></a>';
+                        //         } else {
+                        //             $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" class="custom_font"><span class="badge badge-pill badge-danger">'.trans('custom_admin.label_inactive').'</span></a>';
+                        //         }
+                        //     }
+                        //     return $status;
+                        // })
+                        ->addColumn('order_status', function ($row) use ($isAllow, $allowedRoutes) {
+                            if ($row->order_status == 'PS') {
+                                $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_partially_shipped').'" class="custom_font"><span class="badge badge-pill badge-warning">'.trans('custom_admin.label_partially_shipped').'</span></a>';
+                            } else if ($row->order_status == 'FS') {
+                                $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_fully_shipped').'" class="custom_font"><span class="badge badge-pill badge-success">'.trans('custom_admin.label_fully_shipped').'</span></a>';
                             } else {
-                                if ($row->status == '1') {
-                                    $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" class="custom_font"><span class="badge badge-pill badge-success">'.trans('custom_admin.label_active').'</span></a>';
-                                } else {
-                                    $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_active').'" class="custom_font"><span class="badge badge-pill badge-danger">'.trans('custom_admin.label_inactive').'</span></a>';
-                                }
+                                $status = ' <a data-microtip-position="top" role="" aria-label="'.trans('custom_admin.label_new').'" class="custom_font"><span class="badge badge-pill badge-danger">'.trans('custom_admin.label_new').'</span></a>';
                             }
                             return $status;
                         })
@@ -281,7 +301,7 @@ class SingleStepOrdersController extends Controller
                             
                             return $btn;
                         })
-                        ->rawColumns(['status','action'])
+                        ->rawColumns(['order_status','action'])
                         ->make(true);
             }
             return view($this->viewFolderPath.'.list');
@@ -442,6 +462,8 @@ class SingleStepOrdersController extends Controller
                 }
 
                 if (count($request->category_id)) {
+                    $countPartiallyShippedItems = 0;
+
                     // Invoice table insertion
                     $newInvoice = new Invoice();
                     $newInvoice->single_step_order_id = $id;
@@ -465,7 +487,17 @@ class SingleStepOrdersController extends Controller
                                 $newInvoiceDetail->total_price      = $request->total_price[$keyItem];
                                 $newInvoiceDetail->status           = $request->status[$keyItem];
                                 $newInvoiceDetail->save();
+
+                                // For single_step_orders table order_status change
+                                if ($request->status[$keyItem] == 'A') {
+                                    $countPartiallyShippedItems++;
+                                }
                             }
+                        }
+
+                        // For single_step_orders table order_status change
+                        if ($countPartiallyShippedItems < count($request->category_id)) {
+                            $this->model->where(['id' => $id])->update(['order_status' => 'PS']);
                         }
 
                         $this->generateToastMessage('success', trans('custom_admin.success_invoice_created_successfully'), false);
@@ -519,6 +551,8 @@ class SingleStepOrdersController extends Controller
                 }
 
                 if (count($request->category_id)) {
+                    $countPartiallyShippedItems = $countFullyShippedItems = 0;
+
                     foreach ($request->category_id as $keyItem => $valItem) {
                         if ($valItem != '') {
                             $category   = Category::where(['id' => $valItem])->first();
@@ -551,11 +585,27 @@ class SingleStepOrdersController extends Controller
                                 $newInvoiceDetail->status           = $request->status[$keyItem];
                                 $newInvoiceDetail->save();
                             }
+
+                            // For single_step_orders table order_status change
+                            if ($request->status[$keyItem] == 'S') {
+                                $countFullyShippedItems++;
+                            } else if ($request->status[$keyItem] == 'A' || $request->status[$keyItem] == 'H' || $request->status[$keyItem] == 'I') {
+                                $countPartiallyShippedItems++;
+                            }
+
                             $title  = trans('custom_admin.message_success');
                             $message= trans('custom_admin.success_invoice_data_updated_successfully');
                             $type   = 'success';
                         }
                     }
+
+                    // For single_step_orders table order_status change
+                    if ($countFullyShippedItems == count($request->category_id)) {
+                        $this->model->where(['id' => $invoiceDetails->single_step_order_id])->update(['order_status' => 'FS']);
+                    } else if ($countPartiallyShippedItems){
+                        $this->model->where(['id' => $invoiceDetails->single_step_order_id])->update(['order_status' => 'PS']);
+                    }
+
                     $this->generateToastMessage('success', trans('custom_admin.success_invoice_created_successfully'), false);
                     return redirect()->back();
                 } else {
@@ -739,6 +789,9 @@ class SingleStepOrdersController extends Controller
                         // Delete from details table
                         InvoiceDetail::where(['invoice_id' => $request->id])->delete();
 
+                        // For single_step_orders table order_status change
+                        $this->model->where(['id' => $isExistInvoice->single_step_order_id])->update(['order_status' => 'N']);
+
                         $title  = trans('custom_admin.message_success');
                         $message= trans('custom_admin.message_success');
                         $type   = 'success';
@@ -833,6 +886,27 @@ class SingleStepOrdersController extends Controller
                             Invoice::where(['id' => $isExistInvoiceDetails->invoice_id])->delete();
                             $allDeleted = 1;
                         }
+
+                        // For single_step_orders table order_status change
+                        $countPartiallyShippedItems = $countFullyShippedItems = 0;
+                        $remainingInvoiceDetails = InvoiceDetail::where(['invoice_id' => $isExistInvoiceDetails->invoice_id])->get();
+                        if ($remainingInvoiceDetails->count()) {
+                            foreach ($remainingInvoiceDetails as $invoiceData) {
+                                if ($invoiceData->status == 'S') {
+                                    $countFullyShippedItems++;
+                                } else if ($invoiceData->status == 'A' || $invoiceData->status == 'H' || $invoiceData->status == 'I') {
+                                    $countPartiallyShippedItems++;
+                                }
+                            }
+                        }
+
+                        // For single_step_orders table order_status change
+                        if ($countFullyShippedItems == $remainingInvoiceDetails->count()) {
+                            $this->model->where(['id' => $isExistInvoiceDetails->invoice->single_step_order_id])->update(['order_status' => 'FS']);
+                        } else if ($countPartiallyShippedItems){
+                            $this->model->where(['id' => $isExistInvoiceDetails->invoice->single_step_order_id])->update(['order_status' => 'PS']);
+                        }
+
                         $title  = trans('custom_admin.message_success');
                         $message= trans('custom_admin.message_success');
                         $type   = 'success';
@@ -880,9 +954,12 @@ class SingleStepOrdersController extends Controller
                 $isExistInvoice = InvoiceDetail::where(['invoice_id' => $request->ordId])->get();
                 if ($isExistInvoice->count()) {
                     foreach ($isExistInvoice as $invoice) {
-                        if ($invoice->status == 'I') {
+                        if ($invoice->status == 'A' || $invoice->status == 'I') {
                             InvoiceDetail::where(['id' => $invoice->id])->update(['status' => 'S']);
                         }
+
+                        // For single_step_orders table order_status change
+                        $this->model->where(['id' => $invoice->invoice->single_step_order_id])->update(['order_status' => 'FS']);
                     }
 
                     $title  = trans('custom_admin.message_success');

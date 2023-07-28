@@ -420,6 +420,11 @@ return [
     'label_invoice'                                 => 'Invoiced',
     'label_shipped'                                 => 'Shipped',
     'label_complete'                                => 'Complete',
+    'label_order_date_time'                         => 'Order Date & Time',
+    'label_new'                                     => 'New',
+    'label_partially_shipped'                       => 'Partially Shipped',
+    'label_fully_shipped'                           => 'Fully Shipped',
+    'label_order_status'                            => 'Order Status',
 
     
 /* Buttons */

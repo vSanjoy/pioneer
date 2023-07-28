@@ -53,10 +53,30 @@
 						<table class="table table-bordered table-responsive-lg" style="margin-bottom: 0;">
 							<tbody>
 								<tr>
+									<td class="fs14"><strong>@lang('custom_admin.label_unique_order_id'):</strong> {!! $details->unique_order_id ?? 'NA' !!}</td>
+									<td class="fs14"><strong>@lang('custom_admin.label_order_date_time'):</strong> {!! changeDateFormat($details->created_at) !!}</td>
+									<td class="fs14"><strong>@lang('custom_admin.label_season'):</strong> {!! $details->analysisSeasonDetails->title ?? 'NA' !!}</td>
+									<td class="fs14"><strong>@lang('custom_admin.label_distribution_area'):</strong> {!! $details->distributionAreaDetails->title ?? 'NA' !!}</td>
+									<td class="fs14"><strong>@lang('custom_admin.label_beat'):</strong> {!! $details->beatDetails->title ?? 'NA' !!}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12">
+				<div class="card" style="margin-bottom: 15px;">
+					<div class="table-responsive">
+						<table class="table table-bordered table-responsive-lg" style="margin-bottom: 0;">
+							<tbody>
+								<tr>
 									<td class="fs14"><strong>@lang('custom_admin.label_store'):</strong> {!! $details->storeDetails->store_name ?? 'NA' !!}</td>
 									<td class="fs14"><strong>@lang('custom_admin.label_owner'):</strong> {!! $details->storeDetails->name_1 ?? 'NA' !!}</td>
 									<td class="fs14"><strong>@lang('custom_admin.label_phone'):</strong> {!! $details->storeDetails->phone_no_1 ?? 'NA' !!}</td>
-									<td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! Auth::guard('admin')->user()->full_name ?? 'NA' !!}</td>
+									<td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! $details->sellerDetails->full_name ?? 'NA' !!}</td>
 									<td>
 										<span class="float-right">
 											<button type="submit" class="btn btn-primary waves-effect waves-light btn-rounded shadow-md fs12 btn-padding" id="btn-processing">
@@ -79,7 +99,7 @@
 					</div>
 				</div>
 			</div>
-		</div>	
+		</div>
 			
 		<div class="row">
 			<div class="col-12">
@@ -106,6 +126,8 @@
 								@php
 								$analysisDetails = analysisDetails($details->analyses_id, $item->categoryDetails->id, $item->productDetails->id);
 								$getCategoryWiseProducts = orderProductsCategoryWise($item->categoryDetails->id);
+
+								$quanty = $item->qty ?? 1;
 								@endphp
 								<tr id="section_id_{{ $item->id }}">
 									<th scope="row">
@@ -125,7 +147,7 @@
 										</select>
 									</td>
 									<td>
-										{{ Form::number('qty['.$keyItem.']', 1, [
+										{{ Form::number('qty['.$keyItem.']', $quanty, [
 																	'id' => 'qty_'.$keyItem,
 																	'placeholder' => '',
 																	'class' => 'form-control fs12 qtyUnit qtyDiscountCalculation',
@@ -135,7 +157,7 @@
 																]) }}
 									</td>
 									<td>
-										{{ Form::number('unit_price['.$keyItem.']', $item->productDetails->retailer_price ? formatToTwoDecimalPlaces($item->productDetails->retailer_price) : null, [
+										{{ Form::number('unit_price['.$keyItem.']', $item->productDetails->retailer_price ? formatToTwoDecimalPlaces($item->productDetails->retailer_price) : $item->productDetails->retailer_price, [
 												'id' => 'unit_price_'.$keyItem,
 												'placeholder' => '',
 												'class' => 'form-control fs12 unitPriceDiscountCalculation',
@@ -164,7 +186,7 @@
 																				]) }}
 									</td>
 									<td>
-										{{ Form::number('total_price['.$keyItem.']', $item->productDetails->retailer_price ? formatToTwoDecimalPlaces($item->productDetails->retailer_price) : null, [
+										{{ Form::number('total_price['.$keyItem.']', $item->productDetails->retailer_price ? formatToTwoDecimalPlaces($item->productDetails->retailer_price * $quanty) : $item->productDetails->retailer_price, [
 												'id' => 'total_price_'.$keyItem,
 												'placeholder' => '',
 												'class' => 'form-control fs12 totalPrice',
@@ -229,7 +251,7 @@
 									<td class="fs14"><strong>@lang('custom_admin.label_store'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->store_name ?? 'NA' !!}</td>
 									<td class="fs14"><strong>@lang('custom_admin.label_owner'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->name_1 ?? 'NA' !!}</td>
 									<td class="fs14"><strong>@lang('custom_admin.label_phone'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->phone_no_1 ?? 'NA' !!}</td>
-									<td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! Auth::guard('admin')->user()->full_name ?? 'NA' !!}</td>
+									<td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! $invoiceDetails->singleStepOrder->sellerDetails->full_name ?? 'NA' !!}</td>
 									<td>
 										<span class="float-right">
 											<button type="submit" class="btn btn-success waves-effect waves-light btn-rounded shadow-md fs12 btn-padding formButton" id="btn-updating" data-type="update_invoice">
@@ -360,9 +382,9 @@
 										</select>
 									</td>
 									<td>
-										<a class="btn btn-success btn-rounded updateInvoice" href="javascript: void(0);" style="padding: 0.300rem 0.45rem; font-size: 11px; line-height: 1.4;" data-cid="{{ $item->id }}" data-itemid="{{ $keyItem }}" title="Update">
+										{{-- <a class="btn btn-success btn-rounded updateInvoice" href="javascript: void(0);" style="padding: 0.300rem 0.45rem; font-size: 11px; line-height: 1.4;" data-cid="{{ $item->id }}" data-itemid="{{ $keyItem }}" title="Update">
 											<i class="far fa-save"></i>
-										</a>
+										</a> --}}
 										<a class="deleteRow btn btn-danger ibtnDel btn-rounded" href="javascript: void(0);" style="padding: 0.300rem 0.45rem; font-size: 11px; line-height: 1.4;" data-cid="{{ $item->id }}" data-type="invoice" title="Delete">
 											<i class="fa fa-trash" aria-hidden="true"></i>
 										</a>
@@ -602,7 +624,6 @@ function calculateDiscountAmpount(itemId, productId, qty, unitPrice, discountPer
 }
 // End :: Calculate Discount Amount //
 
-
 // Delete single step order
 $(document).on('click','.deleteInvoice',function() {
 	var id 	= $(this).data('ordid');
@@ -655,7 +676,7 @@ function calculateTotalQuantityAndAmount() {
 }
 
 
-// Ship order
+// Shipped all allocated/invoiced orders
 $(document).on('click','.shipOrder',function() {
 	var ordId = $(this).data('ordid');
 

@@ -3338,28 +3338,41 @@ function updateInvoice(invoiceDetailId, itemId, categoryId, productId, qty, unit
 // Start :: Ship order //
 function shipOrder(ordId) {
     if (ordId != '') {
-        var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-ship-order';
+        swal.fire({
+            text: 'Are you sure, change the status to shipped for all allocated/invoiced orders?',
+            type: 'warning',
+            allowOutsideClick: false,
+            confirmButtonColor: btnConfirmYesColor,
+            cancelButtonColor: btnCancelNoColor,
+            showCancelButton: true,
+            confirmButtonText: btnYes,
+            cancelButtonText: btnNo,
+        }).then((result) => {
+            if (result.value) {
+                var actionUrl = adminPanelUrl + '/singleStepOrder/ajax-ship-order';
 
-        $('.preloader').show();
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: actionUrl,
-            method: 'GET',
-            data: {
-                'ordId': ordId
-            },
-            success: function (response) {
-                $('.preloader').hide();
-                if (response.type == 'success') {
-                    toastr.success(response.message, response.title+'!');
-                    window.location.reload();
-                } else if (response.type == 'warning') {
-                    toastr.warning(response.message, response.title+'!');
-                } else {
-                    toastr.error(response.message, response.title+'!');
-                }
+                $('.preloader').show();
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: actionUrl,
+                    method: 'GET',
+                    data: {
+                        'ordId': ordId
+                    },
+                    success: function (response) {
+                        $('.preloader').hide();
+                        if (response.type == 'success') {
+                            toastr.success(response.message, response.title+'!');
+                            window.location.reload();
+                        } else if (response.type == 'warning') {
+                            toastr.warning(response.message, response.title+'!');
+                        } else {
+                            toastr.error(response.message, response.title+'!');
+                        }
+                    }
+                });
             }
         });
     } else {

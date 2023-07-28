@@ -2,20 +2,21 @@
 
 @section('content')
 
-	<style>
+	{{-- <style>
 	.dataTables_filter{display: none;}
-	</style>
+	</style> --}}
 
 	@php
-	$dateRange = $beatId = $distributionAreaId = $storeId = '';
+	$dateRange = $beatId = $distributionAreaId = $storeId = $orderStatus = '';
 	$hideStatus = 'style="display: none;"';
 	$showStatus = 'style="display: block;"';
 	if (isset($_GET['date_range']) && $_GET['date_range'] != '') { $dateRange = $_GET['date_range']; }
 	if (isset($_GET['distribution_area_id']) && $_GET['distribution_area_id'] != '') { $distributionAreaId = $_GET['distribution_area_id']; }
 	if (isset($_GET['beat_id']) && $_GET['beat_id'] != '') { $beatId = $_GET['beat_id']; }
 	if (isset($_GET['store_id']) && $_GET['store_id'] != '') { $storeId = $_GET['store_id']; }
+	if (isset($_GET['order_status']) && $_GET['order_status'] != '') { $orderStatus = $_GET['order_status']; }
 
-	if ( (isset($_GET['date_range']) && $_GET['date_range'] != '') || (isset($_GET['distribution_area_id']) && $_GET['distribution_area_id'] != '') || (isset($_GET['beat_id']) && $_GET['beat_id'] != '') || (isset($_GET['store_id']) && $_GET['store_id'] != '') ) {
+	if ( (isset($_GET['date_range']) && $_GET['date_range'] != '') || (isset($_GET['distribution_area_id']) && $_GET['distribution_area_id'] != '') || (isset($_GET['beat_id']) && $_GET['beat_id'] != '') || (isset($_GET['store_id']) && $_GET['store_id'] != '') || (isset($_GET['order_status']) && $_GET['order_status'] != '') ) {
 		$showStatus = 'style="display: block;"';
 		$hideStatus = 'style="display: none;"';
 	}
@@ -96,6 +97,19 @@
 									</div>
 								</div>
 								{{-- End :: Store --}}
+								{{-- Start :: Status --}}
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="text-dark font-bold">{{ __('custom_admin.label_order_status') }}</label>
+										<select name="order_status" id="order_status" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+											<option value="">--@lang('custom_admin.label_select')--</option>
+											<option value="N" @if ($orderStatus == 'N')selected @endif>@lang('custom_admin.label_new')</option>
+											<option value="PS" @if ($orderStatus == 'PS')selected @endif>@lang('custom_admin.label_partially_shipped')</option>
+											<option value="FS" @if ($orderStatus == 'FS')selected @endif>@lang('custom_admin.label_fully_shipped')</option>
+										</select>
+									</div>
+								</div>
+								{{-- End :: Status --}}
 								
 
 								<div class="col-md-4">
@@ -161,6 +175,7 @@
 									<th>@lang('custom_admin.label_beat')</th>
 									<th>@lang('custom_admin.label_store')</th>
 									<th>@lang('custom_admin.label_season')</th>
+									<th>@lang('custom_admin.label_status')</th>
 									<th class="actions">@lang('custom_admin.label_action')</th>
 								</tr>
 							</thead>							

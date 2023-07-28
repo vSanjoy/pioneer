@@ -37,6 +37,7 @@ $(document).ready(function() {
 		var distributionAreaId	= $('#distribution_area_id').val();
 		var beatId				= $('#beat_id').val();
 		var storeId				= $('#store_id').val();
+		var orderStatus			= $('#order_status').val();
 		
 		var getListDataUrl = "{{route($routePrefix.'.'.$listRequestUrl)}}";	
 		var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
@@ -62,7 +63,7 @@ $(document).ready(function() {
 					headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
-					url: getListDataUrl + '?date_range=' + dateRange + '&distribution_area_id=' + distributionAreaId + '&store_id=' + storeId + '&beat_id=' + beatId,
+					url: getListDataUrl + '?date_range=' + dateRange + '&distribution_area_id=' + distributionAreaId + '&store_id=' + storeId + '&beat_id=' + beatId + '&order_status=' + orderStatus,
 					type: 'POST',
 					data: function(data) {},
 				},
@@ -91,6 +92,7 @@ $(document).ready(function() {
 					{data: 'beat_id', name: 'beat_id'},
 					{data: 'store_id', name: 'store_id'},
 					{data: 'analysis_season_id', name: 'analysis_season_id'},
+					{data: 'order_status', name: 'order_status'},
 				@if ($isAllow || in_array($viewUrl, $allowedRoutes))
 					{data: 'action', name: 'action', orderable: false, searchable: false},
 				@endif
@@ -137,9 +139,10 @@ $(document).ready(function() {
 		var distributionAreaId	= $('#distribution_area_id').val();
 		var beatId				= $('#beat_id').val();
 		var storeId				= $('#store_id').val();
+		var orderStatus			= $('#order_status').val();
 		
 		if (dateRange != '' || distributionAreaId != '' || beatId != '' || storeId != '') {
-			var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}?date_range=" + dateRange + "&distribution_area_id=" + distributionAreaId + "&store_id=" + storeId + "&beat_id=" + beatId;
+			var getListUrlWithFilter = "{{route($routePrefix.'.'.$listUrl)}}?date_range=" + dateRange + "&distribution_area_id=" + distributionAreaId + "&store_id=" + storeId + "&beat_id=" + beatId + "&order_status=" + orderStatus;
 			window.history.pushState({href: getListUrlWithFilter}, '', getListUrlWithFilter);
 			getList();
 		} else {

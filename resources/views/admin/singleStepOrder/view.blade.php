@@ -4,10 +4,41 @@
 
 	<div class="row">
 		<div class="col-12">
-			<div class="card">
+			<div class="card mb-3">
 				<div class="card-body">
 					<h4 class="card-title">{{ $pageTitle }}</h4>
 					<h3 class="mb-heading">{!! $details->distributionAreaDetails->title !!} - {!! $details->beatDetails->title !!} - {!! $details->storeDetails->name_1.' ('.$details->storeDetails->store_name.')' !!} - {!! $details->analysisSeasonDetails->title.' ('.$details->analysisSeasonDetails->year.')' !!}</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-3">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="text-dark font-bold"><strong>@lang('custom_admin.label_unique_order_id'):</strong></label>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="text-dark font-bold">{!! $details->unique_order_id ?? 'NA' !!}</label>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="text-dark font-bold"><strong>@lang('custom_admin.label_order_date_time'):</strong></label>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="text-dark font-bold">{!! changeDateFormat($details->created_at) !!}</label>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

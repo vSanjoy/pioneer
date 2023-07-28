@@ -270,7 +270,7 @@
 						</div>
 					</div>
 					<!-- Column -->
-					<div class="col-md-4 col-lg-4 col-xlg-3">
+					{{-- <div class="col-md-4 col-lg-4 col-xlg-3">
 						<div class="card card-hover">
 							<div class="p-2 bg-success text-center">
 								<h2 class="font-light text-white">
@@ -285,11 +285,11 @@
 								</h2>
 							</div>
 						</div>
-					</div>
+					</div> --}}
 					<!-- Column -->
 					<div class="col-md-4 col-lg-4 col-xlg-3">
 						<div class="card card-hover">
-							<div class="p-2 bg-warning text-center">
+							<div class="p-2 bg-success text-center">
 								<h2 class="font-light text-white">
 									<a href="{{ route('admin.singleStepOrder.list') }}" class="text-white">
 										<i data-feather="shopping-bag" class="feather-icon"></i>

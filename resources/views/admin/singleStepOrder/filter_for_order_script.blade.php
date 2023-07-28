@@ -18,7 +18,7 @@ $(function() {
 		$('.export-analysis').show();
 	});
 
-    $('#distribution_area_id, #beat_id, #store_id').on('change', function() {
+    $('#distribution_area_id, #beat_id, #store_id, #order_status').on('change', function() {
 		urlBuilder();
     });
 });
