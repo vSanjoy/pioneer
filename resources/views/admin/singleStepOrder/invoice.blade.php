@@ -50,7 +50,7 @@
                 <td class="fs14"><strong>@lang('custom_admin.label_store'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->store_name ?? 'NA' !!}</td>
                 <td class="fs14"><strong>@lang('custom_admin.label_owner'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->name_1 ?? 'NA' !!}</td>
                 <td class="fs14"><strong>@lang('custom_admin.label_phone'):</strong> {!! $invoiceDetails->singleStepOrder->storeDetails->phone_no_1 ?? 'NA' !!}</td>
-                <td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! $invoiceDetails->singleStepOrder ? $invoiceDetails->singleStepOrder->sellerDetails->full_name : 'NA' !!}</td>
+                <td class="fs14"><strong>@lang('custom_admin.label_representative'):</strong> {!! $invoiceDetails->singleStepOrder ? ($invoiceDetails->singleStepOrder->sellerDetails ? $invoiceDetails->singleStepOrder->sellerDetails->full_name : 'NA') : 'NA' !!}</td>
             </tr>
         </tbody>
     </table>

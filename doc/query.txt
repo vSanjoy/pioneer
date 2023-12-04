@@ -296,3 +296,6 @@ ALTER TABLE `up_invoice_details` CHANGE `status` `status` ENUM('A','I','S','H','
 16)
 ALTER TABLE `up_invoice_details` ADD `category` VARCHAR(255) NULL DEFAULT NULL AFTER `category_id`;
 ALTER TABLE `up_invoice_details` ADD `product` VARCHAR(255) NULL DEFAULT NULL AFTER `product_id`;
+
+17)
+ALTER TABLE `up_single_step_orders` ADD `order_status` ENUM('N', 'PS', 'FS') NOT NULL DEFAULT 'N' COMMENT 'N=>New, PS=>Partially Shipped, FS=>Fully Shipped' AFTER `status`;
