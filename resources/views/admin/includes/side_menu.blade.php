@@ -347,6 +347,18 @@ $getSiteSettings = getSiteSettings();
 					</ul>
 				</li>
 			@endif
+
+			<!-- Payment Management Start -->
+			@php
+			$paymentRoutes = ['payment.list', 'payment.view', 'payment.edit'];
+			@endphp
+			@if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type != 'S' || in_array('payment.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $paymentRoutes))selected @endif"> 
+					<a class="sidebar-link sidebar-link @if (in_array($currentPage, $paymentRoutes))active @endif" href="{{ route('admin.payment.add') }}" aria-expanded="false">
+						<i data-feather="sliders" class="feather-icon"></i><span class="hide-menu">Payment</span>
+					</a>
+				</li>
+			@endif
 			
 			<!-- Report Management Start -->
 			@php

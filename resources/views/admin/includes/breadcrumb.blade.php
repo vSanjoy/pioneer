@@ -9,7 +9,7 @@
                         @if (\Auth::guard('admin')->user()->type != 'S')
                         <li class="breadcrumb-item"><a href="{{ route($routePrefix.'.dashboard') }}" class="">@lang('custom_admin.label_dashboard')</a></li>
                         @endif
-                @if (strpos(Route::currentRouteName(), 'website-settings') === false && strpos(Route::currentRouteName(), 'change-password') === false && strpos(Route::currentRouteName(), 'profile') === false)
+                @if (strpos(Route::currentRouteName(), 'website-settings') === false && strpos(Route::currentRouteName(), 'change-password') === false && strpos(Route::currentRouteName(), 'profile') === false && strpos(Route::currentRouteName(), 'payment') === false)
                     @if (isset($breadcrumb[$pageType]) && count($breadcrumb[$pageType]) > 0)
                         @foreach ($breadcrumb[$pageType] as $pageValue)
                             @if ($pageValue['url'] != '')

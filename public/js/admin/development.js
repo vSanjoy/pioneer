@@ -2511,6 +2511,28 @@ $(document).ready(function() {
         // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
 
+    $('.datePickerPayment').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: false,
+        showWeekNumbers: false,
+        showISOWeekNumbers: false,
+        timePicker: false,
+        timePicker24Hour: false,
+        timePickerSeconds: false,
+        autoApply: true,
+        autoUpdateInput: true,
+        alwaysShowCalendars: false,
+        // startDate: moment().startOf('hour'),
+        // endDate: moment().startOf('hour').add(24, 'hour'),
+        // minDate: moment().startOf('hour'),
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    }, function(start, end, label) {
+        // $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + picker.endDate.format('YYYY-MM-DD HH:mm'));
+        // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
+
     // $('.dateRangePicker').daterangepicker({
     //     singleDatePicker: false,
     //     showDropdowns: false,

@@ -283,6 +283,11 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/download-invoice/{id}', 'SingleStepOrdersController@downloadInvoice')->name('download-invoice');
             });
 
+            Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
+                Route::get('/', 'PaymentsController@add')->name('add');
+                Route::get('/add', 'PaymentsController@add')->name('add');
+            });
+
             Route::group(['prefix' => 'analysisReport', 'as' => 'analysisReport.'], function () {
                 Route::get('/', 'AnalysisReportController@list')->name('list');
                 Route::post('ajax-list-request', 'AnalysisReportController@ajaxListRequest')->name('ajax-list-request');
