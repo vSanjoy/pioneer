@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2023 at 02:56 PM
+-- Generation Time: Dec 11, 2023 at 08:25 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.4.20
 
@@ -5944,7 +5944,7 @@ CREATE TABLE `up_invoices` (
 --
 
 INSERT INTO `up_invoices` (`id`, `single_step_order_id`, `created_at`, `updated_at`) VALUES
-(5, '6', '2023-04-07 03:58:14', '2023-04-07 03:58:14');
+(14, '6', '2023-07-26 02:32:59', '2023-07-26 02:32:59');
 
 -- --------------------------------------------------------
 
@@ -5956,13 +5956,15 @@ CREATE TABLE `up_invoice_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `invoice_id` int(11) DEFAULT NULL COMMENT 'Id from invoices table',
   `category_id` int(11) DEFAULT NULL COMMENT 'Id from categories table',
+  `category` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL COMMENT 'Id from products table',
+  `product` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `qty` float(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Product quantity',
   `unit_price` double(10,2) DEFAULT NULL COMMENT 'Unit price',
   `discount_percent` double(10,2) DEFAULT NULL COMMENT 'Discount percent',
   `discount_amount` double(10,2) DEFAULT NULL COMMENT 'Discount amount',
   `total_price` double(10,2) DEFAULT NULL COMMENT 'Total amount after discount',
-  `status` enum('IS','H') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'IS' COMMENT 'IS=>Invoice/Shipped, H=>On Hold',
+  `status` enum('A','I','S','H','C') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'A=> Allocated, S=>Shipped, I=>Invoiced, H=>On Hold, C=>Complete',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -5971,16 +5973,9 @@ CREATE TABLE `up_invoice_details` (
 -- Dumping data for table `up_invoice_details`
 --
 
-INSERT INTO `up_invoice_details` (`id`, `invoice_id`, `category_id`, `product_id`, `qty`, `unit_price`, `discount_percent`, `discount_amount`, `total_price`, `status`, `created_at`, `updated_at`) VALUES
-(14, 5, 1, 2, 1.00, 52.00, 10.00, 5.20, 46.80, 'IS', '2023-04-07 03:58:14', '2023-04-07 07:23:41'),
-(15, 5, 1, 3, 2.00, 60.00, 20.00, 24.00, 96.00, 'IS', '2023-04-07 03:58:14', '2023-04-07 07:23:41'),
-(16, 5, 6, 25, 1.00, 125.00, 5.00, 6.25, 118.75, 'H', '2023-04-07 03:58:14', '2023-04-07 07:23:41'),
-(23, 5, 10, 48, 12.00, 20.00, NULL, NULL, 240.00, 'IS', '2023-04-07 07:06:54', '2023-04-07 07:23:41'),
-(25, 5, 14, 68, 1.00, 45.00, NULL, NULL, 45.00, 'IS', '2023-04-07 07:08:42', '2023-04-07 07:23:41'),
-(26, 5, 17, 78, 12.00, 25.00, NULL, NULL, 300.00, 'IS', '2023-04-07 07:15:05', '2023-04-07 07:23:41'),
-(27, 5, 11, 51, 1.00, 80.50, 10.00, 8.05, 72.45, 'IS', '2023-04-07 07:16:54', '2023-04-07 07:23:41'),
-(28, 5, 2, 5, 12.00, 25.00, 10.00, 30.00, 270.00, 'IS', '2023-04-07 07:17:45', '2023-04-07 07:23:41'),
-(35, 5, 4, 16, 10.00, 18.00, 50.00, 90.00, 90.00, 'IS', '2023-04-07 07:23:41', '2023-04-07 07:23:41');
+INSERT INTO `up_invoice_details` (`id`, `invoice_id`, `category_id`, `category`, `product_id`, `product`, `qty`, `unit_price`, `discount_percent`, `discount_amount`, `total_price`, `status`, `created_at`, `updated_at`) VALUES
+(59, 14, 3, 'Drwaing & Sketch Book', 6, 'Pioneer 4 No Drawing', 1.00, 32.00, NULL, NULL, 32.00, 'S', '2023-07-27 03:43:22', '2023-07-27 04:33:24'),
+(60, 14, 2, NULL, 5, NULL, 1.00, 25.00, 2.00, 0.50, 24.50, 'A', '2023-07-27 04:33:24', '2023-07-27 04:33:24');
 
 -- --------------------------------------------------------
 
@@ -6384,6 +6379,7 @@ CREATE TABLE `up_single_step_orders` (
   `analysis_date` timestamp NULL DEFAULT current_timestamp(),
   `analyses_id` int(11) DEFAULT NULL COMMENT 'Id from analyses table',
   `status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0=>Inactive, 1=>Active',
+  `order_status` enum('N','PS','FS') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N' COMMENT 'N=>New, PS=>Partially Shipped, FS=>Fully Shipped',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -6393,42 +6389,42 @@ CREATE TABLE `up_single_step_orders` (
 -- Dumping data for table `up_single_step_orders`
 --
 
-INSERT INTO `up_single_step_orders` (`id`, `unique_order_id`, `seller_id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `beat_id`, `store_id`, `analysis_date`, `analyses_id`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(5, 'PSA10490498C7', 3, 1, 1, 13, 18, 34, '2022-10-12 10:49:04', 2, '1', '2022-10-12 10:49:04', '2022-10-12 10:49:04', NULL),
-(6, 'PSA112403F86D', 26, 1, 6, 8, 12, 19, '2022-10-12 11:24:03', 3, '1', '2022-10-12 11:24:03', '2022-10-12 11:24:03', NULL),
-(8, 'PSA1032304CF8', 6, 1, 11, 11, 23, 84, '2022-11-24 10:32:30', 27, '1', '2022-11-24 10:32:30', '2022-11-24 10:32:30', NULL),
-(12, 'PSA1120065362', 6, 1, 11, 11, 23, 84, '2022-11-24 11:20:06', 27, '1', '2022-11-24 11:20:06', '2022-11-24 11:20:06', NULL),
-(13, 'PSA112102C87E', 6, 1, 11, 11, 23, 84, '2022-11-24 11:21:02', 27, '1', '2022-11-24 11:21:02', '2022-11-24 11:21:02', NULL),
-(14, 'PSA112136EFD2', 6, 1, 11, 11, 23, 84, '2022-11-24 11:21:36', 27, '1', '2022-11-24 11:21:36', '2022-11-24 11:21:36', NULL),
-(15, 'PSA11215592A8', 6, 1, 11, 11, 23, 84, '2022-11-24 11:21:55', 27, '1', '2022-11-24 11:21:55', '2022-11-24 11:21:55', NULL),
-(16, 'PSA1151045363', 6, 1, 11, 11, 23, 84, '2022-11-24 11:51:04', 27, '1', '2022-11-24 11:51:04', '2022-11-24 11:51:04', NULL),
-(17, 'PSA07384014CC', 6, 1, 11, 11, 23, 76, '2022-11-26 07:38:40', 29, '1', '2022-11-26 07:38:40', '2022-11-26 07:38:40', NULL),
-(18, 'PSA074018BE65', 6, 1, 11, 11, 23, 76, '2022-11-26 07:40:18', 29, '1', '2022-11-26 07:40:18', '2022-11-26 07:40:18', NULL),
-(19, 'PSA0755332470', 5, 1, 1, 13, 3, 20, '2022-11-26 07:55:33', 31, '1', '2022-11-26 07:55:33', '2022-11-26 07:55:33', NULL),
-(20, 'PSA075559F724', 5, 1, 1, 13, 3, 20, '2022-11-26 07:55:59', 31, '1', '2022-11-26 07:55:59', '2022-11-26 07:55:59', NULL),
-(21, 'PSA054253821C', 6, 1, 11, 11, 23, 84, '2022-11-28 05:42:53', 27, '1', '2022-11-28 05:42:53', '2022-11-28 05:42:53', NULL),
-(26, 'PSA115811EF79', 3, 1, 1, 13, 8, 66, '2022-12-01 11:58:11', 32, '1', '2022-12-01 11:58:11', '2022-12-01 11:58:11', NULL),
-(27, 'PSA1204523F31', 3, 1, 1, 13, 8, 43, '2022-12-01 12:04:52', 6, '1', '2022-12-01 12:04:52', '2022-12-01 12:04:52', NULL),
-(29, 'PSA120826B8AA', 4, 1, 11, 11, 29, 36, '2022-12-01 12:08:26', 36, '1', '2022-12-01 12:08:26', '2022-12-01 12:08:26', NULL),
-(30, 'PSA1212239E1B', 4, 1, 11, 11, 29, 40, '2022-12-01 12:12:23', 22, '1', '2022-12-01 12:12:23', '2022-12-01 12:12:23', NULL),
-(31, 'PSA103634A8D8', 4, 1, 7, 15, 27, 33, '2022-12-12 10:36:34', 1, '1', '2022-12-12 10:36:34', '2022-12-12 10:36:34', NULL),
-(32, 'PSA071925E3DE', 6, 1, 11, 11, 23, 44, '2022-12-16 07:19:25', 20, '1', '2022-12-16 07:19:25', '2022-12-16 07:19:25', NULL),
-(33, 'PSA0732299752', 6, 1, 11, 11, 23, 89, '2022-12-16 07:32:29', 57, '1', '2022-12-16 07:32:29', '2022-12-16 07:32:29', NULL),
-(34, 'PSA074338C85D', 6, 1, 11, 11, 23, 88, '2022-12-16 07:43:38', 33, '1', '2022-12-16 07:43:38', '2022-12-16 07:43:38', NULL),
-(35, 'PSA0744358539', 6, 1, 11, 11, 23, 88, '2022-12-16 07:44:35', 33, '1', '2022-12-16 07:44:35', '2022-12-16 07:44:35', NULL),
-(36, 'PSA080344490C', 4, 1, 11, 11, 29, 36, '2022-12-16 08:03:44', 36, '1', '2022-12-16 08:03:44', '2022-12-16 08:03:44', NULL),
-(37, 'PSA0806542A45', 4, 1, 11, 11, 29, 40, '2022-12-16 08:06:54', 22, '1', '2022-12-16 08:06:54', '2022-12-16 08:06:54', NULL),
-(38, 'PSA0807255D87', 6, 1, 11, 11, 23, 91, '2022-12-16 08:07:25', 34, '1', '2022-12-16 08:07:25', '2022-12-16 08:07:25', NULL),
-(39, 'PSA080815A660', 4, 1, 11, 11, 29, 41, '2022-12-16 08:08:15', 40, '1', '2022-12-16 08:08:15', '2022-12-16 08:08:15', NULL),
-(40, 'PSA092751A595', 6, 1, 11, 11, 43, 74, '2022-12-16 09:27:51', 69, '1', '2022-12-16 09:27:51', '2022-12-16 09:27:51', NULL),
-(41, 'PSA1019335255', 6, 1, 11, 11, 29, 40, '2022-12-16 10:19:33', 22, '1', '2022-12-16 10:19:33', '2022-12-16 10:19:33', NULL),
-(42, 'PSA10333120DC', 6, 1, 11, 11, 29, 36, '2022-12-16 10:33:31', 36, '1', '2022-12-16 10:33:31', '2022-12-16 10:33:31', NULL),
-(43, 'PSA103508A698', 6, 1, 11, 11, 29, 41, '2022-12-16 10:35:08', 40, '1', '2022-12-16 10:35:08', '2022-12-16 10:35:08', NULL),
-(44, 'PSA111801A8FC', 6, 1, 11, 11, 30, 70, '2022-12-16 11:18:01', 70, '1', '2022-12-16 11:18:01', '2022-12-16 11:18:01', NULL),
-(45, 'PSA072243E96E', 26, 1, 6, 27, 10, 121, '2023-02-22 07:22:43', 76, '1', '2023-02-22 07:22:43', '2023-02-22 07:22:43', NULL),
-(46, 'PSA10552951F9', 31, 1, 1, 30, 3, 73, '2023-02-23 10:55:29', 77, '1', '2023-02-23 10:55:29', '2023-02-23 10:55:29', NULL),
-(47, 'PSA1110438CEC', 31, 1, 1, 30, 42, 72, '2023-02-23 11:10:43', 78, '1', '2023-02-23 11:10:43', '2023-02-23 11:10:43', NULL),
-(48, 'PSA111412D6DB', 31, 1, 1, 30, 42, 72, '2023-02-23 11:14:12', 78, '1', '2023-02-23 11:14:12', '2023-02-23 11:14:12', NULL);
+INSERT INTO `up_single_step_orders` (`id`, `unique_order_id`, `seller_id`, `analysis_season_id`, `distribution_area_id`, `distributor_id`, `beat_id`, `store_id`, `analysis_date`, `analyses_id`, `status`, `order_status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(5, 'PSA10490498C7', 3, 1, 1, 13, 18, 34, '2022-10-12 10:49:04', 2, '1', 'N', '2022-10-12 10:49:04', '2022-10-12 10:49:04', NULL),
+(6, 'PSA112403F86D', 26, 1, 6, 8, 12, 19, '2022-10-12 11:24:03', 3, '1', 'PS', '2022-10-12 11:24:03', '2023-07-27 04:33:24', NULL),
+(8, 'PSA1032304CF8', 6, 1, 11, 11, 23, 84, '2022-11-24 10:32:30', 27, '1', 'N', '2022-11-24 10:32:30', '2022-11-24 10:32:30', NULL),
+(12, 'PSA1120065362', 6, 1, 11, 11, 23, 84, '2022-11-24 11:20:06', 27, '1', 'N', '2022-11-24 11:20:06', '2022-11-24 11:20:06', NULL),
+(13, 'PSA112102C87E', 6, 1, 11, 11, 23, 84, '2022-11-24 11:21:02', 27, '1', 'FS', '2022-11-24 11:21:02', '2023-07-26 02:18:02', NULL),
+(14, 'PSA112136EFD2', 6, 1, 11, 11, 23, 84, '2022-11-24 11:21:36', 27, '1', 'N', '2022-11-24 11:21:36', '2022-11-24 11:21:36', NULL),
+(15, 'PSA11215592A8', 6, 1, 11, 11, 23, 84, '2022-11-24 11:21:55', 27, '1', 'N', '2022-11-24 11:21:55', '2022-11-24 11:21:55', NULL),
+(16, 'PSA1151045363', 6, 1, 11, 11, 23, 84, '2022-11-24 11:51:04', 27, '1', 'N', '2022-11-24 11:51:04', '2022-11-24 11:51:04', NULL),
+(17, 'PSA07384014CC', 6, 1, 11, 11, 23, 76, '2022-11-26 07:38:40', 29, '1', 'N', '2022-11-26 07:38:40', '2022-11-26 07:38:40', NULL),
+(18, 'PSA074018BE65', 6, 1, 11, 11, 23, 76, '2022-11-26 07:40:18', 29, '1', 'N', '2022-11-26 07:40:18', '2022-11-26 07:40:18', NULL),
+(19, 'PSA0755332470', 5, 1, 1, 13, 3, 20, '2022-11-26 07:55:33', 31, '1', 'N', '2022-11-26 07:55:33', '2022-11-26 07:55:33', NULL),
+(20, 'PSA075559F724', 5, 1, 1, 13, 3, 20, '2022-11-26 07:55:59', 31, '1', 'N', '2022-11-26 07:55:59', '2022-11-26 07:55:59', NULL),
+(21, 'PSA054253821C', 6, 1, 11, 11, 23, 84, '2022-11-28 05:42:53', 27, '1', 'N', '2022-11-28 05:42:53', '2022-11-28 05:42:53', NULL),
+(26, 'PSA115811EF79', 3, 1, 1, 13, 8, 66, '2022-12-01 11:58:11', 32, '1', 'N', '2022-12-01 11:58:11', '2022-12-01 11:58:11', NULL),
+(27, 'PSA1204523F31', 3, 1, 1, 13, 8, 43, '2022-12-01 12:04:52', 6, '1', 'N', '2022-12-01 12:04:52', '2022-12-01 12:04:52', NULL),
+(29, 'PSA120826B8AA', 4, 1, 11, 11, 29, 36, '2022-12-01 12:08:26', 36, '1', 'N', '2022-12-01 12:08:26', '2022-12-01 12:08:26', NULL),
+(30, 'PSA1212239E1B', 4, 1, 11, 11, 29, 40, '2022-12-01 12:12:23', 22, '1', 'N', '2022-12-01 12:12:23', '2022-12-01 12:12:23', NULL),
+(31, 'PSA103634A8D8', 4, 1, 7, 15, 27, 33, '2022-12-12 10:36:34', 1, '1', 'N', '2022-12-12 10:36:34', '2022-12-12 10:36:34', NULL),
+(32, 'PSA071925E3DE', 6, 1, 11, 11, 23, 44, '2022-12-16 07:19:25', 20, '1', 'N', '2022-12-16 07:19:25', '2022-12-16 07:19:25', NULL),
+(33, 'PSA0732299752', 6, 1, 11, 11, 23, 89, '2022-12-16 07:32:29', 57, '1', 'N', '2022-12-16 07:32:29', '2022-12-16 07:32:29', NULL),
+(34, 'PSA074338C85D', 6, 1, 11, 11, 23, 88, '2022-12-16 07:43:38', 33, '1', 'N', '2022-12-16 07:43:38', '2022-12-16 07:43:38', NULL),
+(35, 'PSA0744358539', 6, 1, 11, 11, 23, 88, '2022-12-16 07:44:35', 33, '1', 'N', '2022-12-16 07:44:35', '2022-12-16 07:44:35', NULL),
+(36, 'PSA080344490C', 4, 1, 11, 11, 29, 36, '2022-12-16 08:03:44', 36, '1', 'N', '2022-12-16 08:03:44', '2022-12-16 08:03:44', NULL),
+(37, 'PSA0806542A45', 4, 1, 11, 11, 29, 40, '2022-12-16 08:06:54', 22, '1', 'N', '2022-12-16 08:06:54', '2022-12-16 08:06:54', NULL),
+(38, 'PSA0807255D87', 6, 1, 11, 11, 23, 91, '2022-12-16 08:07:25', 34, '1', 'N', '2022-12-16 08:07:25', '2022-12-16 08:07:25', NULL),
+(39, 'PSA080815A660', 4, 1, 11, 11, 29, 41, '2022-12-16 08:08:15', 40, '1', 'N', '2022-12-16 08:08:15', '2022-12-16 08:08:15', NULL),
+(40, 'PSA092751A595', 6, 1, 11, 11, 43, 74, '2022-12-16 09:27:51', 69, '1', 'N', '2022-12-16 09:27:51', '2022-12-16 09:27:51', NULL),
+(41, 'PSA1019335255', 6, 1, 11, 11, 29, 40, '2022-12-16 10:19:33', 22, '1', 'N', '2022-12-16 10:19:33', '2022-12-16 10:19:33', NULL),
+(42, 'PSA10333120DC', 6, 1, 11, 11, 29, 36, '2022-12-16 10:33:31', 36, '1', 'N', '2022-12-16 10:33:31', '2022-12-16 10:33:31', NULL),
+(43, 'PSA103508A698', 6, 1, 11, 11, 29, 41, '2022-12-16 10:35:08', 40, '1', 'N', '2022-12-16 10:35:08', '2022-12-16 10:35:08', NULL),
+(44, 'PSA111801A8FC', 6, 1, 11, 11, 30, 70, '2022-12-16 11:18:01', 70, '1', 'N', '2022-12-16 11:18:01', '2022-12-16 11:18:01', NULL),
+(45, 'PSA072243E96E', 26, 1, 6, 27, 10, 121, '2023-02-22 07:22:43', 76, '1', 'N', '2023-02-22 07:22:43', '2023-02-22 07:22:43', NULL),
+(46, 'PSA10552951F9', 31, 1, 1, 30, 3, 73, '2023-02-23 10:55:29', 77, '1', 'N', '2023-02-23 10:55:29', '2023-02-23 10:55:29', NULL),
+(47, 'PSA1110438CEC', 31, 1, 1, 30, 42, 72, '2023-02-23 11:10:43', 78, '1', 'N', '2023-02-23 11:10:43', '2023-12-04 02:30:42', NULL),
+(48, 'PSA111412D6DB', 31, 1, 1, 30, 42, 72, '2023-02-23 11:14:12', 78, '1', 'N', '2023-02-23 11:14:12', '2023-02-23 11:14:12', NULL);
 
 -- --------------------------------------------------------
 
@@ -6543,8 +6539,6 @@ INSERT INTO `up_single_step_order_details` (`id`, `single_step_order_id`, `categ
 (95, 45, 1, 1, '10', 'Not sell well', 'Will try'),
 (96, 46, 2, 4, '18', NULL, 'Good sell afterall'),
 (97, 47, 1, 1, '56', NULL, NULL),
-(98, 47, 1, 2, '39', NULL, NULL),
-(99, 47, 1, 3, '20', NULL, NULL),
 (100, 48, 1, 1, '20', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -6750,14 +6744,14 @@ CREATE TABLE `up_users` (
 --
 
 INSERT INTO `up_users` (`id`, `job_title_1`, `nickname`, `title`, `first_name`, `last_name`, `full_name`, `username`, `email`, `company`, `phone_no`, `password`, `profile_pic`, `gender`, `dob`, `distribution_area_id`, `role_id`, `remember_token`, `auth_token`, `type`, `agree`, `status`, `lastlogintime`, `sample_login_show`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1680505600, 'Y', '2022-05-06 07:39:45', '2023-04-03 01:36:40', NULL),
+(1, NULL, NULL, NULL, 'John', 'Doe', 'John Doe', 'johndoe', 'admin@admin.com', NULL, '9876543210', '$2y$10$RFGYQLaP8sI212TKj0CY0uxRR2OENt.2PsiFKxQedSbUXSmPANeQq', '', 'M', NULL, NULL, 1, NULL, NULL, 'SA', 'Y', '1', 1702278351, 'Y', '2022-05-06 07:39:45', '2023-12-11 01:35:51', NULL),
 (2, NULL, NULL, NULL, 'Biswajit', 'Sardar', 'Biswajit Sardar', 'biswajit', 'biswajit.sanmarg.1@gmail.com', NULL, '7908184378', '$2y$10$E2A9DOFqnq.iuvxjbhFaZuW6gmsAPAoA8l6QR7WZnHVt1DIBOSpDq', '', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1662098487, 'N', '2022-08-22 07:57:12', '2022-09-02 06:01:27', NULL),
 (3, NULL, NULL, NULL, 'Raj', 'Misra', 'Raj Misra', 'RAJ', 'rajmisra2424@gmail.com', NULL, '7003387033', '$2y$10$xeA2lJyi7B/suKK1wZrWXO0OHYEb8bIcHuZ0zvYLG6e2jNsT6Jtsa', '', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1669896315, 'N', '2022-08-22 08:02:52', '2022-12-01 12:05:15', NULL),
 (4, NULL, NULL, NULL, 'Rajveer', 'Singh', 'Rajveer Singh', 'Rajveersingh', 'rajveer@gmail.com', NULL, '7278884252', '$2y$10$te6KsiAHbJtLcQ/2u1oTQekgGzKRx7bGhir/ULGOkCUhrS6sAak3m', '', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1671177492, 'N', '2022-08-22 08:05:31', '2022-12-16 07:58:12', NULL),
 (5, NULL, NULL, NULL, 'Sebak', 'Roy', 'Sebak Roy', 'sebak', 'sebakroy263@gmail.com', NULL, '8918991242', '$2y$10$P1iui/OfCRdMEppV3ItsruxLaL4R9qPhYy8dtZ26lRCewWq0kAYHq', 'distributor_1661429684.jpg', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1669896355, 'N', '2022-08-22 08:12:38', '2022-12-01 12:05:55', NULL),
 (6, NULL, NULL, NULL, 'Uttam', 'Sinha', 'Uttam Sinha Roy', 'uttam', 'uttamsinharay86@gmail.com', NULL, '8509951339', '$2y$10$757PSHMbS6xXvFGVzPYChuneAxKMIWHCPGjVHIpvPhD6R9cT5qryO', '', 'M', NULL, NULL, NULL, NULL, NULL, 'S', 'Y', '1', 1671174381, 'N', '2022-08-22 08:14:42', '2022-12-16 07:06:21', NULL),
 (7, 'Owner', NULL, NULL, 'Dipankar', 'Saha', 'Dipankar Saha', 'dipankar', 'dipankar@gmail.com', 'Deep Enterprise', NULL, '$2y$10$3zWg9ux9r.adKD.bjafcCumH9b1C2.7n3BPemJtZNwmKuzcdQ8/Be', '', 'M', NULL, 1, NULL, NULL, NULL, 'D', 'Y', '1', 1661161508, 'N', '2022-08-22 09:38:37', '2022-08-25 11:05:27', '2022-08-25 11:05:27'),
-(8, 'Owner', NULL, NULL, 'Raju', 'Roy', 'Raju Roy', 'raju', 'raju@gmail.com', 'R D Traders', '9433312992', '$2y$10$I6OswHzW26b8AqE7pgonzuryTqI1J6b3V.B5Z0/jxNyxd/peDuihG', 'distributor_1661424975.jpg', 'M', NULL, 6, NULL, NULL, NULL, 'D', 'Y', '1', 1680858913, 'N', '2022-08-25 10:56:15', '2023-04-07 03:45:13', NULL),
+(8, 'Owner', NULL, NULL, 'Raju', 'Roy', 'Raju Roy', 'raju', 'raju@gmail.com', 'R D Traders', '9433312992', '$2y$10$I6OswHzW26b8AqE7pgonzuryTqI1J6b3V.B5Z0/jxNyxd/peDuihG', 'distributor_1661424975.jpg', 'M', NULL, 6, NULL, NULL, NULL, 'D', 'Y', '1', 1690537636, 'N', '2022-08-25 10:56:15', '2023-07-28 04:17:16', NULL),
 (9, 'Owner', NULL, NULL, 'Gobindo', 'Day', 'Gobindo Day', 'gobindo', 'gobindoday68@gmail.com', 'Day Enterprise', '9831144092', '$2y$10$Km36OLc4kzjsH7giwWufDOwcYG0OVd1/L6prO3CWEUIZZwyHYvXYW', 'distributor_1661426486.jpg', 'M', NULL, 9, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-08-25 10:59:14', '2022-08-25 11:21:26', NULL),
 (10, 'Owner', NULL, NULL, 'Sopon', 'badro', 'Sopon badro', 'Soponbodro', 'Sopon@gmail.com', 'Sayan Enterprise', '8017973160', '$2y$10$j1DSnXoR/5.91gz1knqyL.L/Jr7l5RRqNuoijw3f6xVWtd45ghSBu', '', 'M', NULL, 8, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-08-25 10:59:23', '2022-08-25 11:02:09', NULL),
 (11, 'Owner', NULL, NULL, 'SK', 'Abbash', 'SK Abbash Ahmed', 'skabbashahamed', 'skabbshahamed@gmail.com', 'M/S Anika Enterprise', '9933819061', '$2y$10$.2mAuBDrz4kQpIF6O8uJS.9cV1jtg3LeQCqG8otS.hlqiBx7u.Ena', '', 'M', NULL, 11, NULL, NULL, NULL, 'D', 'Y', '1', NULL, 'N', '2022-08-25 11:00:01', '2022-08-25 11:00:01', NULL),
@@ -7234,13 +7228,13 @@ ALTER TABLE `up_grades`
 -- AUTO_INCREMENT for table `up_invoices`
 --
 ALTER TABLE `up_invoices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `up_invoice_details`
 --
 ALTER TABLE `up_invoice_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `up_migrations`
