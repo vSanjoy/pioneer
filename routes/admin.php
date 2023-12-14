@@ -284,8 +284,18 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
             });
 
             Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
-                Route::get('/', 'PaymentsController@add')->name('add');
+                Route::get('/', 'PaymentsController@list')->name('list');
+                Route::post('ajax-list-request', 'PaymentsController@ajaxListRequest')->name('ajax-list-request');
                 Route::get('/add', 'PaymentsController@add')->name('add');
+                Route::post('/add-submit', 'PaymentsController@add')->name('add-submit');
+                Route::get('/history', 'PaymentsController@history')->name('history');
+                Route::post('ajax-list-history-request', 'PaymentsController@ajaxListHistoryRequest')->name('ajax-list-history-request');
+                Route::get('/edit/{id}', 'PaymentsController@edit')->name('edit');
+                Route::any('/edit-submit/{id}', 'PaymentsController@edit')->name('edit-submit');
+                Route::get('/report', 'PaymentsController@report')->name('report');
+                Route::post('ajax-list-report-request', 'PaymentsController@ajaxListReportRequest')->name('ajax-list-report-request');
+                Route::get('/delete/{id}', 'PaymentsController@delete')->name('delete');
+                Route::post('/bulk-actions', 'PaymentsController@bulkActions')->name('bulk-actions');
             });
 
             Route::group(['prefix' => 'analysisReport', 'as' => 'analysisReport.'], function () {
@@ -304,6 +314,21 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/', 'StoreReportController@list')->name('list');
                 Route::post('ajax-list-request', 'StoreReportController@ajaxListRequest')->name('ajax-list-request');
                 Route::any('/export', 'StoreReportController@export')->name('export');
+            });
+
+            Route::group(['prefix' => 'invoice', 'as' => 'invoice.'], function () {
+                Route::get('/', 'InvoiceController@list')->name('list');
+                Route::post('ajax-list-request', 'InvoiceController@ajaxListRequest')->name('ajax-list-request');
+            });
+
+            Route::group(['prefix' => 'storeGradation', 'as' => 'storeGradation.'], function () {
+                Route::get('/', 'StoreGradationController@list')->name('list');
+                Route::post('ajax-list-request', 'StoreGradationController@ajaxListRequest')->name('ajax-list-request');
+                Route::get('/add', 'StoreGradationController@add')->name('add');
+                Route::post('/add-submit', 'StoreGradationController@add')->name('add-submit');
+
+                Route::get('/report', 'StoreGradationController@report')->name('report');
+                Route::post('ajax-list-report-request', 'StoreGradationController@ajaxListReportRequest')->name('ajax-list-report-request');
             });
             
         });

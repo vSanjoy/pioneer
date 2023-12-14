@@ -2,7 +2,7 @@
 
 @section('content')
 	<style type="text/css">
-	.table th, .table td {border: none;}
+/*	.table th, .table td {border: none;}*/
 	</style>
 
 	@php $showStatus = 'style="display: block;"'; @endphp
@@ -116,12 +116,12 @@
                     <table class="table">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">Store</th>
-                                <th scope="col">Phone</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Distribution Area</th>
-                                <th scope="col">Beat</th>
-                                <th scope="col">Action</th>
+                            	<th scope="col">{{ __('custom_admin.label_store') }}</th>
+                                <th scope="col">{{ __('custom_admin.label_phone') }}</th>
+                                <th scope="col">{{ __('custom_admin.label_name') }}</th>
+                                <th scope="col">{{ __('custom_admin.label_distribution_area') }}</th>
+                                <th scope="col">{{ __('custom_admin.label_beat') }}</th>
+                                <th scope="col">{{ __('custom_admin.label_action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -153,7 +153,7 @@
                                 @endif
                             	</td>
                                 <td>
-                                	<a href="javascript: void(0);" class="btn-rounded btn-light shadow-md pr-3 pl-3" style="padding: 0.375rem 0.75rem" data-toggle="modal" data-target="#dark-header-modal">Collect</a>
+                                	<a href="javascript: void(0);" class="btn-rounded btn-light shadow-md pr-3 pl-3" style="padding: 0.375rem 0.75rem" data-toggle="modal" data-target="#collect-payment-modal">{{ __('custom_admin.label_collect') }}</a>
 								</td>
                             </tr>
                             @endif
@@ -166,12 +166,12 @@
         </div>
 	</div>
 
-	<!-- Center modal content -->
-	<div id="dark-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dark-header-modalLabel" aria-hidden="true">
+	<!-- Collect Payment modal content -->
+	<div id="collect-payment-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dark-header-modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header modal-colored-header bg-dark">
-                    <h4 class="modal-title" id="dark-header-modalLabel">Collect Payment</h4>
+                    <h4 class="modal-title" id="dark-header-modalLabel">{{ __('custom_admin.label_payment') }} - Academy (Krishandu pramanik)</h4>
                     <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>
                 </div>
@@ -179,7 +179,7 @@
                     <div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label class="text-dark font-bold">Date<span class="red_star">*</span></label>
+								<label class="text-dark font-bold">{{ __('custom_admin.label_date') }}<span class="red_star">*</span></label>
 								{{ Form::text('date_range', null, [
 															'id' => 'date',
 															'class' => 'form-control datePickerPayment',
@@ -190,17 +190,28 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label class="text-dark font-bold">Amount<span class="red_star">*</span></label>
+								<label class="text-dark font-bold">{{ __('custom_admin.label_amount') }}<span class="red_star">*</span></label>
 								{{ Form::number('amount', null, [
 															'id' => 'amount',
+															'min' => 0,
 															'class' => 'form-control',
 															'placeholder' => ''
 															]) }}
 							</div>
 						</div>
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div class="form-group">
-								<label class="text-dark font-bold">Ref. No.</label>
+								<label class="text-dark font-bold">{{ __('custom_admin.label_password') }}<span class="red_star">*</span></label>
+								{{ Form::text('password', null, [
+															'id' => 'password',
+															'class' => 'form-control',
+															'placeholder' => ''
+															]) }}
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="text-dark font-bold">{{ __('custom_admin.label_reference_no') }}</label>
 								{{ Form::text('reference', null, [
 															'id' => 'reference',
 															'class' => 'form-control',
@@ -210,7 +221,7 @@
 						</div>
 						<div class="col-md-12">
 							<div class="form-group">
-								<label class="text-dark font-bold">Note</label>
+								<label class="text-dark font-bold">{{ __('custom_admin.label_note') }}</label>
 								{{ Form::textarea('reference', null, [
 															'id' => 'reference',
 															'class' => 'form-control',
@@ -222,27 +233,7 @@
 					</div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="btn-processing" class="btn btn-dark btn-rounded">Save</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <div class="modal fade" id="centermodal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myCenterModalLabel">Collect Payment</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-                    <h5>Overflowing text to show scroll behavior</h5>
-                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                        dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-                        ac consectetur ac, vestibulum at eros.</p>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-                        Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-                        auctor.</p>
+                    <button type="submit" id="btn-processing" class="btn btn-success btn-rounded"><i class="far fa-save" aria-hidden="true"></i> {{ __('custom_admin.label_save') }}</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

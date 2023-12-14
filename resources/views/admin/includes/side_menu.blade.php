@@ -220,6 +220,9 @@ $getSiteSettings = getSiteSettings();
 				</li>
 			@endif
 
+			<li class="list-divider"></li>
+			<li class="nav-small-cap"><span class="hide-menu">{{ __('custom_admin.label_analysis_order_report') }}</span></li>
+
 			<!-- Area Analysis Management Start BLOCKED for new logic implementation -->
 			{{-- @php
 			$areaAnalysisRoutes = ['areaAnalysis.list','areaAnalysis.add','areaAnalysis.edit','areaAnalysis.sort','areaAnalysis.details-list'];
@@ -314,7 +317,7 @@ $getSiteSettings = getSiteSettings();
 			@php
 			$orderRoutes = ['order.list'];
 			@endphp
-			@if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type != 'S' || in_array('order.list', $getAllRoles) )
+			{{-- @if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type != 'S' || in_array('order.list', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $orderRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $orderRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
 						<i data-feather="shopping-bag" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_order')</span>
@@ -327,7 +330,7 @@ $getSiteSettings = getSiteSettings();
 						</li>
 					</ul>
 				</li>
-			@endif
+			@endif --}}
 
 			<!-- Single Step Order Management Start -->
 			@php
@@ -348,18 +351,6 @@ $getSiteSettings = getSiteSettings();
 				</li>
 			@endif
 
-			<!-- Payment Management Start -->
-			@php
-			$paymentRoutes = ['payment.list', 'payment.view', 'payment.edit'];
-			@endphp
-			@if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type != 'S' || in_array('payment.list', $getAllRoles) )
-				<li class="sidebar-item @if (in_array($currentPage, $paymentRoutes))selected @endif"> 
-					<a class="sidebar-link sidebar-link @if (in_array($currentPage, $paymentRoutes))active @endif" href="{{ route('admin.payment.add') }}" aria-expanded="false">
-						<i data-feather="sliders" class="feather-icon"></i><span class="hide-menu">Payment</span>
-					</a>
-				</li>
-			@endif
-			
 			<!-- Report Management Start -->
 			@php
 			$analysisReportRoutes 	= ['analysisReport.list','sellerAnalyses.export'];
@@ -391,6 +382,86 @@ $getSiteSettings = getSiteSettings();
 				</li>
 			@endif
 
+
+			<li class="list-divider"></li>
+			<li class="nav-small-cap"><span class="hide-menu">{{ __('custom_admin.label_payment_and_invoice') }}</span></li>
+
+			<!-- Payment Management Start -->
+			@php
+			$paymentRoutes = ['payment.list', 'payment.view', 'payment.edit'];
+			@endphp
+			@if ( ($isSuperAdmin) || in_array('payment.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $paymentRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $paymentRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="map-pin" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_payment')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $paymentRoutes))in @endif">
+						@if ( ($isSuperAdmin) || (in_array('payment.add', $getAllRoles)) )
+						<li class="sidebar-item">
+							<a href="{{ route('admin.payment.add') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_add')</span>
+							</a>
+						</li>
+						@endif
+						@if ( ($isSuperAdmin) || (in_array('payment.history', $getAllRoles)) )
+						<li class="sidebar-item">
+							<a href="{{ route('admin.payment.history') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_history')</span>
+							</a>
+						</li>
+						@endif
+						@if ( ($isSuperAdmin) || (in_array('payment.report', $getAllRoles)) )
+						<li class="sidebar-item">
+							<a href="{{ route('admin.payment.report') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_report')</span>
+							</a>
+						</li>
+						@endif
+					</ul>
+				</li>
+			@endif
+
+			<!-- Invoice Management Start -->
+			@php
+			$invoiceRoutes = ['invoice.list'];
+			@endphp
+			@if ( ($isSuperAdmin) || \Auth::guard('admin')->user()->type != 'S' || in_array('invoice.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $invoiceRoutes))selected @endif"> 
+					<a class="sidebar-link sidebar-link @if (in_array($currentPage, $invoiceRoutes))active @endif" href="{{ route('admin.invoice.list') }}" aria-expanded="false">
+						<i data-feather="sliders" class="feather-icon"></i><span class="hide-menu">{{ __('custom_admin.label_invoice_menu') }}</span>
+					</a>
+				</li>
+			@endif
+
+			<!-- Store Gradation Management Start -->
+			@php
+			$storeGradationRoutes = ['storeGradation.list', 'storeGradation.view', 'storeGradation.edit'];
+			@endphp
+			@if ( ($isSuperAdmin) || in_array('storeGradation.list', $getAllRoles) )
+				<li class="sidebar-item @if (in_array($currentPage, $storeGradationRoutes))selected @endif">
+					<a class="sidebar-link has-arrow @if (in_array($currentPage, $storeGradationRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
+						<i data-feather="star" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_store_gradation')</span>
+					</a>
+					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $storeGradationRoutes))in @endif">
+						@if ( ($isSuperAdmin) || (in_array('storeGradation.list', $getAllRoles)) )
+						<li class="sidebar-item">
+							<a href="{{ route('admin.storeGradation.list') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_list')</span>
+							</a>
+						</li>
+						@endif
+						@if ( ($isSuperAdmin) || (in_array('storeGradation.report', $getAllRoles)) )
+						<li class="sidebar-item">
+							<a href="{{ route('admin.storeGradation.report') }}" class="sidebar-link sub-menu">
+								<span class="hide-menu"> @lang('custom_admin.label_report')</span>
+							</a>
+						</li>
+						@endif
+					</ul>
+				</li>
+			@endif
+
+			
 			<!-- Website Settings Management Start -->
 			{{-- @php
 			$siteSettingRoutes 	= ['website-settings'];

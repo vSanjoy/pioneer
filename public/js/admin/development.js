@@ -2616,6 +2616,32 @@ $(document).ready(function() {
         // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
 
+    $(".dateRangePickerWithoutTime").daterangepicker({
+        singleDatePicker: false,
+        showDropdowns: true,
+        showWeekNumbers: false,
+        showISOWeekNumbers: false,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        autoUpdateInput: false,
+        alwaysShowCalendars: false,
+        minYear: 2022,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    }).on("apply.daterangepicker", function (e, picker) {
+        picker.element.val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+    });
+
     // $("#settlement_status").select2();
 });
 
