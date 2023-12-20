@@ -7,7 +7,7 @@
 	</style>
 
 	@php
-	$dateRange = $storeId = '';
+	$dateRange = '2023-09-01 - 2023-11-15'; $storeId = '21';
 	$hideStatus = 'style="display: none;"';
 	$showStatus = 'style="display: block;"';
 	if (isset($_GET['date_range']) && $_GET['date_range'] != '') { $dateRange = $_GET['date_range']; }
@@ -112,7 +112,7 @@
                                     <th>{{ __('custom_admin.label_owner') }}</th>
                                     <th>{{ __('custom_admin.label_phone') }}</th>
                                     <th>{{ __('custom_admin.label_grade') }}</th>
-                                    <th class="actions">{{ __('custom_admin.label_action') }}</th>
+                                    <!-- <th class="actions">{{ __('custom_admin.label_action') }}</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -123,9 +123,9 @@
                                     <td>SHIBLAL SARKAR</td>
                                     <td>9231879588</td>
                                     <td>4.0</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>2</td>
@@ -134,9 +134,9 @@
                                     <td>AJAY</td>
                                     <td>9932868725</td>
                                     <td>5.0</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>3</td>
@@ -145,9 +145,9 @@
                                     <td>AJAY</td>
                                     <td>9932868725</td>
                                     <td>2.0</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>4</td>
@@ -156,9 +156,9 @@
                                     <td>Suman Sur</td>
                                     <td>9800120623</td>
                                     <td>3.4</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>5</td>
@@ -167,9 +167,9 @@
                                     <td>Surojit Das</td>
                                     <td>9832710097</td>
                                     <td>4.0</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>6</td>
@@ -178,9 +178,9 @@
                                     <td>SHIBLAL SARKAR</td>
                                     <td>9231879588</td>
                                     <td>3.2</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>7</td>
@@ -189,9 +189,9 @@
                                     <td>AJAY</td>
                                     <td>9932868725</td>
                                     <td>3.5</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>8</td>
@@ -200,9 +200,9 @@
                                     <td>Suman Sur</td>
                                     <td>9800120623</td>
                                     <td>4.4</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>9</td>
@@ -211,9 +211,9 @@
                                     <td>Suman Sur</td>
                                     <td>9800120623</td>
                                     <td>2.4</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
                                 </tr>
                                 <tr>
                                     <td>10</td>
@@ -222,9 +222,70 @@
                                     <td>Surojit Das</td>
                                     <td>9832710097</td>
                                     <td>5.0</td>
-                                    <td>
+                                    <!-- <td>
 	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
-	                                </td>
+	                                </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">{{ $pageTitle }} - After Filter View</h4>
+					<div class="table-responsive mt-4-5">
+						<table id="zero_config" class="table table-striped table-bordered no-wrap">
+                            <thead>
+                                <tr>
+                                	<th class="firstColumn">{{ __('custom_admin.label_hash') }}</th>
+                                    <th>{{ __('custom_admin.label_date') }}</th>
+                                    <th>{{ __('custom_admin.label_store') }}</th>
+                                    <th>{{ __('custom_admin.label_owner') }}</th>
+                                    <th>{{ __('custom_admin.label_phone') }}</th>
+                                    <th>{{ __('custom_admin.label_grade') }}</th>
+                                    <!-- <th class="actions">{{ __('custom_admin.label_action') }}</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2023-11-15</td>
+                                    <td>Moden Stationary</td>
+                                    <td>Suman Sur</td>
+                                    <td>9800120623</td>
+                                    <td>3.4</td>
+                                    <!-- <td>
+	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
+	                                </td> -->
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2023-10-22</td>
+                                    <td>Moden Stationary</td>
+                                    <td>Suman Sur</td>
+                                    <td>9800120623</td>
+                                    <td>4.4</td>
+                                    <!-- <td>
+	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
+	                                </td> -->
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2023-09-22</td>
+                                    <td>Moden Stationary</td>
+                                    <td>Suman Sur</td>
+                                    <td>9800120623</td>
+                                    <td>2.4</td>
+                                    <!-- <td>
+	                                    <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm"><i class="fa fa-trash"></i></a>
+	                                </td> -->
                                 </tr>
                             </tbody>
                         </table>

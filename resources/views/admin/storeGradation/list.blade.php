@@ -7,7 +7,7 @@
 	</style>
 
 	@php
-	$dateRange = $storeId = '';
+	$storeId = '121';
 	$hideStatus = 'style="display: none;"';
 	$showStatus = 'style="display: block;"';
 	if (isset($_GET['store_id']) && $_GET['store_id'] != '') { $storeId = $_GET['store_id']; }
@@ -161,6 +161,49 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">
+						{{ $pageTitle }} - After Filter View
+
+						<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3 float-right" href="javascript: void(0);" data-toggle="modal" data-target="#collect-grade-modal">
+							<i class="fa fa-plus-circle"></i> {{ __('custom_admin.label_add_grade') }}
+						</a>
+					</h4>
+					<div class="table-responsive mt-4-5">
+						<table id="zero_config" class="table table-striped table-bordered no-wrap">
+                            <thead>
+                                <tr>
+                                	<th class="firstColumn">{{ __('custom_admin.label_hash') }}</th>
+                                    <th>{{ __('custom_admin.label_store') }}</th>
+                                    <th>{{ __('custom_admin.label_owner') }}</th>
+                                    <th>{{ __('custom_admin.label_phone') }}</th>
+                                    <th>{{ __('custom_admin.label_distribution_area') }}</th>
+                                    <th>{{ __('custom_admin.label_beat') }}</th>
+                                    <th class="actions">{{ __('custom_admin.label_average_grade') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>SARAT STORES</td>
+                                    <td>SHIBLAL SARKAR</td>
+                                    <td>9231879588</td>
+                                    <td>MANKUNDU</td>
+                                    <td>Bandel</td>
+                                    <td>4.4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<!-- Collect Payment modal content -->
 	<div id="collect-grade-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dark-header-modalLabel" aria-hidden="true">

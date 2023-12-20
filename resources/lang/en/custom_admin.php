@@ -448,6 +448,9 @@ return [
     'label_grade'                                   => 'Grade',
     'label_report_store_grade'                      => 'Report',
     'label_analysis_order_report'                   => 'Analysis, Order & Report',
+    'label_collect_payment'                         => 'Collect Payment',
+    'label_edit_payment'                            => 'Edit Payment',
+    'label_view_payment'                            => 'View Payment',
     
 /* Buttons */
     'btn_toggle_navigation'                         => 'Toggle Navigation',

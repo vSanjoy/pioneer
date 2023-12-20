@@ -7,7 +7,7 @@
 	</style>
 
 	@php
-	$dateRange = $storeId = '';
+	$dateRange = '2023-06-01 - 2023-08-10'; $storeId = '119';
 	$hideStatus = 'style="display: none;"';
 	$showStatus = 'style="display: block;"';
 	if (isset($_GET['date_range']) && $_GET['date_range'] != '') { $dateRange = $_GET['date_range']; }
@@ -177,6 +177,62 @@
                                     <td>B.K VARIETY</td>
                                     <td>NASIR HUSSEN KHAN</td>
                                     <td>9732326124</td>
+                                    <!-- <td>Uttam Sinha Roy</td>
+                                    <td>9085416320</td> -->
+                                    <td>
+                                    	<a href="#" data-microtip-position="top" role="tooltip" class="btn btn-dark btn-circle btn-circle-sm" target="_blank" style="padding-left: 7px;"><i class="fa fa-download"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">{{ $pageTitle }} - After Filter View</h4>
+					<div class="table-responsive mt-4-5">
+						<table id="zero_config" class="table table-striped table-bordered no-wrap">
+                            <thead>
+                                <tr>
+                                	<th class="firstColumn">{{ __('custom_admin.label_hash') }}</th>
+                                    <th>{{ __('custom_admin.label_date') }}</th>
+                                    <th>{{ __('custom_admin.label_invoice_no') }}</th>
+                                    <th>{{ __('custom_admin.label_store') }}</th>
+                                    <th>{{ __('custom_admin.label_owner') }}</th>
+                                    <th>{{ __('custom_admin.label_phone') }}</th>
+                                    <!-- <th>{{ __('custom_admin.label_representative') }}</th>
+                                    <th>{{ __('custom_admin.label_phone') }}</th> -->
+                                    <th class="actions">{{ __('custom_admin.label_action') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2023-07-29</td>
+                                    <td>Di/07/2023/20051</td>
+                                    <td>SARKAR ENTERPRISE</td>
+                                    <td>SANJOY SARKAR</td>
+                                    <td>9874160892</td>
+                                    <!-- <td>Uttam Sinha Roy</td>
+                                    <td>9085416320</td> -->
+                                    <td>
+                                    	<a href="#" data-microtip-position="top" role="tooltip" class="btn btn-dark btn-circle btn-circle-sm" target="_blank" style="padding-left: 7px;"><i class="fa fa-download"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2023-06-29</td>
+                                    <td>Di/06/2023/20050</td>
+                                    <td>SARKAR ENTERPRISE</td>
+                                    <td>SANJOY SARKAR</td>
+                                    <td>9874160892</td>
                                     <!-- <td>Uttam Sinha Roy</td>
                                     <td>9085416320</td> -->
                                     <td>

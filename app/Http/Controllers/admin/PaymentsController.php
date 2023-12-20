@@ -60,31 +60,31 @@ class PaymentsController extends Controller
     }
 
     /*
-        * Function name : add
-        * Purpose       : This function is to add payment
+        * Function name : collect
+        * Purpose       : This function is to collect payment
         * Author        :
         * Created Date  :
         * Modified Date : 
         * Input Params  : Request $request
         * Return Value  : 
     */
-    public function add(Request $request, $id = null) {
+    public function collect(Request $request, $id = null) {
         $data = [
-            'pageTitle'     => 'Add Payment',
-            'panelTitle'    => 'Add Payment',
+            'pageTitle'     => 'Collect Payment',
+            'panelTitle'    => 'Collect Payment',
             'pageType'      => 'CREATEPAGE'
         ];
 
         try {
             $data['stores'] = $this->model->where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
 
-            return view($this->viewFolderPath.'.add', $data);
+            return view($this->viewFolderPath.'.collect', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+            return redirect()->route($this->routePrefix.'.payment.history');
         } catch (\Throwable $e) {
             $this->generateToastMessage('error', $e->getMessage(), false);
-            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+            return redirect()->route($this->routePrefix.'.payment.history');
         }
     }
 
@@ -110,10 +110,10 @@ class PaymentsController extends Controller
             return view($this->viewFolderPath.'.history', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+            return redirect()->route($this->routePrefix.'.payment.history');
         } catch (\Throwable $e) {
             $this->generateToastMessage('error', $e->getMessage(), false);
-            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+            return redirect()->route($this->routePrefix.'.payment.history');
         }
     }
 
@@ -141,10 +141,10 @@ class PaymentsController extends Controller
             return view($this->viewFolderPath.'.report', $data);
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
-            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+            return redirect()->route($this->routePrefix.'.payment.history');
         } catch (\Throwable $e) {
             $this->generateToastMessage('error', $e->getMessage(), false);
-            return redirect()->route($this->routePrefix.'.'.$this->listUrl);
+            return redirect()->route($this->routePrefix.'.payment.history');
         }
     }
 

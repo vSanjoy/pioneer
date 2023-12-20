@@ -284,10 +284,10 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
             });
 
             Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
-                Route::get('/', 'PaymentsController@list')->name('list');
-                Route::post('ajax-list-request', 'PaymentsController@ajaxListRequest')->name('ajax-list-request');
-                Route::get('/add', 'PaymentsController@add')->name('add');
-                Route::post('/add-submit', 'PaymentsController@add')->name('add-submit');
+                Route::get('/', 'PaymentsController@collect')->name('add');
+                Route::get('/collect', 'PaymentsController@collect')->name('collect');
+                Route::post('/add-submit', 'PaymentsController@collect')->name('add-submit');
+                Route::get('/list', 'PaymentsController@history')->name('list');
                 Route::get('/history', 'PaymentsController@history')->name('history');
                 Route::post('ajax-list-history-request', 'PaymentsController@ajaxListHistoryRequest')->name('ajax-list-history-request');
                 Route::get('/edit/{id}', 'PaymentsController@edit')->name('edit');

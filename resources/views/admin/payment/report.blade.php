@@ -3,7 +3,7 @@
 @section('content')
 
 	@php
-	$dateRange = $storeId = '';
+	$dateRange = '2023-08-01 - 2023-12-15'; $storeId = '21';
 	$hideStatus = 'style="display: none;"';
 	$showStatus = 'style="display: block;"';
 	if (isset($_GET['date_range']) && $_GET['date_range'] != '') { $dateRange = $_GET['date_range']; }
