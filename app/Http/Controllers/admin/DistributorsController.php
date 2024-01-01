@@ -136,6 +136,13 @@ class DistributorsController extends Controller
                                 return 'NA';
                             }
                         })
+                        ->addColumn('bf_balance', function ($row) {
+                            if ($row->bf_balance !== NULL) {
+                                return formatToTwoDecimalPlaces($row->bf_balance);
+                            } else {
+                                return '0.00';
+                            }
+                        })
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
                         })

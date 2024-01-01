@@ -31,21 +31,50 @@
 					<form class="mt-4" id="showFilterStatus" {!! $showStatus !!}>
 						<div class="form-body">
 							<div class="row">
+
+								{{-- Start :: Distribution Area --}}
+								<div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="text-dark font-bold">Distribution Area</label>
+                                        <select class="selectpicker form-control" id="distribution_area_id" name="distribution_area_id" data-container="body" disabled>
+                                            <option value="1">MANKUNDU</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- End :: Distribution Area --}}
+
+								{{-- Start :: Beat --}}
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="text-dark font-bold">{{ __('custom_admin.label_beat') }}</label>
+                                        <select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                                            <option value="">--@lang('custom_admin.label_select')--</option>
+                                            <option value="6" selected>Bandel</option>
+                                            <option value="1">Bhadreswar</option>
+                                            <option value="2">Mankundu jotir more</option>
+                                            <option value="3">Chandannagar</option>
+                                            <option value="4">Hooghly</option>
+                                            <option value="5">Chinsurah</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- End :: Beat --}}
+
 								{{-- Start :: Store --}}
-								<div class="col-md-4">
-									<div class="form-group">
-										<label class="text-dark font-bold">{{ __('custom_admin.label_store') }}</label>
-										<select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
-											<option value="">--@lang('custom_admin.label_select')--</option>
-										@if ($stores)
-											@foreach ($stores as $itemStore)
-											<option value="{{ $itemStore->id }}" @if ($storeId == $itemStore->id)selected @endif>{!! $itemStore->store_name !!}</option>
-											@endforeach
-										@endif
-										</select>
-									</div>
-								</div>
-								{{-- End :: Store --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="text-dark font-bold">{{ __('custom_admin.label_store') }}</label>
+                                        <select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                                            <option value="">--@lang('custom_admin.label_select')--</option>
+                                            <option value="1" selected>SARAT STORES (SHIBLAL SARKAR - 9231879588)</option>
+                                            <option value="2">JAISWAL (SURESH JAISWAL - 9830366115)</option>
+                                            <option value="3">SARKAR ENTERPRISE (SANJOY SARKAR - 9874160892)</option>
+                                            <option value="4">RAJENDRA XEROX (PRANAB BISWAS - 8013218899)</option>
+                                            <option value="5">ROY ENTERPRISE (SHISIR ROY - 9836530815)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- End :: Store --}}
 								
 								<div class="col-md-4">
 									<div class="form-group">
@@ -67,19 +96,7 @@
 	</div>
 	<!-- End :: Filter -->
 
-	<div class="row">
-		<div class="col-12">
-			<div class="card">
-				<div class="card-body">
-					<h4 class="card-title">
-						{{ $pageTitle }}
-
-						<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3 float-right" href="javascript: void(0);" data-toggle="modal" data-target="#collect-grade-modal">
-							<i class="fa fa-plus-circle"></i> {{ __('custom_admin.label_add_grade') }}
-						</a>
-					</h4>
-					<div class="table-responsive mt-4-5">
-						<!-- <table id="list-table" class="table table-striped table-bordered no-wrap list-data custom-table custom-table-second-column">
+	<!-- <table id="list-table" class="table table-striped table-bordered no-wrap list-data custom-table custom-table-second-column">
 							<thead>
 								<tr>
 									<th class="zeroColumn table-th-display-none"></th>
@@ -95,7 +112,19 @@
 							</thead>
 						</table> -->
 
-                        <table id="zero_config" class="table table-striped table-bordered no-wrap">
+	<!-- <div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">
+						{{ $pageTitle }}
+
+						<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3 float-right" href="javascript: void(0);" data-toggle="modal" data-target="#collect-grade-modal">
+							<i class="fa fa-plus-circle"></i> {{ __('custom_admin.label_add_grade') }}
+						</a>
+					</h4>
+					<div class="table-responsive mt-4-5">
+						<table id="zero_config" class="table table-striped table-bordered no-wrap">
                             <thead>
                                 <tr>
                                 	<th class="firstColumn">{{ __('custom_admin.label_hash') }}</th>
@@ -160,14 +189,14 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title">
-						{{ $pageTitle }} - After Filter View
+						{{ $pageTitle }}
 
 						<a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3 float-right" href="javascript: void(0);" data-toggle="modal" data-target="#collect-grade-modal">
 							<i class="fa fa-plus-circle"></i> {{ __('custom_admin.label_add_grade') }}
@@ -216,20 +245,40 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                    	<div class="col-md-12">
-							<div class="form-group">
-								<label class="text-dark font-bold">{{ __('custom_admin.label_store') }}</label>
-								<select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
-									<option value="">--@lang('custom_admin.label_select')--</option>
-								@if ($stores)
-									@foreach ($stores as $itemStore)
-									<option value="{{ $itemStore->id }}" @if ($storeId == $itemStore->id)selected @endif>{!! $itemStore->store_name !!}</option>
-									@endforeach
-								@endif
-								</select>
-							</div>
-						</div>
-						<div class="col-md-6">
+                    	{{-- Start :: Beat --}}
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="text-dark font-bold">{{ __('custom_admin.label_beat') }}</label>
+                                <select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                                    <option value="">--@lang('custom_admin.label_select')--</option>
+                                    <option value="6" selected>Bandel</option>
+                                    <option value="1">Bhadreswar</option>
+                                    <option value="2">Mankundu jotir more</option>
+                                    <option value="3">Chandannagar</option>
+                                    <option value="4">Hooghly</option>
+                                    <option value="5">Chinsurah</option>
+                                </select>
+                            </div>
+                        </div>
+                        {{-- End :: Beat --}}
+
+                        {{-- Start :: Store --}}
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="text-dark font-bold">Store<span class="red_star">*</span></label>
+                                <select class="selectpicker form-control" id="distribution_area_ids" name="distribution_area_ids[]" data-container="body" data-live-search="true" title="--@lang('custom_admin.label_select')--" data-hide-disabled="true" data-actions-box="true" data-virtual-scroll="false" required>
+                                    <option value="">--@lang('custom_admin.label_select')--</option>
+                                    <option value="1" selected>SARAT STORES (SHIBLAL SARKAR - 9231879588)</option>
+                                    <option value="2">JAISWAL (SURESH JAISWAL - 9830366115)</option>
+                                    <option value="3">SARKAR ENTERPRISE (SANJOY SARKAR - 9874160892)</option>
+                                    <option value="4">RAJENDRA XEROX (PRANAB BISWAS - 8013218899)</option>
+                                    <option value="5">ROY ENTERPRISE (SHISIR ROY - 9836530815)</option>
+                                </select>
+                            </div>
+                        </div>
+                        {{-- End :: Store --}}
+
+                    	<div class="col-md-6">
 							<div class="form-group">
 								<label class="text-dark font-bold">{{ __('custom_admin.label_date') }}<span class="red_star">*</span></label>
 								{{ Form::text('date_range', null, [
@@ -274,4 +323,19 @@
 @endsection
 
 @push('scripts')
+<script type="text/javascript">
+$(document).ready(function () {
+    $(".actions").removeClass("sorting");
+});
+$(document).on('click', '#toggleSearchBox', function() {
+	if ($('#showFilterStatus').is(':visible')) {
+		$('#plus').show();
+		$('#minus').hide();	
+	} else {
+		$('#minus').show();
+		$('#plus').hide();
+	}
+	$('#showFilterStatus').toggle(400);
+});
+</script>
 @endpush

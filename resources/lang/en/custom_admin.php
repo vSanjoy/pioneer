@@ -451,6 +451,8 @@ return [
     'label_collect_payment'                         => 'Collect Payment',
     'label_edit_payment'                            => 'Edit Payment',
     'label_view_payment'                            => 'View Payment',
+    'label_bf_balance'                              => 'Brought Forward Balance',
+    'label_bf_bal'                                  => 'BF Bal.',
     
 /* Buttons */
     'btn_toggle_navigation'                         => 'Toggle Navigation',

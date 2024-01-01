@@ -299,3 +299,8 @@ ALTER TABLE `up_invoice_details` ADD `product` VARCHAR(255) NULL DEFAULT NULL AF
 
 17)
 ALTER TABLE `up_single_step_orders` ADD `order_status` ENUM('N', 'PS', 'FS') NOT NULL DEFAULT 'N' COMMENT 'N=>New, PS=>Partially Shipped, FS=>Fully Shipped' AFTER `status`;
+
+============================================ 27.12.2023 ============================================
+
+18) ALTER TABLE `up_users` ADD `bf_balance` DOUBLE(10,2) NOT NULL DEFAULT '0' COMMENT 'Brought forward balance' AFTER `sample_login_show`;
+

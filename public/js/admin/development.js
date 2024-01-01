@@ -823,6 +823,9 @@ $(document).ready(function() {
                 valid_password: true,
                 equalTo: "#password"
             },
+            bf_balance: {
+                required: true
+            },
         },
         messages: {
             distribution_area_id: {
@@ -853,6 +856,9 @@ $(document).ready(function() {
                 required: "Please enter confirm password",
                 valid_password: "Min. 8, alphanumeric and special character.",
                 equalTo: "Password should be same as new password.",
+            },
+            bf_balance: {
+                required: "Please enter brought forward balance",
             },
         },
         errorClass: 'error invalid-feedback',
@@ -919,6 +925,9 @@ $(document).ready(function() {
                 valid_password: true,
                 equalTo: "#password"
             },
+            bf_balance: {
+                required: true
+            },
         },
         messages: {
             distribution_area_id: {
@@ -949,6 +958,9 @@ $(document).ready(function() {
                 required: "Please enter confirm password",
                 valid_password: "Min. 8, alphanumeric and special character.",
                 equalTo: "Password should be same as new password.",
+            },
+            bf_balance: {
+                required: "Please enter brought forward balance",
             },
         },
         errorClass: 'error invalid-feedback',

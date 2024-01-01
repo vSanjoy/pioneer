@@ -82,14 +82,15 @@
 					},
 				@endif
 					{data: 'id', name: 'id'},
-					{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-					{data: 'job_title_1', name: 'job_title_1'},
+					// {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+					// {data: 'job_title_1', name: 'job_title_1'},
                     {data: 'full_name', name: 'full_name'},
                     {data: 'phone_no', name: 'phone_no'},
                     {data: 'whatsapp_no', name: 'whatsapp_no'},
                     {data: 'company', name: 'company'},
                     {data: 'email', name: 'email'},
 					{data: 'distribution_area_id', name: 'distribution_area_id'},
+					{data: 'bf_balance', name: 'bf_balance'},
 					// {data: 'updated_at', name: 'updated_at', orderable: false, searchable: false},
 					{data: 'status', name: 'status'},
 				@if ($isAllow || in_array($editUrl, $allowedRoutes))

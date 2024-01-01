@@ -10,19 +10,43 @@
                     <form>
                         <div class="form-body mt-4-5">
                             <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="text-dark font-bold">Distribution Area<span class="red_star">*</span></label>
+                                        <select class="selectpicker form-control" id="distribution_area_id" name="distribution_area_id" data-container="body" disabled>
+                                            <option value="1">MANKUNDU</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="text-dark font-bold">Beat<span class="red_star">*</span></label>
+                                        <select class="selectpicker form-control" id="distribution_area_ids" name="distribution_area_ids[]" data-container="body" data-live-search="true" title="--@lang('custom_admin.label_select')--" data-hide-disabled="true" data-actions-box="true" data-virtual-scroll="false" required>
+                                            <option value="">--@lang('custom_admin.label_select')--</option>
+                                            <option value="6" selected>Bandel</option>
+                                            <option value="1">Bhadreswar</option>
+                                            <option value="3">Chandannagar</option>
+                                            <option value="5">Chinsurah</option>
+                                            <option value="4">Hooghly</option>
+                                            <option value="2">Mankundu jotir more</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="text-dark font-bold">Store<span class="red_star">*</span></label>
                                         <select class="selectpicker form-control" id="distribution_area_ids" name="distribution_area_ids[]" data-container="body" data-live-search="true" title="--@lang('custom_admin.label_select')--" data-hide-disabled="true" data-actions-box="true" data-virtual-scroll="false" required>
-                                            <option value="1">SIBANI XEROX</option>
-                                            <option value="2">BOI GHAR</option>
-                                            <option value="3">NEW VARITIES STORE</option>
-                                            <option value="4">SHYAMAL VARITIES STORE</option>
-                                            <option value="5">DIPALI BOOK DEPO</option>
+                                            <option value="">--@lang('custom_admin.label_select')--</option>
+                                            <option value="1" selected>SARAT STORES (SHIBLAL SARKAR - 9231879588)</option>
+                                            <option value="2">JAISWAL (SURESH JAISWAL - 9830366115)</option>
+                                            <option value="3">SARKAR ENTERPRISE (SANJOY SARKAR - 9874160892)</option>
+                                            <option value="4">RAJENDRA XEROX (PRANAB BISWAS - 8013218899)</option>
+                                            <option value="5">ROY ENTERPRISE (SHISIR ROY - 9836530815)</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="text-dark font-bold">@lang('custom_admin.label_date')<span class="red_star">*</span></label>
                                         {{ Form::text('date_range', null, [
@@ -33,7 +57,7 @@
                                                             ]) }}
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="text-dark font-bold">@lang('custom_admin.label_amount')<span class="red_star">*</span></label>
                                         {{ Form::number('amount', null, [
@@ -44,7 +68,7 @@
                                                             ]) }}
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="text-dark font-bold">@lang('custom_admin.label_reference_no')</label>
                                         {{ Form::text('reference', null, [

@@ -29,7 +29,7 @@
 						<div class="form-body">
 							<div class="row">
 								{{-- Start :: Date Range --}}
-								<div class="col-md-4">
+								<div class="col-md-3">
 									<div class="form-group">
 										<label class="text-dark font-bold">Date Range</label>
 										{{ Form::text('date_range', $dateRange, [
@@ -41,21 +41,39 @@
 									</div>
 								</div>
 								{{-- End :: Date Range --}}
+
+								{{-- Start :: Beat --}}
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="text-dark font-bold">{{ __('custom_admin.label_beat') }}</label>
+                                        <select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                                            <option value="">--@lang('custom_admin.label_select')--</option>
+                                            <option value="6" selected>Bandel</option>
+                                            <option value="1">Bhadreswar</option>
+                                            <option value="2">Mankundu jotir more</option>
+                                            <option value="3">Chandannagar</option>
+                                            <option value="4">Hooghly</option>
+                                            <option value="5">Chinsurah</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- End :: Beat --}}
+
 								{{-- Start :: Store --}}
-								<div class="col-md-4">
-									<div class="form-group">
-										<label class="text-dark font-bold">{{ __('custom_admin.label_store') }}</label>
-										<select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
-											<option value="">--@lang('custom_admin.label_select')--</option>
-										@if ($stores)
-											@foreach ($stores as $itemStore)
-											<option value="{{ $itemStore->id }}" @if ($storeId == $itemStore->id)selected @endif>{!! $itemStore->store_name !!}</option>
-											@endforeach
-										@endif
-										</select>
-									</div>
-								</div>
-								{{-- End :: Store --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="text-dark font-bold">{{ __('custom_admin.label_store') }}</label>
+                                        <select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true" data-live-search-placeholder="Search" data-actions-box="true">
+                                            <option value="">--@lang('custom_admin.label_select')--</option>
+                                            <option value="1" selected>SARAT STORES (SHIBLAL SARKAR - 9231879588)</option>
+                                            <option value="2">JAISWAL (SURESH JAISWAL - 9830366115)</option>
+                                            <option value="3">SARKAR ENTERPRISE (SANJOY SARKAR - 9874160892)</option>
+                                            <option value="4">RAJENDRA XEROX (PRANAB BISWAS - 8013218899)</option>
+                                            <option value="5">ROY ENTERPRISE (SHISIR ROY - 9836530815)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- End :: Store --}}
 								
 								<div class="col-md-4">
 									<div class="form-group">
