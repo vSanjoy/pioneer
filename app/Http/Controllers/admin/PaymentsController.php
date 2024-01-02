@@ -19,6 +19,7 @@ use App\Models\Beat;
 use App\Models\DistributionArea;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\Payment;
 use DataTables;
 
 class PaymentsController extends Controller
@@ -26,7 +27,7 @@ class PaymentsController extends Controller
     use GeneralMethods;
     public $controllerName          = 'PaymentsController';
     public $management;
-    public $modelName               = 'User';
+    public $modelName               = 'Payment';
     public $breadcrumb;
     public $routePrefix             = 'admin';
     public $pageRoute               = 'payment';
@@ -37,7 +38,7 @@ class PaymentsController extends Controller
     public $statusUrl               = 'payment.change-status';
     public $deleteUrl               = 'payment.delete';
     public $viewFolderPath          = 'admin.payment';
-    public $model                   = 'User';
+    public $model                   = 'Payment';
 
     /*
         * Function Name : __construct
@@ -76,9 +77,18 @@ class PaymentsController extends Controller
         ];
 
         try {
-            $data['stores'] = $this->model->where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+            if (Auth::guard('admin')->user()->type == 'D' && Auth::guard('admin')->user()->distribution_area_id != null) {
+                $data['distributionArea'] = DistributionArea::where('id', Auth::guard('admin')->user()->distribution_area_id)->first();
+                $data['beats'] = Beat::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'status' => '1'])->orderBy('title', 'ASC')->get();
+                $data['stores'] = Store::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
 
-            return view($this->viewFolderPath.'.collect', $data);
+                // dd($data['distributionArea']);
+
+                return view($this->viewFolderPath.'.collect', $data);
+            } else {
+                $this->generateToastMessage('error', trans('custom_admin.error_you_are_not_a_distributor'), false);
+                return redirect()->route($this->routePrefix.'.dashboard');
+            }
         } catch (Exception $e) {
             $this->generateToastMessage('error', trans('custom_admin.error_something_went_wrong'), false);
             return redirect()->route($this->routePrefix.'.payment.history');
@@ -242,6 +252,50 @@ class PaymentsController extends Controller
             $this->generateToastMessage('error', $e->getMessage(), false);
             return '';
         }
+    }
+
+    /*
+        * Function Name : ajaxDistributionAreaBeatWiseStore
+        * Purpose       : This function is to get stores with distribution area and beat wise
+        * Author        : 
+        * Created Date  : 
+        * Modified date : 
+        * Input Params  : Request $request
+        * Return Value  : 
+    */
+    public function ajaxDistributionAreaBeatWiseStore(Request $request) {
+        $title      = trans('custom_admin.message_error');
+        $message    = trans('custom_admin.error_something_went_wrong');
+        $type       = 'error';
+        $options    = '<option value="">--'.trans('custom_admin.label_select').'--</option>';
+
+        try {
+            if ($request->ajax()) {
+                $distributionAreaId = $request->distribution_area_id ?? '';
+                $beatId             = $request->beat_id ?? '';
+                
+                $title      = trans('custom_admin.message_success');
+                $message    = trans('custom_admin.message_success');
+                $type       = 'success';
+                
+                if ($distributionAreaId != '' && $beatId != '') {
+                    $stores = Store::where(['distribution_area_id' => $distributionAreaId, 'beat_id' => $beatId, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+                } else if ($distributionAreaId != '' && $beatId == '') {
+                    $stores = Store::where(['distribution_area_id' => $distributionAreaId, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+                }
+
+                if ($stores->count()) {
+                    foreach ($stores as $keyStore => $valStore) {
+                        $options .= '<option value="'.$valStore->id.'">'.$valStore->store_name.' ('.$valStore->name_1.' - '.$valStore->phone_no_1.')'.'</option>';
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'options' => $options]);
     }
 
 }

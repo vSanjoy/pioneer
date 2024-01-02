@@ -283,21 +283,6 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/download-invoice/{id}', 'SingleStepOrdersController@downloadInvoice')->name('download-invoice');
             });
 
-            Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
-                Route::get('/', 'PaymentsController@collect')->name('add');
-                Route::get('/collect', 'PaymentsController@collect')->name('collect');
-                Route::post('/add-submit', 'PaymentsController@collect')->name('add-submit');
-                Route::get('/list', 'PaymentsController@history')->name('list');
-                Route::get('/history', 'PaymentsController@history')->name('history');
-                Route::post('ajax-list-history-request', 'PaymentsController@ajaxListHistoryRequest')->name('ajax-list-history-request');
-                Route::get('/edit/{id}', 'PaymentsController@edit')->name('edit');
-                Route::any('/edit-submit/{id}', 'PaymentsController@edit')->name('edit-submit');
-                Route::get('/report', 'PaymentsController@report')->name('report');
-                Route::post('ajax-list-report-request', 'PaymentsController@ajaxListReportRequest')->name('ajax-list-report-request');
-                Route::get('/delete/{id}', 'PaymentsController@delete')->name('delete');
-                Route::post('/bulk-actions', 'PaymentsController@bulkActions')->name('bulk-actions');
-            });
-
             Route::group(['prefix' => 'analysisReport', 'as' => 'analysisReport.'], function () {
                 Route::get('/', 'AnalysisReportController@list')->name('list');
                 Route::post('ajax-list-request', 'AnalysisReportController@ajaxListRequest')->name('ajax-list-request');
@@ -314,6 +299,23 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/', 'StoreReportController@list')->name('list');
                 Route::post('ajax-list-request', 'StoreReportController@ajaxListRequest')->name('ajax-list-request');
                 Route::any('/export', 'StoreReportController@export')->name('export');
+            });
+
+            Route::group(['prefix' => 'payment', 'as' => 'payment.'], function () {
+                Route::get('/', 'PaymentsController@collect')->name('add');
+                Route::get('/collect', 'PaymentsController@collect')->name('collect');
+                Route::post('/add-submit', 'PaymentsController@collect')->name('add-submit');
+                Route::get('/list', 'PaymentsController@history')->name('list');
+                Route::get('/history', 'PaymentsController@history')->name('history');
+                Route::post('ajax-list-history-request', 'PaymentsController@ajaxListHistoryRequest')->name('ajax-list-history-request');
+                Route::get('/edit/{id}', 'PaymentsController@edit')->name('edit');
+                Route::any('/edit-submit/{id}', 'PaymentsController@edit')->name('edit-submit');
+                Route::get('/report', 'PaymentsController@report')->name('report');
+                Route::post('ajax-list-report-request', 'PaymentsController@ajaxListReportRequest')->name('ajax-list-report-request');
+                Route::get('/delete/{id}', 'PaymentsController@delete')->name('delete');
+                Route::post('/bulk-actions', 'PaymentsController@bulkActions')->name('bulk-actions');
+
+                Route::post('/ajax-distribution-area-beat-wise-store', 'PaymentsController@ajaxDistributionAreaBeatWiseStore')->name('ajax-distribution-area-beat-wise-store');
             });
 
             Route::group(['prefix' => 'invoice', 'as' => 'invoice.'], function () {

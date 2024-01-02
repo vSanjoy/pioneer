@@ -104,4 +104,27 @@ $(document).on('click', '#toggleSearchBox', function() {
 	}
 	$('#showFilterStatus').toggle(400);
 });
+
+// Distributor and on beat wise store
+$(document).on('change', '#beat_id', function() {
+	var distributionAreaId 	= $('#distribution_area_id').val();
+	var beatId 	= $(this).val();
+
+	$('.preloader').show();
+	$.ajax({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		},
+		url: adminPanelUrl + '/payment/ajax-distribution-area-beat-wise-store',
+		method: 'POST',
+		data: {
+			distribution_area_id: distributionAreaId,
+			beat_id: beatId
+		},
+		success: function (response) {
+			$('.preloader').hide();
+			$("#store_id").html(response.options).selectpicker('refresh');
+		}
+	});
+});
 </script>

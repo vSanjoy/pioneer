@@ -453,6 +453,8 @@ return [
     'label_view_payment'                            => 'View Payment',
     'label_bf_balance'                              => 'Brought Forward Balance',
     'label_bf_bal'                                  => 'BF Bal.',
+    'label_payment_mode'                            => 'Payment Mode',
+    'label_payment_details'                         => 'Payment Details',
     
 /* Buttons */
     'btn_toggle_navigation'                         => 'Toggle Navigation',
@@ -629,6 +631,7 @@ return [
     'error_enter_valid_number'                      => 'Please enter valid number.',
     'error_qty'                                     => 'Please enter order quantity.',
     'error_analysis_not_done_yet'                   => 'Analysis for this season not done yet from distributor.',
+    'error_you_are_not_a_distributor'               => 'You are not a distributor.',
     
 
 /* Messages */

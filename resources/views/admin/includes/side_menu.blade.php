@@ -390,36 +390,36 @@ $getSiteSettings = getSiteSettings();
 			@php
 			$paymentRoutes = ['payment.list', 'payment.collect','payment.add','payment.view', 'payment.edit'];
 			@endphp
-			{{-- @if ( ($isSuperAdmin) || in_array('payment.collect', $getAllRoles) ) --}}
+			@if ( ($isSuperAdmin) || in_array('payment.collect', $getAllRoles) )
 				<li class="sidebar-item @if (in_array($currentPage, $paymentRoutes))selected @endif">
 					<a class="sidebar-link has-arrow @if (in_array($currentPage, $paymentRoutes))active @endif" href="javascript:void(0)" aria-expanded="false">
 						<i data-feather="map-pin" class="feather-icon"></i><span class="hide-menu"> @lang('custom_admin.label_menu_payment')</span>
 					</a>
 					<ul aria-expanded="false" class="collapse first-level base-level-line @if (in_array($currentPage, $paymentRoutes))in @endif">
-						{{-- @if ( ($isSuperAdmin) || (in_array('payment.collect', $getAllRoles)) ) --}}
+						@if ( (!$isSuperAdmin) || (in_array('payment.collect', $getAllRoles)) )
 						<li class="sidebar-item">
 							<a href="{{ route('admin.payment.collect') }}" class="sidebar-link sub-menu">
 								<span class="hide-menu"> @lang('custom_admin.label_collect')</span>
 							</a>
 						</li>
-						{{-- @endif --}}
-						{{-- @if ( ($isSuperAdmin) || (in_array('payment.history', $getAllRoles)) ) --}}
+						@endif
+						@if ( ($isSuperAdmin) || (in_array('payment.history', $getAllRoles)) )
 						<li class="sidebar-item">
 							<a href="{{ route('admin.payment.history') }}" class="sidebar-link sub-menu">
 								<span class="hide-menu"> @lang('custom_admin.label_history')</span>
 							</a>
 						</li>
-						{{-- @endif
-						@if ( ($isSuperAdmin) || (in_array('payment.report', $getAllRoles)) ) --}}
+						@endif
+						@if ( ($isSuperAdmin) || (in_array('payment.report', $getAllRoles)) )
 						<li class="sidebar-item">
 							<a href="{{ route('admin.payment.report') }}" class="sidebar-link sub-menu">
 								<span class="hide-menu"> @lang('custom_admin.label_report')</span>
 							</a>
 						</li>
-						{{-- @endif --}}
+						@endif
 					</ul>
 				</li>
-			{{-- @endif --}}
+			@endif
 
 			<!-- Invoice Management Start -->
 			@php
