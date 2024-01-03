@@ -632,6 +632,7 @@ return [
     'error_qty'                                     => 'Please enter order quantity.',
     'error_analysis_not_done_yet'                   => 'Analysis for this season not done yet from distributor.',
     'error_you_are_not_a_distributor'               => 'You are not a distributor.',
+    'error_beat'                                    => 'Please select beat.',
     
 
 /* Messages */

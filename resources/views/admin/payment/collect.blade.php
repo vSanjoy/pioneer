@@ -7,11 +7,19 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{ $pageTitle }}</h4>
-                    <form>
+                    {{ Form::open([
+                        'method'=> 'POST',
+                        'class' => '',
+                        'route' => [$routePrefix.'.'.$addUrl.'-submit'],
+                        'name'  => 'createCollectPaymentForm',
+                        'id'    => 'createCollectPaymentForm',
+                        'files' => true,
+                        'novalidate' => true ]) }}
+                            <input type="hidden" name="distribution_area" id="distribution_area" value="{{ $distributionArea->id }}">
                         <div class="form-body mt-4-5">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <div class="form-group">
+                                    <div class="form-group" id="distribution-area-div">
                                         <label class="text-dark font-bold">Distribution Area<span class="red_star">*</span></label>
                                         <select class="selectpicker form-control" id="distribution_area_id" name="distribution_area_id" data-container="body" disabled>
                                             <option value="{{ $distributionArea->id }}">{{ $distributionArea->title }}</option>
@@ -20,7 +28,7 @@
                                 </div>
 
                                 <div class="col-md-3">
-                                    <div class="form-group">
+                                    <div class="form-group" id="beat-div">
                                         <label class="text-dark font-bold">Beat<span class="red_star">*</span></label>
                                         <select class="selectpicker form-control" id="beat_id" name="beat_id" data-container="body" data-live-search="true" title="--@lang('custom_admin.label_select')--" data-hide-disabled="true" data-actions-box="true" data-virtual-scroll="false" required>
                                             <option value="">--@lang('custom_admin.label_select')--</option>
@@ -30,8 +38,9 @@
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group" id="store-div">
                                         <label class="text-dark font-bold">Store<span class="red_star">*</span></label>
                                         <select class="selectpicker form-control" id="store_id" name="store_id" data-container="body" data-live-search="true" title="--@lang('custom_admin.label_select')--" data-hide-disabled="true" data-actions-box="true" data-virtual-scroll="false" required>
                                             <option value="">--@lang('custom_admin.label_select')--</option>
@@ -44,7 +53,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="text-dark font-bold">@lang('custom_admin.label_date')<span class="red_star">*</span></label>
-                                        {{ Form::text('date_range', null, [
+                                        {{ Form::text('date', null, [
                                                             'id' => 'date',
                                                             'class' => 'form-control datePickerPayment',
                                                             'placeholder' => '',

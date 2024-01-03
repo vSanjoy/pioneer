@@ -2380,6 +2380,83 @@ $(document).ready(function() {
     });
     // End :: Update invoice Form //
 
+    // Start :: Create Payment Collect Form //
+    $("#createCollectPaymentForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            distribution_area_id: {
+                required: true
+            },
+            beat_id: {
+                required: true
+            },
+            store_id: {
+                required: true
+            },
+            date: {
+                required: true
+            },
+            amount: {
+                required: true,
+                valid_amount: true,
+            },
+        },
+        messages: {
+            distribution_area_id: {
+                required: "Please select distribution area."
+            },
+            beat_id: {
+                required: "Please select beat."
+            },
+            store_id: {
+                required: "Please select store."
+            },
+            date: {
+                required: "Please select date."
+            },
+            amount: {
+                required: "Please enter amount.",
+                valid_amount: "Please enter valid amount.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            if ($(element).attr('id') == 'distribution_area_id') {
+                error.insertAfter($(element).parents('div#distribution-area-div'));
+            } else if ($(element).attr('id') == 'beat_id') {
+                error.insertAfter($(element).parents('div#beat-div'));
+            } else if ($(element).attr('id') == 'store_id') {
+                error.insertAfter($(element).parents('div#store-div'));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Create Payment Collect Form //
+
+
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //
 	$('.checkAll').click(function() {

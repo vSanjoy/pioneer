@@ -18,7 +18,7 @@ class CreatePaymentsTable extends Migration
 
             $table->integer('distributor_id')->nullable()->comment('Id from users table');
             $table->integer('distribution_area_id')->nullable()->comment('Id from distribution_areas table');
-            $table->integer('beta_id')->nullable()->comment('Id from betas table');
+            $table->integer('beat_id')->nullable()->comment('Id from beats table');
             $table->integer('store_id')->nullable()->comment('Id from stores table');
             $table->timestamp('date')->nullable();
             $table->double('total_amount',10,2)->nullable()->comment('Total amount');
@@ -32,7 +32,7 @@ class CreatePaymentsTable extends Migration
             $table->string('unique_invoice_id')->nullable()->comment('Newly created unique invoice id');
             $table->string('pdf')->nullable()->comment('Name of the generated invoiced pdf');
 
-            $table->enum('status', ['IS','CR','DR'])->default('IS')->comment('IS=>Invoice/Shipped, CR=>Credit, DR=>Debit');
+            $table->enum('status', ['CR','DR'])->default('CR')->comment('CR=>Credit, DR=>Debit');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(DB::raw('NULL ON UPDATE CURRENT_TIMESTAMP'))->nullable();
         });

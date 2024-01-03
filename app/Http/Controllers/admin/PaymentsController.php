@@ -51,7 +51,7 @@ class PaymentsController extends Controller
         parent::__construct();
 
         $this->management  = trans('custom_admin.label_menu_analysis_season');
-        $this->model       = new Store();
+        $this->model       = new Payment();
 
         // Assign breadcrumb
         $this->assignBreadcrumb();
@@ -77,13 +77,52 @@ class PaymentsController extends Controller
         ];
 
         try {
+            if ($request->isMethod('POST')) {
+                $validationCondition = array(
+                    'beat_id'   => 'required',
+                    'store_id'  => 'required',
+                    'date'      => 'required',
+                    'amount'    => 'required|regex:'.config('global.VALID_AMOUNT_REGEX')
+                );
+                $validationMessages = array(
+                    'beat_id.required'  => trans('custom_admin.error_beat'),
+                    'store_id.required' => trans('custom_admin.error_store'),
+                    'amount.required'   => trans('custom_admin.error_amount'),
+                    'amount.regex'      => trans('custom_admin.error_valid_amount')
+                );
+                $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
+                if ($validator->fails()) {
+                    $validationFailedMessages = validationMessageBeautifier($validator->messages()->getMessages());
+                    $this->generateToastMessage('error', $validationFailedMessages, false);
+                    return redirect()->back()->withInput();
+                } else {
+                    $saveData                           = [];
+                    $saveData['distributor_id']         = Auth::guard('admin')->user()->id ?? null;
+                    $saveData['distribution_area_id']   = $request->distribution_area ?? null;
+                    $saveData['beat_id']                = $request->beat_id ?? null;
+                    $saveData['store_id']               = $request->store_id ?? null;
+                    $saveData['date']                   = $request->date ?? null;
+                    $saveData['total_amount']           = $request->amount ?? 0;
+                    $saveData['payment_mode']           = $request->payment_mode ?? null;
+                    $saveData['payment_details']        = $request->payment_details ?? null;
+                    $saveData['note']                   = $request->note ?? null;
+                    $save = $this->model->create($saveData);
+
+                    if ($save) {
+                        $this->generateToastMessage('success', trans('custom_admin.success_data_added_successfully'), false);
+                        return redirect()->route($this->routePrefix.'.payment.collect');
+                    } else {
+                        $this->generateToastMessage('error', trans('custom_admin.error_took_place_while_updating'), false);
+                        return redirect()->back()->withInput();
+                    }
+                }
+            }
+
+
             if (Auth::guard('admin')->user()->type == 'D' && Auth::guard('admin')->user()->distribution_area_id != null) {
                 $data['distributionArea'] = DistributionArea::where('id', Auth::guard('admin')->user()->distribution_area_id)->first();
                 $data['beats'] = Beat::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'status' => '1'])->orderBy('title', 'ASC')->get();
                 $data['stores'] = Store::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
-
-                // dd($data['distributionArea']);
-
                 return view($this->viewFolderPath.'.collect', $data);
             } else {
                 $this->generateToastMessage('error', trans('custom_admin.error_you_are_not_a_distributor'), false);
