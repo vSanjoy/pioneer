@@ -73,7 +73,16 @@
                             @endphp
                         @endif
                         </span>
-                        <span class="ml-2 d-none d-lg-inline-block"><span>@lang('custom_admin.label_hello'),</span> <span class="text-dark">{!! \Auth::guard('admin')->user()->full_name !!}</span> <i data-feather="chevron-down" class="svg-icon"></i></span>
+                        <span class="ml-2 d-none d-lg-inline-block">
+                            <span>@lang('custom_admin.label_hello'),</span> <span class="text-dark">{!! \Auth::guard('admin')->user()->full_name !!}</span>
+                            @if (\Auth::guard('admin')->user()->type == 'SA')
+                                ({{ __('custom_admin.label_master_admin') }})
+                            @elseif (\Auth::guard('admin')->user()->type == 'D')
+                                ({{ __('custom_admin.label_distributor') }})
+                            @elseif (\Auth::guard('admin')->user()->type == 'S')
+                                ({{ __('custom_admin.label_seller') }})
+                            @endif
+                             <i data-feather="chevron-down" class="svg-icon"></i></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
                         <a class="dropdown-item" href="{{ route('admin.profile') }}"><i data-feather="user" class="svg-icon mr-2 ml-1"></i> @lang('custom_admin.label_profile')</a>

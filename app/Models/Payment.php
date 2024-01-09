@@ -41,7 +41,7 @@ class Payment extends Model
         * Return Value  : 
     */
     public function distributionAreaDetails() {
-        return $this->belongsTo('App\Models\DistributionArea', 'distributor_id');
+        return $this->belongsTo('App\Models\DistributionArea', 'distribution_area_id');
     }
 
     /*
@@ -54,7 +54,7 @@ class Payment extends Model
         * Return Value  : 
     */
     public function beatDetails() {
-        return $this->belongsTo('App\Models\Beat', 'beta_id');
+        return $this->belongsTo('App\Models\Beat', 'beat_id');
     }
 
     /*

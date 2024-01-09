@@ -25,6 +25,7 @@ class CreatePaymentsTable extends Migration
             $table->string('payment_mode')->nullable();
             $table->text('payment_details')->nullable();
             $table->longText('note')->nullable();
+            $table->string('password')->nullable()->comment('Password to update payment details');
 
             $table->integer('single_step_order_id')->nullable()->comment('Id from single_step_orders table');
             $table->integer('invoice_id')->nullable()->comment('Id from invoices table');

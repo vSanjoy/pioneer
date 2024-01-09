@@ -455,6 +455,7 @@ return [
     'label_bf_bal'                                  => 'BF Bal.',
     'label_payment_mode'                            => 'Payment Mode',
     'label_payment_details'                         => 'Payment Details',
+    'label_master_admin'                            => 'Master Admin',
     
 /* Buttons */
     'btn_toggle_navigation'                         => 'Toggle Navigation',
@@ -633,7 +634,8 @@ return [
     'error_analysis_not_done_yet'                   => 'Analysis for this season not done yet from distributor.',
     'error_you_are_not_a_distributor'               => 'You are not a distributor.',
     'error_beat'                                    => 'Please select beat.',
-    
+    'error_payment_not_exist'                       => 'Payment not exist.',
+    'error_enter_correct_password_to_update'        => 'Please enter correct password to update payment details.',
 
 /* Messages */
     'message_success'                               => 'Success',

@@ -2456,6 +2456,62 @@ $(document).ready(function() {
     });
     // End :: Create Payment Collect Form //
 
+    // Start :: Update Payment Collect Form //
+    $("#updateCollectPaymentForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            date: {
+                required: true
+            },
+            amount: {
+                required: true,
+                valid_amount: true,
+            },
+            password: {
+                required: true
+            },
+        },
+        messages: {
+            date: {
+                required: "Please select date."
+            },
+            amount: {
+                required: "Please enter amount.",
+                valid_amount: "Please enter valid amount.",
+            },
+            password: {
+                required: "Please enter password to update details."
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+            form.submit();
+        }
+    });
+    // End :: Create Payment Collect Form //
+
 
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //
@@ -3550,3 +3606,40 @@ function completeOrder(ordId) {
     }
 }
 // End :: Complete order //
+
+// Start :: Update Payment //
+function updatePayment(paymentEditId, date, totalAmount, password, paymentMode, paymentDetails, note) {
+    var actionUrl = adminPanelUrl + '/payment/ajax-update-payment';
+
+    $('.preloader').show();
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: actionUrl,
+        method: 'POST',
+        data: {
+            'payment_id': paymentEditId,
+            'date': date,
+            'total_amount': totalAmount,
+            'password': password,
+            'payment_mode': paymentMode,
+            'payment_details': paymentDetails,
+            'note': note,
+        },
+        success: function (response) {
+            $('.preloader').hide();
+            if (response.type == 'success') {
+                toastr.success(response.message, response.title+'!');
+                getList();
+
+                setTimeout(function(){
+                    $('#edit-payment-modal').modal('hide')
+                }, 5000);
+            } else {
+                toastr.error(response.message, response.title+'!');
+            }
+        }
+    });
+}
+// End :: Update Payment //

@@ -95,8 +95,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="text-dark font-bold">@lang('custom_admin.label_note')</label>
-                                        {{ Form::textarea('reference', null, [
-                                                            'id' => 'reference',
+                                        {{ Form::textarea('note', null, [
+                                                            'id' => 'note',
                                                             'class' => 'form-control',
                                                             'placeholder' => '',
                                                             'rows' => 3
