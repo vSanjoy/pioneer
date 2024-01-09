@@ -185,7 +185,11 @@ $(document).on('click', '.editPaymentModal', function() {
 
 				if (response.type = 'success') {
 					$('#payment-edit-id').val(response.paymentEditId);
-					$('#edit-store-details-area').html(' - ' + response.store +' (' + response.storeOwner +' - ' + response.storePhone + ')');
+					if (response.storePhone != null) {
+						var storeDetail = $('#edit-store-details-area').html(' - ' + response.store +' (' + response.storeOwner +' - ' + response.storePhone + ')');
+					} else {
+						var storeDetail = $('#edit-store-details-area').html(' - ' + response.store +' (' + response.storeOwner + ')');
+					}
 					$('#date').val(response.nonFormattedDate);
 					$("#total-amount").val(response.totalAmount);
 					$("#payment-mode").val(response.paymentMode);

@@ -474,7 +474,11 @@ class PaymentsController extends Controller
 
                 if ($stores->count()) {
                     foreach ($stores as $keyStore => $valStore) {
-                        $options .= '<option value="'.$valStore->id.'">'.$valStore->store_name.' ('.$valStore->name_1.' - '.$valStore->phone_no_1.')'.'</option>';
+                        if ($valStore->phone_no_1 != null) {
+                            $options .= '<option value="'.$valStore->id.'">'.$valStore->store_name.' ('.$valStore->name_1.' - '.$valStore->phone_no_1.')'.'</option>';
+                        } else {
+                            $options .= '<option value="'.$valStore->id.'">'.$valStore->store_name.' ('.$valStore->name_1.')'.'</option>';
+                        }
                     }
                 }
             }
@@ -517,7 +521,11 @@ class PaymentsController extends Controller
 
                 if ($stores->count()) {
                     foreach ($stores as $keyStore => $valStore) {
-                        $options .= '<option value="'.$valStore->id.'">'.$valStore->store_name.' ('.$valStore->name_1.' - '.$valStore->phone_no_1.')'.'</option>';
+                        if ($valStore->phone_no_1 != null) {
+                            $options .= '<option value="'.$valStore->id.'">'.$valStore->store_name.' ('.$valStore->name_1.' - '.$valStore->phone_no_1.')'.'</option>';
+                        } else {
+                            $options .= '<option value="'.$valStore->id.'">'.$valStore->store_name.' ('.$valStore->name_1.')'.'</option>';
+                        }
                     }
                 }
             }
@@ -584,7 +592,7 @@ class PaymentsController extends Controller
         } catch (\Throwable $e) {
             $message = $e->getMessage();
         }
-        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'distributionArea' => $distributionArea, 'beat' => $beat, 'store' => $store, 'storeOwner' => $storeOwner, 'storePhone' => $storePhone, 'date' => $date, 'nonFormattedDate' => $nonFormattedDate, 'totalAmount' => $totalAmount, 'paymentMode' => $paymentMode, 'paymentDetail' => $paymentDetail, 'note' => $note, 'paymentEditId' => $paymentEditId]);
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'distributionArea' => $distributionArea, 'beat' => $beat, 'store' => $store, 'storeOwner' => $storeOwner, 'storePhone' => $storePhone, 'date' => $date, 'nonFormattedDate' => $nonFormattedDate, 'totalAmount' => $totalAmount, 'paymentMode' => $paymentMode, 'paymentDetail' => $paymentDetail, 'note' => $note, 'paymentEditId' => $paymentEditId]); 
     }
 
     /*

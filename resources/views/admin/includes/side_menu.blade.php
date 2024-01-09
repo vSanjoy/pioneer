@@ -28,8 +28,10 @@ $getSiteSettings = getSiteSettings();
 					</a>
 				</li>
 
+			@if ( ($isSuperAdmin) || (in_array('distributionArea.list', $getAllRoles) || in_array('distributor.list', $getAllRoles) || in_array('seller.list', $getAllRoles) || in_array('beat.list', $getAllRoles) || in_array('store.list', $getAllRoles) || in_array('category.list', $getAllRoles) || in_array('product.list', $getAllRoles) ) )
 				<li class="list-divider"></li>
 				<li class="nav-small-cap"><span class="hide-menu">@lang('custom_admin.label_managements')</span></li>
+			@endif
 
 			<!-- Distribution Area Management Start -->
 			@php

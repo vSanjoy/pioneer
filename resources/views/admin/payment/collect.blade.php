@@ -45,7 +45,11 @@
                                         <select class="selectpicker form-control" id="store_id" name="store_id" data-container="body" data-live-search="true" title="--@lang('custom_admin.label_select')--" data-hide-disabled="true" data-actions-box="true" data-virtual-scroll="false" required>
                                             <option value="">--@lang('custom_admin.label_select')--</option>
                                         @foreach ($stores as $itemStore)
-                                            <option value="{{ $itemStore->id }}">{!! $itemStore->store_name !!} ({!! $itemStore->name_1.' - '.$itemStore->phone_no_1 !!})</option>
+                                            @if ($itemStore->phone_no_1 != null)
+                                                <option value="{{ $itemStore->id }}">{!! $itemStore->store_name !!} ({!! $itemStore->name_1.' - '.$itemStore->phone_no_1 !!})</option>
+                                            @else
+                                                <option value="{{ $itemStore->id }}">{!! $itemStore->store_name !!} ({!! $itemStore->name_1 !!})</option>
+                                            @endif
                                         @endforeach
                                         </select>
                                     </div>
