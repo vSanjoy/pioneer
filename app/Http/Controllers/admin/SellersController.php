@@ -117,6 +117,9 @@ class SellersController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
+                        ->addColumn('full_name', function ($row) {
+                            return '<a href="javascript: void(0);" data-microtip-position="right" role="tooltip" aria-label="'.trans('custom_admin.label_double_click_to_open_in_new_window').'" class="doubleClick">'.$row->full_name.'</a>';
+                        })
                         ->addColumn('image', function ($row) use ($isAllow, $allowedRoutes) {
                             $image = asset('images/'.config('global.NO_IMAGE'));
                             if ($row->profile_pic != null && file_exists(public_path('images/uploads/distributor/'.$row->profile_pic))) {
@@ -175,7 +178,14 @@ class SellersController extends Controller
                             }                            
                             return $btn;
                         })
-                        ->rawColumns(['whatsapp_no','status','action'])
+                        ->addColumn('edit_link', function ($row) use ($isAllow, $allowedRoutes) {
+                            $editLink = '';
+                            if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
+                                $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
+                            }
+                            return $editLink;
+                        })
+                        ->rawColumns(['full_name','edit_link','whatsapp_no','status','action'])
                         ->make(true);
             }
             return view($this->viewFolderPath.'.list');

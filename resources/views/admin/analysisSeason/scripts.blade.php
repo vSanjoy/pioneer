@@ -262,9 +262,15 @@ function getDistributorList() {
 	function getStoreList() {
 		var getStoreListDataUrl = "{{route($routePrefix.'.analysisSeason.ajax-store-list-request', [$analysisSeasonId, $distributionAreaId, $distributorId])}}";
 		var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
+				fixedColumns: {
+					left: 0,
+				    right: 2
+				},
 				destroy: true,
 				autoWidth: false,
 				responsive: false,
+				scrollX: true,
+				scrollY: {{ config('global.DATATABLE_SCROLL_HEIGHT') }},
 				processing: true,
 				language: {
 					processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
@@ -291,8 +297,6 @@ function getDistributorList() {
 				createdRow: function( row, data, dataIndex ) {
 					$(row).addClass('listTable');
 				},
-				scrollY: {{ config('global.DATATABLE_SCROLL_HEIGHT') }},
-        		scrollX: true,
 				columns: [
 					{data: 'id', name: 'id'},
 					{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},

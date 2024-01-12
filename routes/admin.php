@@ -333,6 +333,12 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 Route::get('/report', 'StoreGradationController@report')->name('report');
                 Route::post('ajax-list-report-request', 'StoreGradationController@ajaxListReportRequest')->name('ajax-list-report-request');
             });
+
+            Route::group(['prefix' => 'storeTargetSummaryLog', 'as' => 'storeTargetSummaryLog.'], function () {
+                Route::post('/ajax-list-request', 'StoreTargetSummaryLogController@ajaxListRequest')->name('ajax-list-request');
+                Route::any('/ajax-store-target-summary-logs-details', 'StoreTargetSummaryLogController@ajaxStoreTargetSummaryLogsDetails')->name('ajax-store-target-summary-logs-details');
+                Route::post('/ajax-store-target-summary-log', 'StoreTargetSummaryLogController@ajaxStoreTargetSummaryLog')->name('ajax-store-target-summary-log');
+            });
             
         });
 

@@ -41,9 +41,14 @@ $(document).ready(function() {
 		
 		var getListDataUrl = "{{route($routePrefix.'.'.$listRequestUrl)}}";	
 		var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
+				fixedColumns: {
+					left: 0,
+				    right: 2
+				},
 				destroy: true,
 				autoWidth: false,
 				responsive: false,
+				scrollX: true,
 				processing: true,
 				language: {
 					processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',

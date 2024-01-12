@@ -97,7 +97,18 @@ $(document).ready(function() {
 });
 
 @if (Route::currentRouteName() == $routePrefix.'.'.$listUrl)
-	$(document).on("dblclick", "tr[role='row']", function() {
+	// $(document).on("dblclick", "tr[role='row']", function() {
+	// 	@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
+	// 		var linkUrl = $(this).closest('tr').find('td:nth-child(3)').text();
+	// 		alert(linkUrl);
+	// 		// window.open(linkUrl, '_blank');
+	// 	@else
+	// 		var linkUrl = $(this).closest('tr').find('td:nth-child(2)').text();
+	// 		window.open(linkUrl, '_blank');
+	// 	@endif
+	// });
+
+	$(document).on("dblclick", ".doubleClick", function() {
 		@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
 			var linkUrl = $(this).closest('tr').find('td:nth-child(3)').text();
 			window.open(linkUrl, '_blank');
@@ -118,9 +129,15 @@ $(document).ready(function() {
 
 		var getListDataUrl = "{{route($routePrefix.'.'.$listRequestUrl)}}";	
 		var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
+				fixedColumns: {
+					left: 0,
+				    right: 2
+				},
 				destroy: true,
 				autoWidth: false,
 				responsive: false,
+				scrollX: true,
+      			// scrollY: 400,
 				processing: true,
 				language: {
 					processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
@@ -147,7 +164,6 @@ $(document).ready(function() {
 				createdRow: function( row, data, dataIndex ) {
 					$(row).addClass('listTable');
 				},
-				scrollX: true,
 				columns: [		
 				@if ($isAllow || in_array($statusUrl, $allowedRoutes) || in_array($deleteUrl, $allowedRoutes))
 				{
@@ -198,7 +214,7 @@ $(document).ready(function() {
 					[0, 'desc']
 				@endif
 				],
-				pageLength: 25,
+				pageLength: 10,
 				lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
 				fnDrawCallback: function(settings) {
 					if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
@@ -234,6 +250,118 @@ $(document).ready(function() {
 			window.history.pushState({href: getListUrlWithFilter}, '', getListUrlWithFilter);
 			getList();
 		}
+	}
+
+	// Store Payment Target Summary Log Modal Popup
+	$(document).on('click', '.viewStoreTargetSummaryLogsModal', function() {
+		var storeId = $(this).data('storeid');
+		if (storeId != '') {
+			$('.preloader').show();
+			$.ajax({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: adminPanelUrl + '/storeTargetSummaryLog/ajax-store-target-summary-logs-details',
+				method: 'POST',
+				data: {
+					store_id: storeId
+				},
+				success: function (response) {
+					$('.preloader').hide();
+					if (response.type = 'success') {
+						$("#store-details-area").html(' - ' + response.storeName);
+						$('#store-id').val(response.encryptedStoreId);						
+						
+						// Get list of logs
+						getStoreTargetSummaryLog(response.encryptedStoreId);
+
+						$('#store-target-summary-logs-modal').modal('show');
+					}
+				}
+			});
+		}
+	});
+
+	// Create Store Target Summary Log Modal Popup Form
+	$(document).on('click', '.createStoreTargetSummaryLog', function() {
+		var storeId			= $('#store-id').val();
+		var date 			= $('#date').val();
+		var creditDays		= $('#credit_days').val();
+		var currentTarget	= $('#current_target').val();
+		var weeklyPayment	= $('#weekly_payment').val();
+		var visitCycle		= $('#visit_cycle').val();
+
+		if (storeId != '' && date != '' && creditDays != '' && currentTarget != '' && weeklyPayment != '') {
+			createStoreTargetSummaryLog(storeId, date, creditDays, currentTarget, weeklyPayment, visitCycle);
+		}
+	});
+
+	function getStoreTargetSummaryLog(storeId) {
+		setTimeout(function() {
+			var getListDataUrl = "{{route($routePrefix.'.storeTargetSummaryLog.ajax-list-request')}}";
+			var dTable = $('#store-target-summary-log').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
+					destroy: true,
+					autoWidth: false,
+					responsive: false,
+					processing: true,
+					language: {
+						processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
+						search: "_INPUT_",
+						searchPlaceholder: '{{ trans("custom_admin.btn_search") }}',
+						emptyTable: '{{ trans("custom_admin.message_no_records_found") }}',
+						zeroRecords: '{{ trans("custom_admin.message_no_records_found") }}',
+						paginate: {
+							first: '{{trans("custom_admin.label_first")}}',
+							previous: '{{trans("custom_admin.label_previous")}}',
+							next: '{{trans("custom_admin.label_next")}}',
+							last: '{{trans("custom_admin.label_last")}}',
+						}
+					},
+					serverSide: true,
+					ajax: {
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+						},
+						url: getListDataUrl + '?store_id=' + storeId,
+						type: 'POST',
+						data: function(data) {},
+					},
+					scrollX: true,
+					columns: [
+						{data: 'id', name: 'id'},
+						{data: 'date', name: 'date', orderable: false},
+						{data: 'credit_days', name: 'credit_days'},
+						{data: 'current_target', name: 'current_target'},
+						{data: 'weekly_payment', name: 'weekly_payment'},
+						{data: 'visit_cycle', name: 'visit_cycle'},
+					],
+					columnDefs: [
+						{
+							targets: [ 0 ],
+							visible: false,
+							searchable: false,
+						},
+					],
+					order: [
+						[0, 'desc']
+					],
+					pageLength: 10,
+					lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
+					fnDrawCallback: function(settings) {
+						if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
+							$('#list-table_paginate').hide();
+						} else {
+							$('#list-table_paginate').show();
+						}
+					},
+			});
+			// Prevent alert box from datatable & console error message
+			$.fn.dataTable.ext.errMode = 'none';	
+			$('#store-target-summary-log').on('error.dt', function (e, settings, techNote, message) {
+				$('#dataTableLoading').hide();
+				toastr.error(message, "@lang('custom_admin.message_error')");
+			});
+		}, 200);
 	}
 @endif
 </script>

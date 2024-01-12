@@ -128,6 +128,9 @@ class ProductsController extends Controller
                                 return 'N/A';
                             }
                         })
+                        ->addColumn('title', function ($row) {
+                            return '<a href="javascript: void(0);" data-microtip-position="right" role="tooltip" aria-label="'.trans('custom_admin.label_double_click_to_open_in_new_window').'" class="doubleClick">'.$row->title.'</a>';
+                        })
                         ->addColumn('rate_per_pcs', function ($row) {
                             return formatToTwoDecimalPlaces($row->rate_per_pcs);
                         })
@@ -176,7 +179,14 @@ class ProductsController extends Controller
                             }                            
                             return $btn;
                         })
-                        ->rawColumns(['category','status','action'])
+                        ->addColumn('edit_link', function ($row) use ($isAllow, $allowedRoutes) {
+                            $editLink = '';
+                            if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
+                                $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
+                            }
+                            return $editLink;
+                        })
+                        ->rawColumns(['category','title', 'edit_link','status','action'])
                         ->make(true);
             }
             return view($this->viewFolderPath.'.list');

@@ -294,7 +294,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btn-processing" class="btn btn-success btn-rounded updatePayment"><i class="far fa-save" aria-hidden="true"></i> {{ __('custom_admin.btn_update') }}</button>
+                        <button type="submit" id="btn-processing" class="btn btn-success btn-rounded updatePayment"><i class="far fa-save" aria-hidden="true"></i> {{ __('custom_admin.btn_update') }}</button>
                     </div>
                 </form>
             </div><!-- /.modal-content -->

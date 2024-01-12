@@ -23,7 +23,7 @@ var confirmDefaultMessage           = 'Are you sure, you want to set it default?
 var overallErrorMessage         = '';
 var pleaseFillOneField          = 'You missed 1 field. It has been highlighted.';
 var pleaseFillMoreFieldFirst    = 'You have missed ';
-var pleaseFillMoreFieldLast     = ' fields. Please fill before submitted.';
+var pleaseFillMoreFieldLast     = ' fields. Please fill before submit.';
 
 var copiedToClipBoard           = 'Copied to clipboard';
 
@@ -45,6 +45,7 @@ var btnCreatingPreloader= '<span class="spinner-grow spinner-grow-sm" role="stat
 var btnUpdatingPreloader= '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Updating...';
 var btnLoadingPreloader = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading...';
 var btnSendingPreloader = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Sending...';
+var btnSubmit           = '<i class="far fa-save" aria-hidden="true"></i> Submit';
 
 $.validator.addMethod("valid_email", function(value, element) {
     if (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value)) {
@@ -220,6 +221,7 @@ $(document).ready(function() {
             error.insertAfter(element);
         },
         submitHandler: function(form) {
+
             $('#btn-processing').html(btnLoadingPreloader);
             $('.preloader').show();
             form.submit();
@@ -2512,6 +2514,69 @@ $(document).ready(function() {
     });
     // End :: Create Payment Collect Form //
 
+    // Start :: Create Store Target Summary Log Form //
+    $("#createStoreTargetSummaryLogForm").validate({
+        ignore: ":hidden",
+        debug: false,
+        rules: {
+            date: {
+                required: true
+            },
+            credit_days: {
+                required: true
+            },
+            current_target: {
+                required: true,
+                valid_amount: true,
+            },
+            weekly_payment: {
+                required: true,
+                valid_amount: true,
+            },
+        },
+        messages: {
+            date: {
+                required: "Please select date."
+            },
+            credit_days: {
+                required: "Please enter credit days."
+            },
+            current_target: {
+                required: "Please enter current target.",
+                valid_amount: "Please enter valid amount.",
+            },
+            weekly_payment: {
+                required: "Please enter weekly payment.",
+                valid_amount: "Please enter valid amount.",
+            },
+        },
+        errorClass: 'error invalid-feedback',
+        errorElement: 'div',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        },
+        invalidHandler: function(form, validator) {
+            var numberOfInvalids = validator.numberOfInvalids();
+            if (numberOfInvalids) {
+                overallErrorMessage = numberOfInvalids == 1 ? pleaseFillOneField : pleaseFillMoreFieldFirst + numberOfInvalids + pleaseFillMoreFieldLast;
+            } else {
+                overallErrorMessage = '';
+            }
+            toastr.error(overallErrorMessage, errorMessage+'!');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        },
+        submitHandler: function(form) {
+            $('#btn-processing').html(btnSavingPreloader);
+            $('.preloader').show();
+        }
+    });
+    // End :: Create Store Target Summary Log Form //
+
 
     /***************************** Start :: Data table and Common Functionalities ****************************/
     // Start :: Check / Un-check all for Admin Bulk Action (DO NOT EDIT / DELETE) //
@@ -3643,3 +3708,42 @@ function updatePayment(paymentEditId, date, totalAmount, password, paymentMode, 
     });
 }
 // End :: Update Payment //
+
+// Start :: Create Store Target Summary Log //
+function createStoreTargetSummaryLog(storeId, date, creditDays, currentTarget, weeklyPayment, visitCycle) {
+    var actionUrl = adminPanelUrl + '/storeTargetSummaryLog/ajax-store-target-summary-log';
+
+    $('.preloader').show();
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: actionUrl,
+        method: 'POST',
+        data: {
+            'store_id': storeId,
+            'date': date,
+            'credit_days': creditDays,
+            'current_target': currentTarget,
+            'weekly_payment': weeklyPayment,
+            'visit_cycle': visitCycle,
+        },
+        success: function (response) {
+            $('.preloader').hide();
+            if (response.type == 'success') {
+                toastr.success(response.message, response.title+'!');
+                $('#btn-processing').html(btnSubmit);
+
+                getStoreTargetSummaryLog(storeId);
+
+                // setTimeout(function() {
+                //     $('#store-target-summary-logs-modal').modal('hide');
+                    $('#createStoreTargetSummaryLogForm').trigger("reset");
+                // }, 5000);
+            } else {
+                toastr.error(response.message, response.title+'!');
+            }
+        }
+    });
+}
+// End :: Create Store Target Summary Log //

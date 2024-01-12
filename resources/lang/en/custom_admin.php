@@ -456,6 +456,15 @@ return [
     'label_payment_mode'                            => 'Payment Mode',
     'label_payment_details'                         => 'Payment Details',
     'label_master_admin'                            => 'Master Admin',
+    'label_double_click_to_open'                    => 'Double Click To Open',
+    'label_double_click_to_open_in_new_window'      => 'Double Click To Open In New Window',
+    'label_store_target_summary'                    => 'Store Target Summary',
+    'label_menu_store_target_summary_log'           => 'Store Target Summary Log',
+    'label_current_credit_days'                     => 'Current Credit Days',
+    'label_current_target'                          => 'Current Target',
+    'label_weekly_payment'                          => 'Weekly Payment',
+    'label_visit_cycle'                             => 'Visit Cycle',
+    'label_store_target_summary_log_list'           => 'Store Target Summary Log List',
     
 /* Buttons */
     'btn_toggle_navigation'                         => 'Toggle Navigation',
@@ -698,6 +707,7 @@ return [
     'message_no_analysis_found'                     => 'No analysis record found.',
     'message_only_invoiced_orders_will_be_shipped'  => 'Only invoiced orders will be shipped.',
     'message_only_shipped_orders_will_be_complete'  => 'Only shipped orders will be complete.',
+    'message_store_not_found'                       => 'Store not found.',
 
     
 /* Success */

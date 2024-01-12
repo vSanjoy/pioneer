@@ -58,4 +58,17 @@ class Store extends Model
 		return $this->belongsTo('App\Models\Grade', 'grade_id');
 	}
 
+    /*
+        * Function name : storeTargetSummaryLogDetails
+        * Purpose       : To get store summary logs
+        * Author        :
+        * Created Date  :
+        * Modified Date : 
+        * Input Params  : 
+        * Return Value  : 
+    */
+    public function storeTargetSummaryLogDetails() {
+        return $this->belongsTo('App\Models\StoreTargetSummaryLog', 'grade_id');
+    }
+
 }

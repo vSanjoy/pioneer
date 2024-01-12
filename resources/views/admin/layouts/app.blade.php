@@ -34,6 +34,8 @@
     <!-- DataTables -->
     <link href="{{ asset('css/admin/plugins/datatables.net-bs4/dataTables.bootstrap4.css') }}" rel="stylesheet">
     <link href="{{ asset('css/admin/plugins/datatables-responsive/responsive.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin/plugins/datatables.net-bs4/fixedColumns.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin/plugins/datatables.net-bs4/scroller.bootstrap4.min.css') }}" rel="stylesheet">
     @endif
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('css/admin/plugins/select2/select2.min.css') }}">
@@ -233,6 +235,8 @@
     <script src="{{ asset('js/admin/dist/pages/datatable/datatable-basic.init.js') }}"></script>
     <script src="{{ asset('js/admin/plugins/datatables-responsive/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('js/admin/plugins/datatables-responsive/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/admin/plugins/datatables.net-bs4/js/dataTables.fixedColumns.min.js') }}"></script>
+    <script src="{{ asset('js/admin/plugins/datatables.net-bs4/js/dataTables.scroller.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
             $('#responsive-table').DataTable({

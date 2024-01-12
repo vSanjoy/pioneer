@@ -152,6 +152,13 @@ ul,li {list-style: none; padding: 0;}
 .bg-white{background-color: #ffffff;}
 .accordion-border-top{border-top: 1px solid #edf2f9}
 
+.table-striped tbody tr:nth-of-type(odd) td {
+    background-color: #f4f8fb;
+}
+table.table-bordered.dataTable th, table.table-bordered.dataTable td {
+    box-shadow: -1px 0 0 0 #e8eef3;
+}
+
 @media only screen and (max-width: 767px) {
     .notfound .notfound-404 {height: 142px;}
     .notfound .notfound-404 h1 {font-size: 130px;}

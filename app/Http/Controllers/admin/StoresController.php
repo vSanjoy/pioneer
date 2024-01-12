@@ -195,6 +195,9 @@ class StoresController extends Controller
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
                         ->addIndexColumn()
+                        ->addColumn('name_1', function ($row) {
+                            return '<a href="javascript: void(0);" data-microtip-position="right" role="tooltip" aria-label="'.trans('custom_admin.label_double_click_to_open_in_new_window').'" class="doubleClick">'.$row->name_1.'</a>';
+                        })
                         ->addColumn('beat_id', function ($row) {
                             if ($row->beatDetails !== NULL) {
                                 return $row->beatDetails->title;
@@ -249,7 +252,12 @@ class StoresController extends Controller
                             if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
                                 $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
 
-                                $btn .= '<a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
+                                $btn .= '<a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm viewStoreTargetSummaryLogsModal" aria-label="'.trans('custom_admin.label_store_target_summary').'" data-storeid="'.$row->id.'"><i class="fas fa-bullseye"></i></a>';
+                            }
+                            if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
+                                $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
+
+                                $btn .= ' <a href="'.$editLink.'" data-microtip-position="top" role="tooltip" class="btn btn-info btn-circle btn-circle-sm" aria-label="'.trans('custom_admin.label_edit').'" target="_blank"><i class="fa fa-edit"></i></a>';
                             }
                             if ($isAllow || in_array($this->deleteUrl, $allowedRoutes)) {
                                 $btn .= ' <a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-danger btn-circle btn-circle-sm delete" aria-label="'.trans('custom_admin.label_delete').'" data-action-type="delete" data-id="'.customEncryptionDecryption($row->id).'"><i class="fa fa-trash"></i></a>';
@@ -263,7 +271,7 @@ class StoresController extends Controller
                             }
                             return $editLink;
                         })
-                        ->rawColumns(['edit_link','distribution_area_id','sale_size_category','status','action'])
+                        ->rawColumns(['name_1','edit_link','distribution_area_id','sale_size_category','status','action'])
                         ->make(true);
             }
             return view($this->viewFolderPath.'.list');

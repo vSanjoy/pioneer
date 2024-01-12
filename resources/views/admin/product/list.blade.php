@@ -50,6 +50,7 @@
 								@endif
 									<th class="zeroColumn table-th-display-none"></th>
 									<th class="firstColumn">@lang('custom_admin.label_hash')</th>
+									<th class="display-none">@lang('custom_admin.label_hash')</th>
 									<th>@lang('custom_admin.label_category')</th>
 									<th>@lang('custom_admin.label_product_name')</th>
 									<th>@lang('custom_admin.label_rate_per_pcs')</th>

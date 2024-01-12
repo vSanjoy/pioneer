@@ -47,6 +47,7 @@
 									</th>
 								@endif
 									<th class="zeroColumn table-th-display-none"></th>
+									<th class="display-none">@lang('custom_admin.label_hash')</th>
 									<!-- <th class="firstColumn">@lang('custom_admin.label_hash')</th> -->
 									<!-- <th>@lang('custom_admin.label_job_title_1')</th> -->
 									<th>@lang('custom_admin.label_name') 1</th>
