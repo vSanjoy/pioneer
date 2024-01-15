@@ -34,7 +34,9 @@ $(document).ready(function() {
 	});
 	@endif
 
+	@if (\Auth::guard('admin')->user()->type == 'SA')
 	@include($routePrefix.'.includes.filter_for_store_script')
+	@endif
 
 	// On Distribution Area change
 	$(document).on('change', '#distribution_area_id', function() {
@@ -157,7 +159,11 @@ $(document).ready(function() {
 					headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
+					@if (\Auth::guard('admin')->user()->type == 'SA')
 					url: getListDataUrl + '?distribution_area_id=' + distributionAreaId + '&distributor_id=' + distributorId + '&beat_id=' + beatId + '&store_id=' + storeId + '&name_1_id=' + name1Id + '&grade_id=' + gradeId,
+					@else
+					url: getListDataUrl,
+					@endif
 					type: 'POST',
 					data: function(data) {},
 				},
@@ -192,7 +198,7 @@ $(document).ready(function() {
 					{data: 'integrity', name: 'integrity'},
 					// {data: 'updated_at', name: 'updated_at', orderable: false, searchable: false},
 					{data: 'status', name: 'status'},
-				@if ($isAllow || in_array($editUrl, $allowedRoutes))
+				@if ($isAllow || in_array($listUrl, $allowedRoutes) || in_array($editUrl, $allowedRoutes))
 					{data: 'action', name: 'action', orderable: false, searchable: false},
 				@endif
 				],

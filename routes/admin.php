@@ -309,6 +309,7 @@ Route::group(['namespace'=>'admin', 'prefix'=>'adminpanel', 'as'=>'admin.'], fun
                 
                 Route::get('/history', 'PaymentsController@history')->name('history');
                 Route::post('ajax-list-history-request', 'PaymentsController@ajaxListHistoryRequest')->name('ajax-list-history-request');
+                Route::any('/ajax-get-store-details', 'PaymentsController@ajaxGetStoreDetails')->name('ajax-get-store-details');
                 Route::any('/ajax-update-payment', 'PaymentsController@ajaxUpdatePayment')->name('ajax-update-payment');
 
                 Route::get('/report', 'PaymentsController@report')->name('report');

@@ -6,8 +6,16 @@ $(function() {
 		$('.export-analysis').show();
 	});
 
-    $('#beat_id, #store_id').on('change', function() {
-    	urlBuilder();
+    $('#beat_id').on('change', function() {
+    	$('#store_id').selectpicker('refresh');
+    	setTimeout(function() {
+    		urlBuilder();
+    	}, 1000);
+    });
+
+    $('#store_id').on('change', function() {
+    	var beatid = $('#beat_id').val();
+    	urlBuilderWithStoreOnly($(this).val(), beatid);
     });
 });
 

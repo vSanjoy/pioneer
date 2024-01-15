@@ -105,6 +105,46 @@ function urlBuilder() {
 	}
 }
 
+// URL build with store only
+function urlBuilderWithStoreOnly(storeId, beatid) {
+	if (storeId != '') {
+		$('.preloader').show();
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: adminPanelUrl + '/payment/ajax-get-store-details',
+			method: 'POST',
+			data: {
+				store_id: storeId
+			},
+			success: function (response) {
+				if (response.type = 'success') {
+					$('select[name=beat_id]').val(response.storeDetails.beat_id);
+					$('#beat_id').selectpicker('refresh');
+
+					$('#store_id').val(response.storeDetails.id);
+					$('#beat_id').val(response.storeDetails.beat_id);
+
+					setTimeout(function() {
+						urlBuilder();
+						$('.preloader').hide();
+					}, 1000);
+				} else {
+					$('.preloader').hide();
+					toastr.error(response.message, response.title+'!');
+				}
+			}
+		});
+	} else {
+		$('#store_id').selectpicker('refresh');
+		setTimeout(function() {
+			urlBuilder();
+		}, 1000);
+	}
+}
+
+
 // Beat wise store ==> History Page
 $(document).on('change', '#beat_id', function() {
 	var beatId 	= $(this).val();

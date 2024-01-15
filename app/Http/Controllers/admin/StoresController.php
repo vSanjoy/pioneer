@@ -165,32 +165,36 @@ class StoresController extends Controller
                 // Main query
                 $data = $this->model->whereNull(['deleted_at']);
 
-                // Based on disribution area filter
-                if ($filterBydistributionArea) {
-                    $data = $data->where('distribution_area_id', $distributionAreaId);
-                }
-                // Based on distributor filter
-                if ($filterByDistributor) {
-                    $distributorDetails = User::where(['id' => $distributorId])->select('id','distribution_area_id')->first();
-                    if ($distributorDetails != null) {
-                        $data = $data->where('distribution_area_id', $distributorDetails->distribution_area_id);
+                if ($isAllow) {
+                    // Based on disribution area filter
+                    if ($filterBydistributionArea) {
+                        $data = $data->where('distribution_area_id', $distributionAreaId);
                     }
-                }
-                // Based on beat filter
-                if ($filterByBeat) {
-                    $data = $data->where('beat_id', $beatId);
-                }
-                // Based on store filter
-                if ($filterByStore) {
-                    $data = $data->where('id', $storeId);
-                }
-                // Based on name filter
-                if ($filterByName1) {
-                    $data = $data->where('id', $name1Id);
-                }
-                // Based on grade filter
-                if ($filterByGrade) {
-                    $data = $data->where('grade_id', $gradeId);
+                    // Based on distributor filter
+                    if ($filterByDistributor) {
+                        $distributorDetails = User::where(['id' => $distributorId])->select('id','distribution_area_id')->first();
+                        if ($distributorDetails != null) {
+                            $data = $data->where('distribution_area_id', $distributorDetails->distribution_area_id);
+                        }
+                    }
+                    // Based on beat filter
+                    if ($filterByBeat) {
+                        $data = $data->where('beat_id', $beatId);
+                    }
+                    // Based on store filter
+                    if ($filterByStore) {
+                        $data = $data->where('id', $storeId);
+                    }
+                    // Based on name filter
+                    if ($filterByName1) {
+                        $data = $data->where('id', $name1Id);
+                    }
+                    // Based on grade filter
+                    if ($filterByGrade) {
+                        $data = $data->where('grade_id', $gradeId);
+                    }
+                } else {
+                    $data = $this->model->where(['distribution_area_id' => \Auth::guard('admin')->user()->distribution_area_id]);
                 }
 
                 return Datatables::of($data, $isAllow, $allowedRoutes)
@@ -249,9 +253,7 @@ class StoresController extends Controller
                         })
                         ->addColumn('action', function ($row) use ($isAllow, $allowedRoutes) {
                             $btn = '';
-                            if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {
-                                $editLink = route($this->routePrefix.'.'.$this->editUrl, customEncryptionDecryption($row->id));
-
+                            if ($isAllow || in_array($this->listUrl, $allowedRoutes)) {
                                 $btn .= '<a href="javascript: void(0);" data-microtip-position="top" role="tooltip" class="btn btn-warning btn-circle btn-circle-sm viewStoreTargetSummaryLogsModal" aria-label="'.trans('custom_admin.label_store_target_summary').'" data-storeid="'.$row->id.'"><i class="fas fa-bullseye"></i></a>';
                             }
                             if ($isAllow || in_array($this->editUrl, $allowedRoutes)) {

@@ -507,16 +507,24 @@ class PaymentsController extends Controller
 
         try {
             if ($request->ajax()) {
-                $beatId             = $request->beat_id ?? '';
+                $beatId     = $request->beat_id ?? '';
                 
                 $title      = trans('custom_admin.message_success');
                 $message    = trans('custom_admin.message_success');
                 $type       = 'success';
                 
                 if ($beatId != '') {
-                    $stores = Store::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'beat_id' => $beatId, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+                    if (Auth::guard('admin')->user()->type == 'D') {
+                        $stores = Store::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'beat_id' => $beatId, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+                    } else {
+                        $stores = Store::where(['beat_id' => $beatId, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+                    }
                 } else if ($beatId == '') {
-                    $stores = Store::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+                    if (Auth::guard('admin')->user()->type == 'D') {
+                        $stores = Store::where(['distribution_area_id' => Auth::guard('admin')->user()->distribution_area_id, 'status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+                    } else {
+                        $stores = Store::where(['status' => '1'])->whereNull('deleted_at')->select('id','store_name','email','beat_name','name_1','phone_no_1','distribution_area_id','beat_id')->orderBy('store_name', 'ASC')->get();
+                    }
                 }
 
                 if ($stores->count()) {
@@ -535,6 +543,43 @@ class PaymentsController extends Controller
             $message = $e->getMessage();
         }
         return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'options' => $options]);
+    }
+
+    /*
+        * Function Name : ajaxGetStoreDetails
+        * Purpose       : This function is to get stote details
+        * Author        : 
+        * Created Date  : 
+        * Modified date : 
+        * Input Params  : Request $request
+        * Return Value  : 
+    */
+    public function ajaxGetStoreDetails(Request $request) {
+        $title          = trans('custom_admin.message_error');
+        $message        = trans('custom_admin.error_something_went_wrong');
+        $type           = 'error';
+        $storeDetails   = '';
+
+        try {
+            if ($request->ajax()) {
+                $storeId  = $request->store_id ?? '';
+                
+                if ($storeId != '') {
+                    $storeDetails = Store::where(['id' => $storeId])->first();
+
+                    if ($storeDetails) {
+                        $title  = trans('custom_admin.message_success');
+                        $message= trans('custom_admin.success_data_fetched_successfully');
+                        $type   = 'success';                        
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+        }
+        return response()->json(['title' => $title, 'message' => $message, 'type' => $type, 'storeDetails' => $storeDetails]); 
     }
 
     /*

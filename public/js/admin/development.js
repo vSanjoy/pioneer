@@ -2509,7 +2509,7 @@ $(document).ready(function() {
         submitHandler: function(form) {
             $('#btn-processing').html(btnSavingPreloader);
             $('.preloader').show();
-            form.submit();
+            // form.submit();
         }
     });
     // End :: Create Payment Collect Form //
@@ -3699,7 +3699,9 @@ function updatePayment(paymentEditId, date, totalAmount, password, paymentMode, 
                 getList();
 
                 setTimeout(function(){
-                    $('#edit-payment-modal').modal('hide')
+                    $('#edit-payment-modal').modal('hide');
+
+                    $('#updateCollectPaymentForm').trigger("reset");
                 }, 5000);
             } else {
                 toastr.error(response.message, response.title+'!');

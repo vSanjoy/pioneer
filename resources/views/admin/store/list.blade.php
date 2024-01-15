@@ -2,7 +2,9 @@
 
 @section('content')
 
+@if (\Auth::guard('admin')->user()->type == 'SA')
 	@include($routePrefix.'.includes.filter_for_store')
+@endif
 
 	<div class="row">
 		<div class="col-12">
