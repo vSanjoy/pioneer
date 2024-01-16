@@ -232,6 +232,13 @@ class StoresController extends Controller
                                 return 'Small';
                             }
                         })
+                        ->addColumn('bf_balance', function ($row) {
+                            if ($row->bf_balance) {
+                                return formatToTwoDecimalPlaces($row->bf_balance);
+                            } else {
+                                return '0.00';
+                            }
+                        })
                         ->addColumn('updated_at', function ($row) {
                             return changeDateFormat($row->updated_at);
                         })
@@ -307,6 +314,7 @@ class StoresController extends Controller
                     'store_name'            => 'required|unique:'.($this->model)->getTable().',store_name,NULL,id,deleted_at,NULL',
                     // 'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
                     'beat_id'               => 'required',
+                    'bf_balance'            => 'required|regex:'.config('global.VALID_AMOUNT_REGEX')
                 );
                 $validationMessages = array(
                     'distribution_area_id.required' => 'Please select distribution area.',
@@ -314,10 +322,12 @@ class StoresController extends Controller
                     'name_1.unique'                 => 'Please enter unique name 1.',
                     'store_name.required'           => 'Please enter store name.',
                     'store_name.unique'             => 'Please enter unique store name.',
-                    // 'email.required'            => trans('custom_admin.error_email'),
-                    // 'email.regex'               => trans('custom_admin.error_valid_email'),
-                    // 'email.unique'              => trans('custom_admin.error_email_unique'),
-                    'beat_id.required'             => 'Please select beat.',
+                    // 'email.required'                => trans('custom_admin.error_email'),
+                    // 'email.regex'                => trans('custom_admin.error_valid_email'),
+                    // 'email.unique'               => trans('custom_admin.error_email_unique'),
+                    'beat_id.required'              => 'Please select beat.',
+                    'bf_balance.required'           => 'Please enter brought forward balance.',
+                    'bf_balance.regex'              => trans('custom_admin.error_valid_amount')
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -345,6 +355,7 @@ class StoresController extends Controller
                     $saveData['sale_size_category']     = $request->sale_size_category ?? 'S';
                     $saveData['integrity']              = $request->integrity ?? 'A+';
                     $saveData['notes']                  = $request->notes ?? null;
+                    $saveData['bf_balance']             = $request->bf_balance ?? 0;
                     $saveData['sort']                   = generateSortNumber($this->model);
                     $save = $this->model->create($saveData);
 
@@ -405,6 +416,7 @@ class StoresController extends Controller
                     'store_name'            => 'required|unique:'.($this->model)->getTable().',store_name,'.$id.',id,deleted_at,NULL',
                     // 'email'                 => 'required|regex:'.config('global.EMAIL_REGEX').'|unique:'.($this->model)->getTable().',email,NULL,id,deleted_at,NULL',
                     'beat_id'               => 'required',
+                    'bf_balance'            => 'required|regex:'.config('global.VALID_AMOUNT_REGEX')
                 );
                 $validationMessages = array(
                     'distribution_area_id.required' => 'Please select distributor.',
@@ -415,7 +427,9 @@ class StoresController extends Controller
                     // 'email.required'                => trans('custom_admin.error_email'),
                     // 'email.regex'                   => trans('custom_admin.error_valid_email'),
                     // 'email.unique'                  => trans('custom_admin.error_email_unique'),
-                    'beat_id.required'             => 'Please select beat.',
+                    'beat_id.required'              => 'Please select beat.',
+                    'bf_balance.required'           => 'Please enter brought forward balance.',
+                    'bf_balance.regex'              => trans('custom_admin.error_valid_amount')
                 );
                 $validator = \Validator::make($request->all(), $validationCondition, $validationMessages);
                 if ($validator->fails()) {
@@ -443,6 +457,7 @@ class StoresController extends Controller
                     $updateData['sale_size_category']   = $request->sale_size_category ?? 'S';
                     $updateData['integrity']            = $request->integrity ?? 'A+';
                     $updateData['notes']                = $request->notes ?? null;
+                    $updateData['bf_balance']           = $request->bf_balance ?? 0;
                     $update = $details->update($updateData);
 
                     if ($update) {

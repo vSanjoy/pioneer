@@ -168,18 +168,6 @@
 																'placeholder' => '' ]) }}
 									</div>
 								</div>
-								<div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="text-dark font-bold">@lang('custom_admin.label_bf_balance')<span class="red_star">*</span></label>
-                                        {{ Form::number('bf_balance', $details->bf_balance ?? 0, [
-                                                            'id' => 'bf_balance',
-                                                            'min' => 0,
-                                                            'class' => 'form-control',
-                                                            'placeholder' => '',
-                                                            'required' => 'required'
-                                                            ]) }}
-                                    </div>
-                                </div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">

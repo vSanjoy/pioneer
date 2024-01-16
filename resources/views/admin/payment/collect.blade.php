@@ -16,7 +16,7 @@
                         'files' => true,
                         'novalidate' => true ]) }}
                             <input type="hidden" name="distribution_area" id="distribution_area" value="{{ $distributionArea->id }}">
-                        <div class="form-body mt-4-5">
+                        <div class="form-body mt-3">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group" id="distribution-area-div">
@@ -103,13 +103,13 @@
                                                             'id' => 'note',
                                                             'class' => 'form-control',
                                                             'placeholder' => '',
-                                                            'rows' => 3
+                                                            'rows' => 1
                                                             ]) }}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-actions mt-4">
+                        <div class="form-actions">
                             <div class="float-left">
                                 <a class="btn btn-secondary waves-effect waves-light btn-rounded shadow-md pr-3 pl-3" href="{{ route($routePrefix.'.payment.history') }}">
                                     <i class="far fa-arrow-alt-circle-left"></i> @lang('custom_admin.btn_cancel')
@@ -122,6 +122,32 @@
                             </div>
                         </div>
                     {{ Form::close() }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- List of collected payments -->
+    <div class="row" id="collect-payment-history-list" style="display: none;">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Payment History</h4>
+                    <div class="table-responsive">
+                        <table id="list-table" class="table table-striped table-bordered no-wrap list-data custom-table custom-table-second-column">
+                            <thead>
+                                <th class="firstColumn">{{ __('custom_admin.label_hash') }}</th>
+                                <th>{{ __('custom_admin.label_date') }}</th>
+                                <th>{{ __('custom_admin.label_beat') }}</th>
+                                <th>{{ __('custom_admin.label_store') }}</th>
+                                <th>{{ __('custom_admin.label_owner') }}</th>
+                                <th>{{ __('custom_admin.label_phone') }}</th>
+                                <th>{{ __('custom_admin.label_amount') }}</th>
+                                <th>{{ __('custom_admin.label_payment_mode') }}</th>
+                                <!-- <th class="actions">{{ __('custom_admin.label_action') }}</th> -->
+                            </thead>                            
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

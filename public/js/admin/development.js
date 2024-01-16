@@ -1284,6 +1284,10 @@ $(document).ready(function() {
             //     required: true,
             //     valid_email: true
             // },
+            bf_balance: {
+                required: true,
+                valid_amount: true,
+            },
         },
         messages: {
             distribution_area_id: {
@@ -1302,6 +1306,10 @@ $(document).ready(function() {
             //     required: "Please enter email.",
             //     valid_email: "Please enter valid email.",
             // },
+            bf_balance: {
+                required: "Please enter brought forward balance.",
+                valid_amount: "Please enter valid amount.",
+            },
         },
         errorClass: 'error invalid-feedback',
         errorElement: 'div',
@@ -1356,6 +1364,10 @@ $(document).ready(function() {
             //     required: true,
             //     valid_email: true
             // },
+            bf_balance: {
+                required: true,
+                valid_amount: true,
+            },
         },
         messages: {
             distribution_area_id: {
@@ -1377,6 +1389,10 @@ $(document).ready(function() {
             //     required: "Please enter email.",
             //     valid_email: "Please enter valid email.",
             // },
+            bf_balance: {
+                required: "Please enter brought forward balance.",
+                valid_amount: "Please enter valid amount.",
+            },
         },
         errorClass: 'error invalid-feedback',
         errorElement: 'div',

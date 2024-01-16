@@ -119,7 +119,7 @@ function urlBuilderWithStoreOnly(storeId, beatid) {
 				store_id: storeId
 			},
 			success: function (response) {
-				if (response.type = 'success') {
+				if (response.type == 'success') {
 					$('select[name=beat_id]').val(response.storeDetails.beat_id);
 					$('#beat_id').selectpicker('refresh');
 
@@ -185,7 +185,7 @@ $(document).on('click', '.viewPaymentModal', function() {
 			success: function (response) {
 				$('.preloader').hide();
 
-				if (response.type = 'success') {
+				if (response.type == 'success') {
 					$("#view-distribution-area").html(response.distributionArea);
 					$("#view-beat").html(response.beat);
 					$("#view-store").html(response.store);
@@ -223,7 +223,7 @@ $(document).on('click', '.editPaymentModal', function() {
 			success: function (response) {
 				$('.preloader').hide();
 
-				if (response.type = 'success') {
+				if (response.type == 'success') {
 					$('#payment-edit-id').val(response.paymentEditId);
 					if (response.storePhone != null) {
 						var storeDetail = $('#edit-store-details-area').html(' - ' + response.store +' (' + response.storeOwner +' - ' + response.storePhone + ')');
@@ -292,8 +292,120 @@ $(document).on('change', '#beat_id', function() {
 		success: function (response) {
 			$('.preloader').hide();
 			$("#store_id").html(response.options).selectpicker('refresh');
+
+			$('#collect-payment-history-list').css({'display':'none'});
 		}
 	});
 });
+
+// Store wise beat and history ==> Collect Page
+$('#store_id').on('change', function() {
+	var storeId = $(this).val();
+	if (storeId != '') {
+		$('.preloader').show();
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			url: adminPanelUrl + '/payment/ajax-get-store-details',
+			method: 'POST',
+			data: {
+				store_id: storeId
+			},
+			success: function (response) {
+				if (response.type == 'success') {
+					$('select[name=beat_id]').val(response.storeDetails.beat_id);
+					$('#beat_id').selectpicker('refresh');
+
+					$('#store_id').val(response.storeDetails.id);
+					$('#beat_id').val(response.storeDetails.beat_id);
+
+					setTimeout(function() {
+						getHistoryList(storeId, response.storeDetails.beat_id);
+
+						$('#collect-payment-history-list').css({'display':'block'});
+						$('.preloader').hide();
+					}, 1000);
+				} else {
+					$('.preloader').hide();
+					toastr.error(response.message, response.title+'!');
+				}
+			}
+		});
+	} else {
+		$('#store_id').selectpicker('refresh');
+		
+		$('#collect-payment-history-list').css({'display':'none'});
+	}
+});
+
+function getHistoryList(storeId, beatId) {
+	var getListDataUrl = "{{route($routePrefix.'.payment.ajax-list-history-request')}}";
+	var dTable = $('#list-table').on('init.dt', function () {$('#dataTableLoading').hide();}).DataTable({
+			destroy: true,
+			autoWidth: false,
+			responsive: false,
+			processing: true,
+			language: {
+				processing: '<img src="{{asset("images/admin/".config("global.TABLE_LIST_LOADER"))}}">',
+				search: "_INPUT_",
+				searchPlaceholder: '{{ trans("custom_admin.btn_search") }}',
+				emptyTable: '{{ trans("custom_admin.message_no_records_found") }}',
+				zeroRecords: '{{ trans("custom_admin.message_no_records_found") }}',
+				paginate: {
+					first: '{{trans("custom_admin.label_first")}}',
+					previous: '{{trans("custom_admin.label_previous")}}',
+					next: '{{trans("custom_admin.label_next")}}',
+					last: '{{trans("custom_admin.label_last")}}',
+				}
+			},
+			serverSide: true,
+			ajax: {
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				},
+				url: getListDataUrl + '?beat_id=' + beatId + '&store_id=' + storeId,
+				type: 'POST',
+				data: function(data) {},
+			},
+			columns: [
+				// {data: 'id', name: 'id'},
+				{data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+				{data: 'date', name: 'date'},
+				{data: 'beat_id', name: 'beat_id'},
+				{data: 'store_id', name: 'store_id'},
+				{data: 'store_owner', name: 'store_owner'},
+				{data: 'store_phone', name: 'store_phone'},
+				{data: 'total_amount', name: 'total_amount'},
+				{data: 'payment_mode', name: 'payment_mode'},
+				// {data: 'action', name: 'action'},
+			],
+			columnDefs: [
+				{
+				targets: [ 0 ],
+				visible: false,
+				searchable: false,
+				},
+			],
+			order: [
+				[0, 'desc']
+			],
+			pageLength: 10,
+			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '{{trans("custom_admin.label_all")}}']],
+			fnDrawCallback: function(settings) {
+				if (settings._iDisplayLength == -1 || settings._iDisplayLength > settings.fnRecordsDisplay()) {
+					$('#list-table_paginate').hide();
+				} else {
+					$('#list-table_paginate').show();
+				}
+			},
+	});
+	// Prevent alert box from datatable & console error message
+	$.fn.dataTable.ext.errMode = 'none';	
+	$('#list-table').on('error.dt', function (e, settings, techNote, message) {
+		$('#dataTableLoading').hide();
+		toastr.error(message, "@lang('custom_admin.message_error')");
+	});
+}
 @endif
 </script>

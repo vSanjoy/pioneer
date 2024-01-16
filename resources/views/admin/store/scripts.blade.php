@@ -196,6 +196,7 @@ $(document).ready(function() {
 					{data: 'grade_id', name: 'grade_id'},
 					{data: 'sale_size_category', name: 'sale_size_category'},
 					{data: 'integrity', name: 'integrity'},
+					{data: 'bf_balance', name: 'bf_balance'},
 					// {data: 'updated_at', name: 'updated_at', orderable: false, searchable: false},
 					{data: 'status', name: 'status'},
 				@if ($isAllow || in_array($listUrl, $allowedRoutes) || in_array($editUrl, $allowedRoutes))

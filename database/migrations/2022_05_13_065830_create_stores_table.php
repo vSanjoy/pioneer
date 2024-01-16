@@ -35,6 +35,7 @@ class CreateStoresTable extends Migration
             $table->enum('integrity', ['A+','A','B','B-','C'])->default('A+')->comment('A+=>A+, A=>A, B=>B, B-=>B-, C=>C');
             $table->text('notes')->nullable();
             $table->integer('sort')->default('0');
+            $table->double('bf_balance',10,2)->default(0)->comment('Brought forward balance');
             $table->enum('status', ['0','1'])->default('1')->comment('0=>Inactive, 1=>Active');
             $table->enum('progress_status', ['IP','CP'])->default('IP')->comment('IP=>In-Progress, CP=>Complete');
             $table->timestamp('created_at')->useCurrent();

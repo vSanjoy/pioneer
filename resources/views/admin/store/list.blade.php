@@ -62,6 +62,7 @@
 									<th>@lang('custom_admin.label_grade_name')</th>
 									<th>@lang('custom_admin.label_sale_size_category')</th>
 									<th>@lang('custom_admin.label_integrity')</th>
+									<th>@lang('custom_admin.label_bf_bal')</th>
 									{{-- <th class="modifiedColumn">@lang('custom_admin.label_modified')</th> --}}
 									<th class="row_status">@lang('custom_admin.label_status')</th>
 									<th class="actions">@lang('custom_admin.label_action')</th>
@@ -162,22 +163,6 @@
                                     <th>{{ __('custom_admin.label_visit_cycle') }}</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2023-08-08</td>
-                                    <td>Di/08/2023/20066</td>
-                                    <td>Bandel</td>
-                                    <td>SARAT STORES</td>
-                                    <td>SHIBLAL SARKAR</td>
-                                </tr>
-                                <tr>
-                                    <td>2023-07-29</td>
-                                    <td>Di/07/2023/20051</td>
-                                    <td>Bandel</td>
-                                    <td>SARAT STORES</td>
-                                    <td>SHIBLAL SARKAR</td>
-                                </tr>
-                            </tbody>
                         </table>
                 	</div>
                 </div>

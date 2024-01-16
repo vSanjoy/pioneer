@@ -304,3 +304,6 @@ ALTER TABLE `up_single_step_orders` ADD `order_status` ENUM('N', 'PS', 'FS') NOT
 
 18) ALTER TABLE `up_users` ADD `bf_balance` DOUBLE(10,2) NOT NULL DEFAULT '0' COMMENT 'Brought forward balance' AFTER `sample_login_show`;
 
+19) ALTER TABLE `up_stores` ADD `bf_balance` DOUBLE(10,2) NOT NULL DEFAULT '0' COMMENT 'Brought forward balance' AFTER `sort`;
+
+20) New table added -> up_store_target_summary_logs

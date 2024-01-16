@@ -81,20 +81,23 @@ class StoreTargetSummaryLogController extends Controller
                         ->addColumn('date', function ($row) {
                             return date('d-m-Y', strtotime($row->date));
                         })
+                        ->addColumn('credit_days', function ($row) {
+                            return $row->credit_days;
+                        })
                         ->addColumn('current_target', function ($row) {
                             return formatToTwoDecimalPlaces($row->current_target);
                         })
                         ->addColumn('weekly_payment', function ($row) {
-                            return formatToTwoDecimalPlaces($row->current_target);
+                            return formatToTwoDecimalPlaces($row->weekly_payment);
                         })
-                        ->addColumn('weekly_payment', function ($row) {
-                            if ($row->weekly_payment !== NULL) {
-                                return $row->weekly_payment;
+                        ->addColumn('visit_cycle', function ($row) {
+                            if ($row->visit_cycle !== NULL) {
+                                return $row->visit_cycle;
                             } else {
                                 return 'N/A';
                             }
                         })
-                        ->rawColumns(['date','current_target','weekly_payment','weekly_payment'])
+                        ->rawColumns(['date','credit_days','current_target','weekly_payment','visit_cycle'])
                         ->make(true);
             }
             
